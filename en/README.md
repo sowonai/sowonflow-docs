@@ -1,13 +1,10 @@
 # Introduction
 
-## SowonFlow -Missing Link of AI transformation
+## SowonFlow -Missing Link of AI Transformation
 
 ### What is SowonFlow?
 
-SowonFlow is an innovative YAML -based AI workflow engine that breaks down the gap between business requirements and AI implementation. We solve the important "missing link ", which is an introduction of corporate AI -disconnection between business teams that understand the problem and technology teams that implement solutions.
-
-This is a translation test sentence.
-This is the eighth test. Did the translation quality improve?
+SowonFlow is an innovative YAML -based AI workflow engine that breaks down the gap between business requirements and AI implementation. We solve the important "sewing link ", which is important in the introduction of corporate AI -disconnection between a business team that understands the problem and a technology team that implements solutions.
 
 ### The problem we solve
 

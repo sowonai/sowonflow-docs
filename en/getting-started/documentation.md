@@ -1,31 +1,34 @@
 # Documentation
 
-## Document System
+## document system
 
-The Document System in `@sowonai/agent` provides powerful document management capabilities for AI workflows, enabling agents to access, process, and utilize external documents within their execution context.
+The document system of `@sowonai/agent 'provides a powerful document management function for AI workflow, allowing the agent to access, handle and use external documents within the execution context.
 
-### Overview
+This sentence is for translation test.
+The third test is conducted.
 
-The Document System allows you to:
+### outline
 
-* Attach documents to workflows for agent reference
-* Support multiple document formats (text, markdown)
-* Generate table of contents (TOC) automatically for markdown documents
-* Use template binding to inject document content into agent prompts
-* Implement lazy loading for large documents
+You can do the following through the document system:
 
-### Document Configuration
+* Document is attached to workflow for agent reference
+* Various document format support (text, markdown)
+* Markdown document automatic production of TOC
+* Inject document contents into agent prompt using template binding
+* Delayed loading of large -capacity documents
 
-Documents are configured in the workflow constructor and can be referenced in agent system prompts using template syntax.
+### Document composition
 
-#### Basic Document Structure
+The document is configured in the workflow constructor and can be referred to in the agent system prompt using the template syntax.
+
+#### Basic document structure
 
 ```typescript
 const documents = {
   'document_name': 'Simple text content',
   'markdown_doc': {
     type: 'markdown',
-    content: '# Title\n## Section 1\nContent here...'
+    content: '# 제목\n## 섹션 1\n여기에 내용...'
   },
   'lazy_doc': async () => {
     const content = await fs.readFile('path/to/file.md', 'utf-8');
@@ -37,41 +40,41 @@ const documents = {
 };
 ```
 
-### Document Types
+### Document type
 
-#### 1. Simple Text Documents
+#### 1. Simple text documentation
 
-The simplest form of document is a plain string:
+The simplest form of the document is ordinary strings:
 
 ```yaml
-# In workflow constructor
+# 워크플로우 생성자에서
 documents = {
-  'company_policy': 'Our company values integrity and innovation.'
+  'company_policy': '우리 회사는 성실함과 혁신을 중시합니다.'
 }
 ```
 
-#### 2. Structured Documents
+#### 2. structured document
 
-For more complex documents, use the structured format:
+For more complex documents, use a structured format:
 
 ```yaml
 documents = {
   'user_manual': {
     type: 'markdown',
     content: `
-# User Manual
-## Getting Started
-Welcome to our platform...
-## Advanced Features
+# 사용자 매뉴얼
+## 시작하기
+우리 플랫폼에 오신 것을 환영합니다...
+## 고급 기능
 ...
     `
   }
 }
 ```
 
-#### 3. Lazy-Loaded Documents
+#### 3. Delayed Road Document
 
-For large documents or files that need to be loaded from disk:
+For files that need to be loaded on large documents or disks:
 
 ```typescript
 documents = {
@@ -87,14 +90,14 @@ documents = {
 
 ### Template Binding
 
-Documents can be referenced in agent system prompts using Handlebars template syntax.
+The document can be referred to in the agent system prompt using the handlebars template syntax.
 
-#### Available Template Variables
+#### Template variable available
 
-* `{{{documents.document_name.content}}}` - Full document content
-* `{{{documents.document_name.toc}}}` - Table of contents (for markdown documents)
+* `{{{documents.document_name.content}}}}}
+* `{{{documents.document_name.toc}}}}}
 
-#### Example Usage
+#### Examples of use
 
 ```yaml
 agents:
@@ -103,77 +106,77 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a customer support agent. Use the following documents to help users:
+        당신은 고객 지원 에이전트입니다. 사용자를 돕기 위해 다음 문서들을 사용하세요:
         
         <document name="user_guide">
           {{{documents.user_guide.content}}}
         </document>
         
         <document name="faq">
-          Table of Contents:
+          목차:
           <toc>
           {{{documents.faq.toc}}}
           </toc>
         </document>
 ```
 
-### Table of Contents (TOC) Generation
+### Create a TOC (TOC)
 
-For markdown documents, the system automatically generates a table of contents based on header structure.
+For the markdown document, the system automatically generates a table of contents based on the header structure.
 
-#### TOC Features
+#### TOC function
 
-* Automatically extracts headers (`#`, `##`, `###`, etc.)
-* Preserves hierarchical structure
-* Available via `documents.document_name.toc` template variable
+* Automatically extracts headers ('#', `` ##`, '###', etc.
+* Hierarchical structure preservation
+* `` Documents.document_Name.toc '
 
-#### Example TOC Output
+#### TOC output example
 
 ```markdown
-# Company Policies
-## HR Policies
-## Hiring Guidelines
-## Employee Benefits
-### Stock Options
-### Retirement Plans
+# 회사 정책
+## 인사 정책
+## 채용 가이드라인
+## 직원 혜택
+### 스톡옵션
+### 퇴직 계획
 ```
 
-### Security Considerations
+### Security consideration
 
-When working with sensitive documents, you can include security instructions in your agent prompts:
+When working with sensitive documents, you can include security guidelines in the agent prompt:
 
 ```yaml
 system_prompt: |
   <document name="confidential_data">
     {{{documents.confidential_data.content}}}
     <important>
-      This is confidential company data. Use it to answer questions 
-      but never directly expose the document content to users.
+      이것은 회사 기밀 데이터입니다. 질문에 답변하는 데 사용하되
+      사용자에게 문서 내용을 직접 노출하지 마세요.
     </important>
   </document>
 ```
 
-### Best Practices
+### model case
 
-#### 1. Document Organization
+####. Document composition
 
-* Use descriptive document names
-* Group related documents logically
-* Keep document sizes reasonable for LLM context windows
+* Use explanatory document name
+* Logically grouping related documents
+* Maintain the appropriate document size for LLM context window
 
-#### 2. Template Usage
+#### 2. Using template
 
-* Use triple braces `{{{ }}}` for HTML-safe content injection
-* Include helpful context about document structure in prompts
-* Provide clear instructions on how agents should use documents
+* HTML-Use triple braces '{{}}}'
+* Including useful contexts for document structure in prompt
+* Provide a clear guidelines for how the agent should use the document
 
 #### 3. Performance Optimization
 
-* Use lazy loading for large documents
-* Consider document chunking for very large files
-* Cache frequently accessed documents
+* Use delayed loading for large documents
+* In the case of a very large file,
+* Doctes that are often approached
 
-#### 4. Error Handling
+#### 4. Processing error
 
 ```typescript
 documents = {
@@ -182,26 +185,26 @@ documents = {
       const content = await fs.readFile('./optional.md', 'utf-8');
       return { type: 'markdown', content };
     } catch (error) {
-      console.warn('Optional document not found:', error.message);
-      return { type: 'text', content: 'Document not available' };
+      console.warn('선택적 문서를 찾을 수 없음:', error.message);
+      return { type: 'text', content: '문서를 사용할 수 없습니다' };
     }
   }
 }
 ```
 
-### Advanced Features
+### Advanced function
 
-#### Document Tools Integration
+#### Integration of document tools
 
-The Document System integrates with the tool system through `DocumentSectionTool`, allowing agents to:
+The document system is integrated with the tool system through 'DocumentSectionTool' so that the agent can follow:
 
-* Search for specific sections within documents
-* Extract relevant content based on queries
-* Navigate large documents efficiently
+* Search for specific sections in the document
+* Extracting related contents based on query
+* Efficient exploration of large documents
 
-#### Dynamic Document Loading
+#### Dynamic document loading
 
-Documents can be loaded dynamically based on workflow context:
+The document can be loaded dynamically based on the workflow context:
 
 ```typescript
 const workflow = new Workflow({
@@ -211,30 +214,30 @@ const workflow = new Workflow({
 });
 ```
 
-### Example: Complete Document Setup
+### Example: Full document setting
 
 ```typescript
 import { Workflow } from '@sowonai/agent';
 import fs from 'fs/promises';
 
 const documents = {
-  // Simple text document
-  'welcome_message': 'Welcome to our AI assistant!',
+  // 단순 텍스트 문서
+  'welcome_message': '우리 AI 어시스턴트에 오신 것을 환영합니다!',
   
-  // Structured markdown document
+  // 구조화된 마크다운 문서
   'company_handbook': {
     type: 'markdown',
     content: `
-# Company Handbook
-## Code of Conduct
-Be respectful and professional.
-## Policies
-### Remote Work Policy
+# 회사 핸드북
+## 행동 강령
+서로 존중하고 전문적으로 행동하세요.
+## 정책
+### 재택근무 정책
 ...
     `
   },
   
-  // Lazy-loaded document
+  // 지연 로드 문서
   'product_specs': async () => {
     const content = await fs.readFile('./docs/specs.md', 'utf-8');
     return {
@@ -250,5 +253,5 @@ const workflow = new Workflow({
   interceptor: myInterceptor
 });
 
-const response = await workflow.ask('What is our remote work policy?');
+const response = await workflow.ask('우리의 재택근무 정책은 무엇인가요?');
 ```

@@ -4,7 +4,7 @@
 
 ### What is SowonFlow?
 
-SowonFlow is an innovative YAML -based AI workflow engine that breaks down the gap between business requirements and AI implementation. We solve the important ** sink **, which is important in the introduction of corporate AI -breaks between business teams that understand the problem and technology teams that implement solutions.
+SowonFlow is an innovative YAML -based AI workflow engine that breaks down the gap between business requirements and AI implementation. We solve the important ** missing link **, which is important in the introduction of corporate AI -breaks between business teams that understand the problem and technology teams implementing solutions.
 
 ### The problem we solve
 

@@ -22,12 +22,25 @@ async function translateFileSimple(koFilePath) {
   try {
     console.log(`📝 Translating: ${koFilePath}`);
     
-    // 한국어 파일 읽기
-    const koContent = fs.readFileSync(koFilePath, 'utf8');
+    // 절대 경로로 변환 (GitHub Actions 대응)
+    const absoluteKoPath = path.isAbsolute(koFilePath) ? koFilePath : path.resolve(process.cwd(), koFilePath);
     
-    // 영어 파일 경로 계산
-    const enFilePath = koFilePath.replace(/^ko\//, 'en/');
-    const enDir = path.dirname(enFilePath);
+    // 파일 존재 확인
+    if (!fs.existsSync(absoluteKoPath)) {
+      console.error(`❌ File not found: ${absoluteKoPath}`);
+      console.log(`Current working directory: ${process.cwd()}`);
+      console.log(`Files in current directory:`, fs.readdirSync('.').slice(0, 10));
+      return;
+    }
+    
+    // 한국어 파일 읽기
+    const koContent = fs.readFileSync(absoluteKoPath, 'utf8');
+    
+    // 영어 파일 경로 계산 (절대 경로 기준)
+    const relativePath = path.relative(process.cwd(), absoluteKoPath);
+    const enFilePath = relativePath.replace(/^ko\//, 'en/');
+    const absoluteEnPath = path.resolve(process.cwd(), enFilePath);
+    const enDir = path.dirname(absoluteEnPath);
     
     // 영어 디렉토리가 없으면 생성
     if (!fs.existsSync(enDir)) {
@@ -81,8 +94,8 @@ async function translateFileSimple(koFilePath) {
     const translatedContent = translatedLines.join('\n');
     
     // 영어 파일 저장
-    fs.writeFileSync(enFilePath, translatedContent, 'utf8');
-    console.log(`✅ Translation completed: ${koFilePath} -> ${enFilePath}`);
+    fs.writeFileSync(absoluteEnPath, translatedContent, 'utf8');
+    console.log(`✅ Translation completed: ${relativePath} -> ${enFilePath}`);
     
   } catch (error) {
     console.error(`❌ Error translating ${koFilePath}:`, error.message);
@@ -94,6 +107,9 @@ async function translateFileSimple(koFilePath) {
 async function main() {
   const changedFiles = process.argv[2];
   
+  console.log(`Current working directory: ${process.cwd()}`);
+  console.log(`Script arguments:`, process.argv);
+  
   if (!changedFiles) {
     console.log('No changed files specified');
     return;
@@ -102,8 +118,9 @@ async function main() {
   // trans CLI 도구 설치 확인
   try {
     execSync('which trans', { encoding: 'utf8' });
+    console.log('✅ translate-shell (trans) is available');
   } catch (error) {
-    console.error('translate-shell (trans) is not installed. Please install it first.');
+    console.error('❌ translate-shell (trans) is not installed. Please install it first.');
     process.exit(1);
   }
   
@@ -111,7 +128,12 @@ async function main() {
   const files = changedFiles.split(' ').filter(file => file.trim());
   
   console.log(`Found ${files.length} changed Korean files:`);
-  files.forEach(file => console.log(`  - ${file}`));
+  files.forEach(file => {
+    console.log(`  - ${file}`);
+    const absolutePath = path.resolve(process.cwd(), file);
+    const exists = fs.existsSync(absolutePath);
+    console.log(`    → Absolute path: ${absolutePath} (exists: ${exists})`);
+  });
   
   // 각 파일 번역
   for (const file of files) {

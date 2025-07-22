@@ -1,39 +1,42 @@
-# Introduction
+# introduction
 
-## SowonFlow - The Missing Link in AI Transformation
+## SOWONFLOW -Lost ring of AI transformation
 
-### What is SowonFlow?
+### What is SOWONFLOW?
 
-SowonFlow is a revolutionary YAML-based AI workflow engine that bridges the gap between business requirements and AI implementation. We solve the critical "missing link" in enterprise AI adoption - the disconnect between business teams who understand the problems and technical teams who implement the solutions.
+SOWONFLOW is an innovative YAML -based AI workflow engine that breaks down the gap between business requirements and AI implementation. We solve the important \ "lost ring \", which is an introduction of corporate AI -disconnection between business teams that understand the problem and technology teams that implement solutions.
 
-### The Problem We Solve
+This is a translation test sentence.
+This is the 7th test.
 
-Enterprise AI adoption faces a critical bottleneck:
+### The problem we solve
 
-* **Business teams** know their workflows but can't implement AI solutions
-* **Technical teams** can build AI systems but lack deep domain knowledge
-* **Existing solutions** require extensive coding or expensive specialists
-* **Complex workflows** take months to develop and maintain
+The introduction of corporate AI is faced with important bottlenecks:
 
-Result? Most companies struggle with AI transformation, despite having clear use cases and budgets.
+*** Business Team ** knows a workflow but cannot implement AI solutions.
+*** Technology team ** can build an AI system, but lacks deep domain knowledge.
+*** Existing solution ** requires a wide range of coding or expensive experts.
+*** Complex workflow ** takes a few months to develop and maintain
 
-### Our Solution: YAML-Powered AI Workflows
+result? Most companies are having difficulty in AI transformation despite the clear use and budget.
 
-SowonFlow transforms complex AI orchestration into human-readable YAML configurations. Business analysts can define workflows that developers can immediately implement and maintain.
+### Our solution: YAML -based AI Workflow
+
+SOWONFLOW converts complex AI orchestrations into a YAML configuration that a person can read. Developers can immediately implement and maintain workflows defined by business analysts.
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "Email Assistant"
-  description: "Automated email processing and response"
+  name: "이메일 어시스턴트"
+  description: "자동화된 이메일 처리 및 응답"
 
 agents:
   - id: "email_agent"
     inline:
       type: "agent"
       model: "openai/gpt-4o-mini"
-      system_prompt: "You are an email assistant..."
+      system_prompt: "당신은 이메일 어시스턴트입니다..."
       mcp: ["gmail"]
 
 nodes:

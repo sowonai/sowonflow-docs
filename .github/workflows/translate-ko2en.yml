@@ -39,7 +39,7 @@ jobs:
     - name: Translate changed files
       if: steps.changed-files.outputs.any_changed == 'true'
       run: |
-        echo "Using Google Translate for translation..."
+        echo "Using improved Google Translate for translation..."
         node .github/scripts/translate-simple.js "${{ steps.changed-files.outputs.all_changed_files }}"
 
     - name: Commit and push translated files

@@ -2,6 +2,35 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+// 번역 후처리 함수 - 품질 개선
+function postProcessTranslation(translated, original) {
+  let result = translated;
+  
+  // 1. 브랜드명 보존
+  result = result.replace(/SOWONFLOW/g, 'SowonFlow');
+  result = result.replace(/sowonflow/g, 'SowonFlow');
+  
+  // 2. 제목 대문자화
+  if (original.startsWith('# ')) {
+    result = result.replace(/^# [a-z]/, match => match.toUpperCase());
+  }
+  
+  // 3. 마크다운 포맷 복원
+  result = result.replace(/\*\*\* ([^*]+) \*\*/g, '* **$1**');  // *** Text ** → * **Text**
+  result = result.replace(/\\\s*"/g, '"');  // \" → "
+  result = result.replace(/\\\s*'/g, "'");  // \' → '
+  
+  // 4. 일반적인 번역 개선
+  result = result.replace(/The introduction of corporate AI/g, 'Corporate AI adoption');
+  result = result.replace(/Lost ring/g, 'Missing Link');
+  result = result.replace(/lost ring/g, 'missing link');
+  
+  // 5. 마크다운 리스트 포맷 복원
+  result = result.replace(/^\s*\*\*\*\s*/gm, '* **');
+  
+  return result;
+}
+
 // Google Translate CLI를 사용한 간단한 번역
 function translateWithGoogle(text, fromLang = 'ko', toLang = 'en') {
   try {
@@ -76,7 +105,11 @@ async function translateFileSimple(koFilePath) {
       // 헤더나 일반 텍스트 번역
       if (line.trim().length > 0) {
         try {
-          const translated = translateWithGoogle(line);
+          let translated = translateWithGoogle(line);
+          
+          // 후처리: 번역 품질 개선
+          translated = postProcessTranslation(translated, line);
+          
           translatedLines.push(translated);
           console.log(`  ✓ "${line.substring(0, 50)}..." -> "${translated.substring(0, 50)}..."`);
         } catch (error) {

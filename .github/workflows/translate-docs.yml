@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: write  # 파일 수정 및 커밋 권한
-  pull-requests: write  # PR 관련 권한
 
 jobs:
   translate:
@@ -51,43 +50,10 @@ jobs:
 
     - name: Commit translated files
       if: steps.changed-files.outputs.any_changed == 'true'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add en/
-        
-        # 변경사항이 있는지 확인
-        if ! git diff --staged --quiet; then
-          # 브랜치명 생성 (타임스탬프 포함)
-          BRANCH_NAME="auto-translate-$(date +%s)"
-          
-          # 새 브랜치 생성 및 체크아웃
-          git checkout -b $BRANCH_NAME
-          
-          # 커밋
-          git commit -m "Auto-translate: Update English docs from Korean changes
-
-          Changed files:
-          ${{ steps.changed-files.outputs.all_changed_files }}"
-          
-          # 푸시
-          git push origin $BRANCH_NAME
-          
-          # PR 생성
-          gh pr create \
-            --title "🤖 Auto-translate: Update English documentation" \
-            --body "This PR contains automatic translations from Korean to English.
-
-          **Changed Korean files:**
-          ${{ steps.changed-files.outputs.all_changed_files }}
-
-          **Translation method:** Google Translate via translate-shell
-
-          Please review the translations before merging." \
-            --head $BRANCH_NAME \
-            --base main
-        else
-          echo "No changes to commit"
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "🤖 Auto-translate: Update English docs from Korean changes"
+        file_pattern: 'en/**/*.md'
+        commit_user_name: "GitHub Actions Bot"
+        commit_user_email: "actions@github.com"
+        commit_author: "GitHub Actions Bot <actions@github.com>"

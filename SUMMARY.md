@@ -1,21 +1,13 @@
-# SowonFlow Documentation
+# Table of contents
 
-## Language Selection
+## Getting Started
 
-Please select your preferred language to access the documentation:
+* [Introduction](README.md)
+* [Documentation](getting-started/documentation.md)
 
-* **🇰🇷 한국어**: [Korean Documentation](ko/README.md)
-* **🇺🇸 English**: [English Documentation](en/README.md)
+***
 
----
-
-## About This Repository
-
-This repository contains multilingual documentation for SowonFlow. Each language has its own complete documentation set located in separate directories.
-
-### For Gitbook Integration
-
-- Korean documentation: Use `/ko` as root directory
-- English documentation: Use `/en` as root directory
-
-Each language directory contains its own `SUMMARY.md` file for proper navigation.
+* [Agent](agent.md)
+* [Supervisor](supervisor.md)
+* [MCP](mcp.md)
+* [Models](models.md)

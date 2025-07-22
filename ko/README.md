@@ -1,7 +1,5 @@
 # 소개
 
-> 🌏 **Language**: 한국어 | [Switch to English](../en/README.md)
-
 ## SowonFlow - AI 변혁의 잃어버린 고리
 
 ### SowonFlow란 무엇인가요?

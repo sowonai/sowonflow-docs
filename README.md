@@ -1,13 +1,4 @@
-# SowonFlow Documentation
-
-## 🌏 Multi-Language Support
-
-### 📖 Available Languages
-
-- **🇰🇷 한국어**: [한국어 문서로 이동](./ko/README.md)
-- **🇺🇸 English**: [Go to English Documentation](./en/README.md)
-
----
+# Introduction
 
 ## SowonFlow - The Missing Link in AI Transformation
 
@@ -15,14 +6,16 @@
 
 SowonFlow is a revolutionary YAML-based AI workflow engine that bridges the gap between business requirements and AI implementation. We solve the critical "missing link" in enterprise AI adoption - the disconnect between business teams who understand the problems and technical teams who implement the solutions.
 
-### Quick Start
+### The Problem We Solve
 
-Choose your preferred language to get started:
+Enterprise AI adoption faces a critical bottleneck:
 
-| Language | Documentation | Getting Started |
-|----------|---------------|-----------------|
-| 한국어 | [한국어 문서](./ko/README.md) | [시작하기](./ko/getting-started/documentation.md) |
-| English | [English Docs](./en/README.md) | [Getting Started](./en/getting-started/documentation.md) |
+* **Business teams** know their workflows but can't implement AI solutions
+* **Technical teams** can build AI systems but lack deep domain knowledge
+* **Existing solutions** require extensive coding or expensive specialists
+* **Complex workflows** take months to develop and maintain
+
+Result? Most companies struggle with AI transformation, despite having clear use cases and budgets.
 
 ### Our Solution: YAML-Powered AI Workflows
 

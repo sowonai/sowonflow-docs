@@ -44,9 +44,22 @@ jobs:
 
     - name: Commit and push translated files
       if: steps.changed-files.outputs.any_changed == 'true'
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "🤖 Auto-translate: Update English docs from Korean changes"
-        file_pattern: 'en/**/*.md'
-        commit_user_name: "GitHub Actions"
-        commit_user_email: "actions@github.com"
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        
+        # 변경된 파일 확인
+        echo "Checking for changes in en/ directory..."
+        git status
+        git add en/
+        
+        # 스테이징된 변경사항이 있는지 확인
+        if ! git diff --staged --quiet; then
+          echo "Changes detected, committing..."
+          git commit -m "🤖 Auto-translate: Update English docs from Korean changes
+
+          Source files changed: ${{ steps.changed-files.outputs.all_changed_files }}"
+          git push
+        else
+          echo "No changes to commit in en/ directory"
+        fi

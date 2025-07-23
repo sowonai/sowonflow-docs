@@ -27,7 +27,7 @@ agents:
       model: "google/gemini-2.5-flash"
       system_prompt: |
         You are a Gmail assistant that can search and manage emails.
-        Use MCP tools (with "mcp__" prefix) to access Gmail functionality.
+        Use MCP tools (with "mcp__" prefix) to access Gmail features.
       mcp: ["gmail"]  # Reference MCP server by name
 
 nodes:
@@ -42,7 +42,7 @@ nodes:
 
 #### Configuring MCP Server
 
-Specify MCP server configuration when creating your workflow:
+Specify MCP server configuration when creating a workflow:
 
 ```typescript
 const workflow = new Workflow({
@@ -65,14 +65,14 @@ const workflow = new Workflow({
 
 #### Gmail MCP Server
 
-Access Gmail functionality for email management:
+Access Gmail features for email management:
 
 ```yaml
 agents:
   - id: "email_assistant"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are an email management assistant.
 
@@ -110,7 +110,7 @@ agents:
   - id: "file_manager"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a file management assistant that can:
         - Read and write files
@@ -130,7 +130,7 @@ agents:
   - id: "data_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a data analyst with database access.
         Use MCP database tools to query and analyze data.
@@ -152,7 +152,7 @@ agents:
   - id: "email_manager"
     inline:
       type: "agent"
-      model: "openai/gpt-4o-mini"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         You are a professional email management assistant.
 
@@ -263,7 +263,7 @@ system_prompt: |
   ✓ Collect multiple email IDs
   ✓ Retrieve content with single tool call when possible
 
-  To avoid:
+  Avoid:
   ✗ Multiple individual searches
   ✗ Opening emails one by one
   ✗ Duplicate API calls
@@ -302,7 +302,7 @@ agents:
   - id: "assistant"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a comprehensive digital assistant with access to:
         - Gmail (email management)
@@ -353,7 +353,7 @@ system_prompt: |
 ```yaml
 system_prompt: |
   Security guidelines:
-  - Avoid exposing sensitive email content unnecessarily
+  - Don't expose sensitive email content unnecessarily
   - Respect privacy boundaries
   - Summarize rather than quote personal information
   - Handle authentication failures appropriately

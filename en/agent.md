@@ -123,7 +123,7 @@ agents:
         - Potential issues or concerns
         - Actionable recommendations
         Always structure your response clearly with headers and bullet points
-        to make it easy to read.
+        for easy reading.
 
 nodes:
   start:
@@ -167,7 +167,7 @@ agents:
       system_prompt: "You are a creative writing assistant."
       temperature: 0.9        # Set high for creativity
       max_tokens: 2000        # Response length limit
-      timeout: 30000          # 30 second timeout
+      timeout: 30000          # 30-second timeout
 ```
 
 ### Available Tools
@@ -188,7 +188,7 @@ agents:
   - id: "data_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a data analyst. Use the calculator tool for mathematical calculations,
         and the current_time tool to reference today's date in your analysis.
@@ -199,10 +199,10 @@ agents:
 
 #### System Prompt Guidelines
 
-1. **Be Specific**: Clearly define the agent's role and expertise
-2. **Set Expectations**: Explain how the agent should respond
-3. **Include Context**: Provide relevant background information
-4. **Format Instructions**: Specify output format preferences
+1. **Be specific**: Clearly define the agent's role and expertise
+2. **Set expectations**: Explain how the agent should respond
+3. **Include context**: Provide relevant background information
+4. **Format guidelines**: Specify output format preferences
 
 #### Example: Well-Structured System Prompt
 
@@ -230,10 +230,10 @@ system_prompt: |
 
 #### Performance Tips
 
-1. **Choose Appropriate Models**: Use simpler models for basic tasks
-2. **Optimize Prompts**: Keep system prompts focused and clear
-3. **Limit Tools**: Only include tools the agent actually needs
-4. **Set Timeouts**: Configure appropriate response timeouts
+1. **Choose appropriate models**: Use simpler models for basic tasks
+2. **Optimize prompts**: Keep system prompts focused and clear
+3. **Limit tools**: Only include tools the agent actually needs
+4. **Set timeouts**: Configure appropriate response timeouts
 
 #### Common Patterns
 

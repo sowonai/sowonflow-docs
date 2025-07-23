@@ -15,7 +15,7 @@ SowonFlow는 비즈니스 요구사항과 AI 구현 사이의 격차를 해소�
 * **기존 솔루션**은 광범위한 코딩이나 비용이 많이 드는 전문가가 필요합니다
 * **복잡한 워크플로우**는 개발하고 유지하는 데 몇 달이 걸립니다
 
-결과? 대부분의 회사들은 명확한 사용 사례와 예산이 있음에도 불구하고 AI 변혁에 어려움을 겪고 있습니다.
+대부분의 회사들은 명확한 사용 사례와 예산이 있음에도 불구하고 AI 변혁에 어려움을 겪고 있습니다.
 
 ### 우리의 솔루션: YAML 기반 AI 워크플로우
 
@@ -25,15 +25,15 @@ SowonFlow는 복잡한 AI 오케스트레이션을 사람이 읽을 수 있는 Y
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "이메일 어시스턴트"
-  description: "자동화된 이메일 처리 및 응답"
+  name: "email agent"
+  description: "Automated email processing and response"
 
 agents:
   - id: "email_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4o-mini"
-      system_prompt: "당신은 이메일 어시스턴트입니다..."
+      model: "google/gemini-2.5-flash"
+      system_prompt: "You are email assistance..."
       mcp: ["gmail"]
 
 nodes:

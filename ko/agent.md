@@ -2,14 +2,14 @@
 
 ## 에이전트
 
-에이전트는 자연어를 이해하고, 문제에 대해 추론하며, 대형 언어 모델(LLM)을 사용하여 작업을 실행할 수 있는 AI 기반 엔티티입니다. 이들은 `@sowonai/agent` 시스템의 핵심 구성 요소입니다.
+에이전트는 자연어를 이해하고, 문제에 대해 추론하며, 대형 언어 모델(LLM)을 사용하여 작업을 실행할 수 있는 AI 기반 엔티티입니다. 이들은 **SowonFlow**의 핵심 구성 요소입니다.
 
 ### 에이전트란 무엇인가요?
 
 에이전트는 다음과 같이 정의됩니다:
 
 * **역할**: 에이전트가 전문화하는 분야 (예: 법률 전문가, 기술 분석가)
-* **모델**: 사용할 LLM (예: OpenAI GPT-4, Mistral)
+* **모델**: 사용할 LLM (예: gpt 4.1, gemini 2.5 pro)
 * **시스템 프롬프트**: 에이전트의 전문성과 행동을 정의하는 지침
 * **도구**: 에이전트가 기능을 확장하기 위해 호출할 수 있는 선택적 함수
 
@@ -22,11 +22,11 @@ agents:
   - id: "research_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        당신은 여러 소스에서 정보를 찾고 종합하는 데 뛰어난
-        연구 전문가입니다. 항상 잘 구조화되고 사실적인
-        응답을 제공하세요.
+        You are an expert researcher, 
+        excellent at finding and compiling information from various sources. 
+        Always provide well-structured and factual responses.
 ```
 
 #### 도구를 사용하는 에이전트
@@ -36,10 +36,10 @@ agents:
   - id: "calculator_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        당신은 수학 어시스턴트입니다. 모든 수치 계산에는
-        계산기 도구를 사용하세요.
+        You are a math assistant. 
+        Use a calculator tool for all numerical calculations.
       tools: ["calculator"]
 ```
 
@@ -125,7 +125,6 @@ agents:
         - 주요 발견사항 및 중요한 포인트
         - 잠재적 이슈나 우려사항
         - 실행 가능한 권장사항
-        
         항상 읽기 쉽도록 헤더와 불릿 포인트로
         응답을 명확하게 구조화하세요.
 

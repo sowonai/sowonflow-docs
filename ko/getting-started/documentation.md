@@ -1,11 +1,8 @@
-# 문서화
+# 문서 시스템
 
 ## 문서 시스템
 
-`@sowonai/agent`의 문서 시스템은 AI 워크플로우를 위한 강력한 문서 관리 기능을 제공하여, 에이전트가 실행 컨텍스트 내에서 외부 문서에 접근하고, 처리하고, 활용할 수 있도록 합니다.
-
-이 문장은 번역 테스트용입니다.
-4번째 테스트 진행합니다.
+문서 시스템은 AI 워크플로우를 위한 강력한 문서 관리 기능을 제공하여, 에이전트가 실행 컨텍스트 내에서 외부 문서에 접근하고, 처리하고, 활용할 수 있도록 합니다.
 
 ### 개요
 
@@ -133,12 +130,12 @@ agents:
 #### TOC 출력 예시
 
 ```markdown
-# 회사 정책
-## 인사 정책
-## 채용 가이드라인
-## 직원 혜택
-### 스톡옵션
-### 퇴직 계획
+# company policy
+## HR Policy
+## Recruitment Guidelines
+## Employee Benefits
+### Stock Option
+### Retirement Plan
 ```
 
 ### 보안 고려사항
@@ -185,8 +182,8 @@ documents = {
       const content = await fs.readFile('./optional.md', 'utf-8');
       return { type: 'markdown', content };
     } catch (error) {
-      console.warn('선택적 문서를 찾을 수 없음:', error.message);
-      return { type: 'text', content: '문서를 사용할 수 없습니다' };
+      console.warn('cannot found:', error.message);
+      return { type: 'text', content: 'not found!' };
     }
   }
 }

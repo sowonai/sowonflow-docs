@@ -1,4 +1,4 @@
-# 감독자 (Supervisor)
+# 감독자
 
 ## 감독자
 
@@ -46,7 +46,7 @@ agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 전문 컨설턴트들을 관리하는 감독자입니다.
         요청에 따라 적절한 워크플로우를 생성하기 위해 도구를 사용하세요.
@@ -56,7 +56,7 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 계약서 분석, 규정 준수, 법적 위험 평가를
         전문으로 하는 법률 전문가입니다.
@@ -64,7 +64,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 소프트웨어 아키텍처, 기술 평가, 구현 계획을
         전문으로 하는 기술 전문가입니다.
@@ -72,7 +72,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 전략 계획, 시장 분석, ROI 평가를
         전문으로 하는 비즈니스 분석가입니다.
@@ -119,7 +119,7 @@ agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 전문가 분석을 조정하는 감독자입니다.
         
@@ -138,7 +138,7 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 법률 전문가입니다. 다음에 집중하세요:
         - 규정 준수
@@ -148,7 +148,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 기술 전문가입니다. 다음에 집중하세요:
         - 구현 가능성
@@ -158,7 +158,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 비즈니스 분석가입니다. 다음에 집중하세요:
         - 전략적 영향
@@ -179,7 +179,7 @@ nodes:
 
 감독자는 자동으로 전문화된 도구에 접근할 수 있습니다:
 
-#### workflow_template_selector
+#### workflow\_template\_selector
 
 사용자 요청을 분석하고 적절한 워크플로우 패턴을 선택합니다:
 
@@ -187,7 +187,7 @@ nodes:
 * 참여해야 할 에이전트 선택
 * 결정에 대한 근거 제공
 
-#### dynamic_workflow_executor
+#### dynamic\_workflow\_executor
 
 워크플로우를 동적으로 생성하고 실행합니다:
 
@@ -272,7 +272,7 @@ agents:
   - id: "test_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 테스트 감독자입니다. 도구를 사용하여 요청을
         분석하고 팀과 함께 적절한 워크플로우를 생성하세요.
@@ -281,13 +281,13 @@ agents:
   - id: "expert_a"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: "당신은 전문가 A입니다. 모든 주제에 대해 관점 A를 제공하세요."
         
   - id: "expert_b"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: "당신은 전문가 B입니다. 모든 주제에 대해 관점 B를 제공하세요."
 
 nodes:

@@ -24,9 +24,9 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are an expert researcher, 
-        excellent at finding and compiling information from various sources. 
-        Always provide well-structured and factual responses.
+        당신은 전문 연구자이며,
+        다양한 출처에서 정보를 찾고 수집하는 데 능숙합니다.
+        항상 체계적이고 사실에 기반한 답변을 제공하십시오.
 ```
 
 #### 도구를 사용하는 에이전트
@@ -38,8 +38,8 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a math assistant. 
-        Use a calculator tool for all numerical calculations.
+        당신은 수학전문가입니다.
+        calculator tool을 사용해서 숫자를 계산하세요.
       tools: ["calculator"]
 ```
 
@@ -52,7 +52,7 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 다음 분야를 전문으로 하는 법률 전문가입니다:
         - 계약서 분석 및 검토
@@ -72,7 +72,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 다음 분야를 전문으로 하는 기술 전문가입니다:
         - 소프트웨어 아키텍처 및 설계
@@ -91,7 +91,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 다음 분야를 전문으로 하는 비즈니스 분석가입니다:
         - 전략 계획 및 분석

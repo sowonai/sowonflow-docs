@@ -101,7 +101,7 @@ agents:
   - id: "support_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 고객 지원 에이전트입니다. 사용자를 돕기 위해 다음 문서들을 사용하세요:
         

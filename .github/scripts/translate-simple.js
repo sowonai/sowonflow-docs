@@ -39,7 +39,7 @@ function postProcessTranslation(translated, original) {
 }
 
 // OpenRouter API를 사용한 파일 단위 AI 번역
-async function translateFileWithOpenRouter(content, fromLang = 'Korean', toLang = 'English') {
+async function translateFileWithOpenRouter(content, fromLang = 'Korean', toLang = 'English', filePath = '') {
   try {
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
@@ -47,7 +47,29 @@ async function translateFileWithOpenRouter(content, fromLang = 'Korean', toLang 
       return null; // 라인별 번역으로 폴백
     }
 
-    const prompt = `Translate the entire markdown document from ${fromLang} to ${toLang}.
+    // SUMMARY.md 파일에 대한 특별한 처리
+    const isSummaryFile = filePath.includes('SUMMARY.md');
+    
+    let prompt;
+    if (isSummaryFile) {
+      prompt = `Translate this GitBook table of contents from ${fromLang} to ${toLang}.
+
+CRITICAL RULES FOR TABLE OF CONTENTS:
+1. This is ONLY a navigation menu - translate ONLY the display text
+2. Keep ALL markdown formatting exactly the same (*, [text](link), ***)
+3. Do NOT add any content, examples, or code blocks
+4. Do NOT expand or explain entries
+5. Translate only the text inside [ ] brackets
+6. Keep all file paths and links unchanged
+7. Preserve the exact structure and spacing
+
+Document to translate:
+
+${content}
+
+Provide ONLY the translated table of contents without any additional content:`;
+    } else {
+      prompt = `Translate the entire markdown document from ${fromLang} to ${toLang}.
 
 IMPORTANT RULES:
 1. This is technical documentation about AI agents and workflows
@@ -63,6 +85,7 @@ Document to translate:
 ${content}
 
 Provide ONLY the translated document without any explanations or additional text:`;
+    }
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -233,7 +256,7 @@ async function translateFileSimple(koFilePath) {
 
     // 먼저 파일 단위 AI 번역 시도
     console.log(`🤖 Attempting AI file-level translation...`);
-    const aiTranslation = await translateFileWithOpenRouter(koContent);
+    const aiTranslation = await translateFileWithOpenRouter(koContent, 'Korean', 'English', relativePath);
     
     if (aiTranslation) {
       // AI 번역 성공 - 후처리 적용

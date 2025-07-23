@@ -39,7 +39,7 @@ const documents = {
 
 ### Document Types
 
-#### 1. Simple Text Document
+#### 1. Simple Text Documents
 
 The simplest form of a document is a plain string:
 
@@ -50,7 +50,7 @@ documents = {
 }
 ```
 
-#### 2. Structured Document
+#### 2. Structured Documents
 
 For more complex documents, use a structured format:
 
@@ -69,7 +69,7 @@ Welcome to our platform...
 }
 ```
 
-#### 3. Lazy Load Document
+#### 3. Lazy Load Documents
 
 For large documents or files that need to be loaded from disk:
 
@@ -87,7 +87,7 @@ documents = {
 
 ### Template Binding
 
-Documents can be referenced in the agent system prompt using Handlebars template syntax.
+Documents can be referenced in agent system prompts using Handlebars template syntax.
 
 #### Available Template Variables
 
@@ -103,7 +103,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a customer support agent. Use the following documents to help the user:
+        You are a customer support agent. Use the following documents to help users:
 
         <document name="user_guide">
           {{{documents.user_guide.content}}}
@@ -148,7 +148,7 @@ system_prompt: |
     {{{documents.confidential_data.content}}}
     <important>
       This is company confidential data. Use it to answer questions but
-      do not expose the document content directly to the user.
+      do not expose the document content directly to users.
     </important>
   </document>
 ```
@@ -165,7 +165,7 @@ system_prompt: |
 
 * Use triple braces `{{{ }}}` for HTML-safe content injection
 * Include useful context about document structure in the prompt
-* Provide clear instructions on how the agent should use the documents
+* Provide clear instructions on how agents should use the documents
 
 #### 3. Performance Optimization
 
@@ -201,7 +201,7 @@ The document system integrates with the tool system through `DocumentSectionTool
 
 #### Dynamic Document Loading
 
-Documents can be dynamically loaded based on the workflow context:
+Documents can be dynamically loaded based on workflow context:
 
 ```typescript
 const workflow = new Workflow({

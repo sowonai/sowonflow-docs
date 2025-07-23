@@ -1,12 +1,7 @@
 # Table of contents
 
-## Getting Started
-
 * [Introduction](README.md)
-* [Documentation System](getting-started/documentation.md)
-
-***
-
+* *** [Documentation System](documentation.md)
 * [Agent](agent.md)
 * [Supervisor](supervisor.md)
 * [MCP](mcp.md)

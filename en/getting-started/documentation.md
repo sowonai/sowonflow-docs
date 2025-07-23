@@ -1,11 +1,8 @@
-# Documentation
+# Document system
 
 ## document system
 
-The document system of `@sowonai/agent 'provides a powerful document management function for AI workflow, allowing the agent to access, handle and use external documents within the execution context.
-
-This sentence is for translation test.
-The fourth test is conducted.
+The document system provides a powerful document management for the AI workflow so that the agent accesses, processes and utilizes external documents within the execution context.
 
 ### outline
 
@@ -49,13 +46,13 @@ The simplest form of the document is ordinary strings:
 ```yaml
 # 워크플로우 생성자에서
 documents = {
-  'company_policy': '우리 회사는 성실함과 혁신을 중시합니다.'
+  'company_policy': 'Our company values sincerity and innovation.'
 }
 ```
 
-#### 2. structured document
+#### 2. 구조화된 문서
 
-For more complex documents, use a structured format:
+더 복잡한 문서의 경우 구조화된 형식을 사용합니다:
 
 ```yaml
 documents = {
@@ -120,30 +117,30 @@ agents:
         </document>
 ```
 
-### Create a TOC (TOC)
+### 목차(TOC) 생성
 
 For the markdown document, the system automatically generates a table of contents based on the header structure.
 
-#### TOC function
+#### TOC 기능
 
 * Automatically extracts headers ('#', `` ##`, '###', etc.
 * Hierarchical structure preservation
 * `` Documents.document_Name.toc '
 
-#### TOC output example
+#### TOC 출력 예시
 
 ```markdown
-# 회사 정책
-## 인사 정책
-## 채용 가이드라인
-## 직원 혜택
-### 스톡옵션
-### 퇴직 계획
+# company policy
+## HR Policy
+## Recruitment Guidelines
+## Employee Benefits
+### Stock Option
+### Retirement Plan
 ```
 
-### Security consideration
+### 보안 고려사항
 
-When working with sensitive documents, you can include security guidelines in the agent prompt:
+민감한 문서로 작업할 때는 에이전트 프롬프트에 보안 지침을 포함할 수 있습니다:
 
 ```yaml
 system_prompt: |
@@ -185,8 +182,8 @@ documents = {
       const content = await fs.readFile('./optional.md', 'utf-8');
       return { type: 'markdown', content };
     } catch (error) {
-      console.warn('선택적 문서를 찾을 수 없음:', error.message);
-      return { type: 'text', content: '문서를 사용할 수 없습니다' };
+      console.warn('cannot found:', error.message);
+      return { type: 'text', content: 'not found!' };
     }
   }
 }

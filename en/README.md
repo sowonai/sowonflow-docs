@@ -15,7 +15,7 @@ Corporate AI adoption is faced with important bottlenecks:
 * **Existing solution** requires a wide range of coding or expensive experts.
 * **Complex workflow** takes a few months to develop and maintain
 
-result? Most companies are having difficulty in AI transformation despite the clear use and budget.
+Most companies are having difficulty in AI transformation despite the clear use and budget.
 
 ### Our solution: YAML -based AI Workflow
 
@@ -25,15 +25,15 @@ SowonFlow converts complex AI orchestrations into a YAML configuration that a pe
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "이메일 어시스턴트"
-  description: "자동화된 이메일 처리 및 응답"
+  name: "email agent"
+  description: "Automated email processing and response"
 
 agents:
   - id: "email_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4o-mini"
-      system_prompt: "당신은 이메일 어시스턴트입니다..."
+      model: "google/gemini-2.5-flash"
+      system_prompt: "You are email assistance..."
       mcp: ["gmail"]
 
 nodes:

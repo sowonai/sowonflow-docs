@@ -1,51 +1,51 @@
 # Agent
 
-## Agents
+## Agent
 
-Agents are AI-powered entities that can understand natural language, reason about problems, and execute tasks using Large Language Models (LLMs). They are the core building blocks of the `@sowonai/agent` system.
+Agents are AI -based entities that can understand natural language, reasoning of problems, and run tasks using large language models (LLM). These are the core components of ** SowonFlow **.
 
-### What is an Agent?
+### What is an agent?
 
-An agent is defined by:
+The agent is defined as follows:
 
-* **Role**: What the agent specializes in (e.g., legal expert, technical analyst)
-* **Model**: Which LLM to use (e.g., OpenAI GPT-4, Mistral)
-* **System Prompt**: Instructions that define the agent's expertise and behavior
-* **Tools**: Optional functions the agent can call to extend its capabilities
+* **Role**: A field that agents specialize (e.g., legal expert, technical analyst)
+* **Model**: LLM to use (e.g. GPT 4.1, Gemini 2.5 Pro)
+* **System Prompt**: Guidelines to define agent's expertise and behavior
+* **Tool**: optional functions that agents can be called to expand their functions
 
-### Basic Agent Configuration
+### Basic agent configuration
 
-#### Simple Agent
+#### Simple agent
 
 ```yaml
 agents:
   - id: "research_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a research specialist who excels at finding and
-        synthesizing information from multiple sources.
-        Always provide well-structured, factual responses.
+        You are an expert researcher, 
+        excellent at finding and compiling information from various sources. 
+        Always provide well-structured and factual responses.
 ```
 
-#### Agent with Tools
+#### 도구를 사용하는 에이전트
 
 ```yaml
 agents:
   - id: "calculator_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a mathematical assistant. Use the calculator tool
-        for any numerical computations.
+        You are a math assistant. 
+        Use a calculator tool for all numerical calculations.
       tools: ["calculator"]
 ```
 
-### Specialized Agent Examples
+### Example of specialized agent
 
-#### Legal Expert
+#### Law expert
 
 ```yaml
 agents:
@@ -54,18 +54,18 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a legal expert specializing in:
-        - Contract analysis and review
-        - Regulatory compliance assessment
-        - Risk evaluation
-        - Legal research and documentation
+        당신은 다음 분야를 전문으로 하는 법률 전문가입니다:
+        -Conalization and review of contracts
+        -Recision compliance evaluation
+        -Riocession evaluation
+        -Legal research and documentation
         
-        Always provide thorough legal assessments with attention
-        to regulatory requirements and potential risks.
+        Always pay attention to the requirements and potential risks.
+        Provide a thorough legal evaluation.
       tools: ["document_search"]
 ```
 
-#### Technical Expert
+#### 기술 전문가
 
 ```yaml
 agents:
@@ -74,17 +74,17 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a technical expert specializing in:
-        - Software architecture and design
-        - Technology assessment and evaluation
-        - Implementation planning
-        - Performance optimization
+        당신은 다음 분야를 전문으로 하는 기술 전문가입니다:
+        - 소프트웨어 아키텍처 및 설계
+        - 기술 평가 및 검토
+        - 구현 계획
+        - 성능 최적화
         
-        Provide detailed technical analysis with practical
-        implementation considerations.
+        실용적인 구현 고려사항과 함께 상세한 기술 분석을
+        제공하세요.
 ```
 
-#### Business Analyst
+#### Business analyst
 
 ```yaml
 agents:
@@ -93,26 +93,26 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a business analyst specializing in:
-        - Strategic planning and analysis
-        - Market research and competitive analysis
-        - ROI and financial impact assessment
-        - Stakeholder analysis
+        당신은 다음 분야를 전문으로 하는 비즈니스 분석가입니다:
+        -Tragon plan and analysis
+        -Market research and competition analysis
+        -ROI and financial impact assessment
+        -An analysis of stakeholders
         
-        Focus on business value and strategic implications
-        in your recommendations.
+        In the recommendation, business value and strategic implications
+        Focus on.
 ```
 
-### Complete Workflow Example
+### 완전한 워크플로우 예시
 
-Here's a complete workflow using a single agent:
+다음은 단일 에이전트를 사용하는 완전한 워크플로우입니다:
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "Document Analysis"
-  description: "Analyze documents with a specialized agent"
+  name: "문서 분석"
+  description: "전문 에이전트로 문서 분석"
 
 agents:
   - id: "document_analyst"
@@ -120,14 +120,13 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a document analysis expert. Analyze documents
-        thoroughly and provide structured insights including:
-        - Key findings and important points
-        - Potential issues or concerns
-        - Actionable recommendations
-        
-        Always structure your response clearly with headers
-        and bullet points for easy reading.
+        당신은 문서 분석 전문가입니다. 문서를 철저히 분석하고
+        다음을 포함한 구조화된 인사이트를 제공하세요:
+        - 주요 발견사항 및 중요한 포인트
+        - 잠재적 이슈나 우려사항
+        - 실행 가능한 권장사항
+        항상 읽기 쉽도록 헤더와 불릿 포인트로
+        응답을 명확하게 구조화하세요.
 
 nodes:
   start:
@@ -139,25 +138,25 @@ nodes:
     type: "end"
 ```
 
-### Model Configuration
+### Model configuration
 
-#### Supported Models
+#### Supported model
 
 ```yaml
-# OpenAI models
+# OpenAI 모델
 model: "openai/gpt-4"
 model: "openai/gpt-3.5-turbo"
 
-# Anthropic models
+# Anthropic 모델
 model: "anthropic/claude-3-sonnet"
 model: "anthropic/claude-3-haiku"
 
-# Local/Ollama models
+# 로컬/Ollama 모델
 model: "ollama/llama3"
 model: "ollama/mistral"
 ```
 
-#### Model Parameters
+#### 모델 매개변수
 
 ```yaml
 agents:
@@ -165,24 +164,24 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4"
-      system_prompt: "You are a creative writing assistant."
-      temperature: 0.9        # Higher for creativity
-      max_tokens: 2000        # Limit response length
-      timeout: 30000          # 30 second timeout
+      system_prompt: "당신은 창의적 글쓰기 어시스턴트입니다."
+      temperature: 0.9        # 창의성을 위해 높게 설정
+      max_tokens: 2000        # 응답 길이 제한
+      timeout: 30000          # 30초 타임아웃
 ```
 
-### Available Tools
+### I can use
 
-#### Built-in Tools
+#### Built -in tool
 
 ```yaml
 tools:
-  - "calculator"           # Mathematical calculations
-  - "current_time"         # Get current date/time
-  - "document_section"     # Search document sections
+  - "Calculator " # Mathematical calculation
+  - "Current_Time " #The current date/time brings
+  - "Document_section " # Document section search
 ```
 
-#### Tool Usage Example
+#### 도구 사용 예시
 
 ```yaml
 agents:
@@ -191,55 +190,55 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a data analyst. Use the calculator tool for
-        any mathematical computations and current_time tool
-        to reference today's date in your analysis.
+        당신은 데이터 분석가입니다. 수학적 계산에는 계산기 도구를,
+        분석에서 오늘 날짜를 참조할 때는 current_time 도구를
+        사용하세요.
       tools: ["calculator", "current_time"]
 ```
 
-### Best Practices
+### model case
 
 #### System Prompt Guidelines
 
-1. **Be Specific**: Clearly define the agent's role and expertise
-2. **Set Expectations**: Explain how the agent should respond
-3. **Include Context**: Provide relevant background information
-4. **Format Instructions**: Specify output format preferences
+1. ** Specifically written **: Clearly defines the role and expertise of agents
+2. ** Setting expectations **: Describe how the agent should respond
+3. ** Including context **: Provides relevant background information
+4. ** Type Guidelines **: Output format preference
 
-#### Example: Well-Structured System Prompt
+#### Example: Good structured system prompt
 
 ```yaml
 system_prompt: |
-  You are a customer service agent for a SaaS company.
+  You are a customer service agent of SaaS company.
   
-  Your expertise includes:
-  - Product features and limitations
-  - Billing and subscription management
-  - Technical troubleshooting basics
-  - Account management procedures
+  전문 분야:
+  -Product function and restrictions
+  -Bill and subscription management
+  -Solving basic technology problems
+  -A account management procedure
   
-  Guidelines:
-  - Always be helpful, professional, and empathetic
-  - Provide step-by-step instructions when needed
-  - If you cannot solve a problem, escalate appropriately
-  - Ask clarifying questions to better understand issues
+  가이드라인:
+  -Doardly help, professional, and sympathetic
+  -If you provide step -by -step guidelines when necessary
+  -If you can't solve the problem, properly escalation
+  -In order to better understand the issues, ask a clear question
   
-  Response format:
-  - Use clear, concise language
-  - Structure responses with headers and bullet points
-  - Include relevant links or references when helpful
+  응답 형식:
+  -Use clear and concise language
+  -Chizards and Bullet points
+  -Including related links or references when helping
 ```
 
-#### Performance Tips
+#### 성능 팁
 
-1. **Choose Appropriate Models**: Use simpler models for basic tasks
-2. **Optimize Prompts**: Keep system prompts focused and clear
-3. **Limit Tools**: Only include tools the agent actually needs
-4. **Set Timeouts**: Configure appropriate response timeouts
+1. **적절한 모델 선택**: Use a simpler model for basic work
+2. **프롬프트 최적화**: Maintain system prompt intensively and clearly
+3. **도구 제한**: Including only tools that agents actually need
+4. **타임아웃 설정**: Proper response timeout configuration
 
-#### Common Patterns
+#### 일반적인 패턴
 
-**Question-Answer Agent**
+** Question-answer agent **
 
 ```yaml
 agents:
@@ -248,12 +247,12 @@ agents:
       type: "agent"
       model: "openai/gpt-3.5-turbo"
       system_prompt: |
-        You are a helpful assistant that answers questions
-        clearly and concisely. If you don't know something,
-        say so honestly rather than guessing.
+        당신은 질문에 명확하고 간결하게 답변하는 도움이 되는
+        어시스턴트입니다. 모르는 것이 있으면 추측하기보다는
+        솔직하게 모른다고 하세요.
 ```
 
-**Task Execution Agent**
+** Occupation Agent **
 
 ```yaml
 agents:
@@ -262,21 +261,21 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        You are a task execution specialist. Break down
-        complex requests into actionable steps and provide
-        detailed implementation guidance.
+        You are a work executive. Complex requests
+        Divide into an executable stage and give a detailed implementation guide.
+        Provide it.
       tools: ["calculator", "current_time"]
 ```
 
-### Testing Your Agents
+### 에이전트 테스트
 
-#### Simple Test Workflow
+#### 간단한 테스트 워크플로우
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "Agent Test"
+  name: "에이전트 테스트"
 
 agents:
   - id: "test_agent"
@@ -284,8 +283,8 @@ agents:
       type: "agent"
       model: "openai/gpt-3.5-turbo"
       system_prompt: |
-        You are a test agent. Respond helpfully to any request
-        and demonstrate your capabilities clearly.
+        당신은 테스트 에이전트입니다. 모든 요청에 도움이 되도록
+        응답하고 당신의 능력을 명확하게 보여주세요.
 
 nodes:
   start:
@@ -297,9 +296,9 @@ nodes:
     type: "end"
 ```
 
-Test this workflow with various inputs to validate your agent's behavior:
+Test the workflow with various inputs to verify the behavior of the agent:
 
 * Simple questions
-* Complex analysis requests
-* Tasks requiring tool usage
-* Edge cases and error conditions
+* Complex analysis request
+* Tasks that need to be used
+* Edge case and error conditions

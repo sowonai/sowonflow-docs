@@ -1,13 +1,13 @@
-# Table of contents
+# Table of Contents
 
-## Getting Started
+## Starting
 
-* [Introduction](README.md)
-* [Documentation](getting-started/documentation.md)
+* [소개](README.md)
+* [문서 시스템](getting-started/documentation.md)
 
-***
+* **
 
-* [Agent](agent.md)
-* [Supervisor](supervisor.md)
+* [에이전트](agent.md)
+* [감독자](supervisor.md)
 * [MCP](mcp.md)
-* [Models](models.md)
+* [모델](models.md)

@@ -80,13 +80,75 @@ async function translateFileSimple(koFilePath) {
     const lines = koContent.split('\n');
     const translatedLines = [];
     let inCodeBlock = false;
+    let inYamlBlock = false;
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
       // 코드 블록 감지
       if (line.trim().startsWith('```')) {
-        inCodeBlock = !inCodeBlock;
+        if (line.includes('yaml')) {
+          inYamlBlock = !inYamlBlock;
+        } else {
+          inCodeBlock = !inCodeBlock;
+        }
+        translatedLines.push(line);
+        continue;
+      }
+      
+      // YAML 블록 내부에서 한국어 텍스트 번역
+      if (inYamlBlock) {
+        // YAML 내부의 문자열 값만 번역 (키는 번역하지 않음)
+        if (line.includes(':') && !line.trim().startsWith('#')) {
+          const colonIndex = line.indexOf(':');
+          const key = line.substring(0, colonIndex + 1);
+          const value = line.substring(colonIndex + 1).trim();
+          
+          // 값이 한국어를 포함하고 있고, 파이프(|) 다음 라인이거나 따옴표로 감싸진 문자열인 경우
+          if (value && value !== '|' && !/^[a-zA-Z0-9_\-\.\[\]"]+$/.test(value)) {
+            try {
+              // 따옴표 제거하고 번역
+              let cleanValue = value.replace(/^["']|["']$/g, '');
+              if (cleanValue.length > 0 && /[가-힣]/.test(cleanValue)) {
+                let translated = translateWithGoogle(cleanValue);
+                translated = postProcessTranslation(translated, cleanValue);
+                
+                // 원래 따옴표 형식 유지
+                if (value.startsWith('"') && value.endsWith('"')) {
+                  translated = `"${translated}"`;
+                } else if (value.startsWith("'") && value.endsWith("'")) {
+                  translated = `'${translated}'`;
+                } else if (value.includes('|')) {
+                  // 멀티라인 문자열은 그대로
+                  translated = value;
+                }
+                
+                translatedLines.push(key + ' ' + translated);
+                console.log(`  ✓ YAML: "${cleanValue.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                continue;
+              }
+            } catch (error) {
+              console.warn(`  ⚠️  YAML translation failed for: "${value}"`);
+            }
+          }
+        }
+        // YAML 멀티라인 문자열 (|, >, |- 등) 처리
+        else if (line.trim() && !line.trim().startsWith('#') && !line.includes(':') && /[가-힣]/.test(line)) {
+          try {
+            const indent = line.match(/^\s*/)[0];
+            const content = line.trim();
+            let translated = translateWithGoogle(content);
+            translated = postProcessTranslation(translated, content);
+            translatedLines.push(indent + translated);
+            console.log(`  ✓ YAML multiline: "${content.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            continue;
+          } catch (error) {
+            console.warn(`  ⚠️  YAML multiline translation failed for: "${line.trim()}"`);
+          }
+        }
+        
         translatedLines.push(line);
         continue;
       }

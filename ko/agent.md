@@ -191,7 +191,7 @@ agents:
   - id: "data_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 데이터 분석가입니다. 수학적 계산에는 계산기 도구를,
         분석에서 오늘 날짜를 참조할 때는 current_time 도구를

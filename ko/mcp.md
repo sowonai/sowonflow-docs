@@ -72,7 +72,7 @@ agents:
   - id: "email_assistant"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 이메일 관리 어시스턴트입니다.
         
@@ -110,7 +110,7 @@ agents:
   - id: "file_manager"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 다음을 할 수 있는 파일 관리 어시스턴트입니다:
         - 파일 읽기 및 쓰기
@@ -130,7 +130,7 @@ agents:
   - id: "data_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 데이터베이스 접근 권한을 가진 데이터 분석가입니다.
         MCP 데이터베이스 도구를 사용하여 데이터를 쿼리하고 분석하세요.
@@ -152,7 +152,7 @@ agents:
   - id: "email_manager"
     inline:
       type: "agent"
-      model: "openai/gpt-4o-mini"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         당신은 전문적인 이메일 관리 어시스턴트입니다.
         
@@ -302,7 +302,7 @@ agents:
   - id: "assistant"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 다음에 접근할 수 있는 종합적인 디지털 어시스턴트입니다:
         - Gmail (이메일 관리)

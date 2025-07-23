@@ -73,7 +73,7 @@ Provide ONLY the translated document without any explanations or additional text
         'X-Title': 'SowonFlow Documentation Translation'
       },
       body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free',
+        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-small-3.2-24b-instruct:free',
         messages: [
           {
             role: 'system',

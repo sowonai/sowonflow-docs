@@ -6,10 +6,6 @@
 
 SowonFlow는 비즈니스 요구사항과 AI 구현 사이의 격차를 해소하는 혁신적인 YAML 기반 AI 워크플로우 엔진입니다. 우리는 기업 AI 도입에서 중요한 **missing link**를 해결합니다 - 문제를 이해하는 비즈니스 팀과 솔루션을 구현하는 기술 팀 사이의 단절 말입니다.
 
-```yaml
-2번째 yaml 내 번역 테스트...
-```
-
 ### 우리가 해결하는 문제
 
 기업 AI 도입은 중요한 병목 현상에 직면해 있습니다:
@@ -29,15 +25,15 @@ SowonFlow는 복잡한 AI 오케스트레이션을 사람이 읽을 수 있는 Y
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "email agent"
-  description: "Automated email processing and response"
+  name: "이메일 에이전트"
+  description: "gmail mcp server를 활용한 에이전트로 메일 관련 기능을 할 수 있습니다."
 
 agents:
   - id: "email_agent"
     inline:
       type: "agent"
       model: "google/gemini-2.5-flash"
-      system_prompt: "You are email assistance..."
+      system_prompt: "당신은 이메일 에이전트입니다."
       mcp: ["gmail"]
 
 nodes:

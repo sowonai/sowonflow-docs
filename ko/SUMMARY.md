@@ -8,6 +8,6 @@
 ***
 
 * [에이전트](agent.md)
-* [감독자](supervisor.md)
+* [수퍼바이저](supervisor.md)
 * [MCP](mcp.md)
 * [모델](models.md)

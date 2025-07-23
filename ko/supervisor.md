@@ -1,12 +1,12 @@
-# 감독자
+# 수퍼바이저
 
-## 감독자
+## 수퍼바이저
 
-감독자는 복잡한 작업을 처리하기 위해 여러 에이전트를 조율하고 조정하는 전문화된 에이전트입니다. 사용자 요청을 분석하고, 적절한 에이전트를 선택하며, 다면적인 문제를 해결하기 위한 동적 워크플로우를 생성합니다.
+수퍼바이저는 복잡한 작업을 처리하기 위해 여러 에이전트를 조율하고 조정하는 전문화된 에이전트입니다. 사용자 요청을 분석하고, 적절한 에이전트를 선택하며, 다면적인 문제를 해결하기 위한 동적 워크플로우를 생성합니다.
 
-### 감독자란 무엇인가요?
+### 수퍼바이저란 무엇인가요?
 
-감독자는 다음을 수행할 수 있는 에이전트입니다:
+수퍼바이저는 다음을 수행할 수 있는 에이전트입니다:
 
 * **복잡한 요청을 분석**하고 관리 가능한 작업으로 나눔
 * **적절한 에이전트를 선택**하여 관리팀에서 배정
@@ -14,9 +14,9 @@
 * **여러 전문 에이전트 간 실행 조정**
 * **다양한 에이전트의 결과를 종합**하여 일관된 응답 제공
 
-### 기본 감독자 구성
+### 기본 수퍼바이저 구성
 
-#### 간단한 감독자
+#### 간단한 수퍼바이저
 
 ```yaml
 agents:
@@ -38,7 +38,7 @@ agents:
 
 #### 관리되는 에이전트
 
-감독자가 조정할 수 있는 전문 에이전트를 정의합니다:
+수퍼바이저가 조정할 수 있는 전문 에이전트를 정의합니다:
 
 ```yaml
 agents:
@@ -64,7 +64,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: |
         당신은 소프트웨어 아키텍처, 기술 평가, 구현 계획을
         전문으로 하는 기술 전문가입니다.
@@ -72,7 +72,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         당신은 전략 계획, 시장 분석, ROI 평가를
         전문으로 하는 비즈니스 분석가입니다.
@@ -148,7 +148,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: |
         당신은 기술 전문가입니다. 다음에 집중하세요:
         - 구현 가능성
@@ -158,7 +158,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         당신은 비즈니스 분석가입니다. 다음에 집중하세요:
         - 전략적 영향
@@ -272,7 +272,7 @@ agents:
   - id: "test_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         당신은 테스트 감독자입니다. 도구를 사용하여 요청을
         분석하고 팀과 함께 적절한 워크플로우를 생성하세요.
@@ -281,7 +281,7 @@ agents:
   - id: "expert_a"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1-mini"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: "당신은 전문가 A입니다. 모든 주제에 대해 관점 A를 제공하세요."
         
   - id: "expert_b"

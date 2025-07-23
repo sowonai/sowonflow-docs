@@ -63,7 +63,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: |
         You are a technical expert specializing in software architecture,
         technical evaluation, and implementation plans.
@@ -71,7 +71,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         You are a business analyst specializing in strategic planning,
         market analysis, and ROI assessment.
@@ -79,7 +79,7 @@ agents:
 
 ### Workflow Patterns
 
-Supervisors can create various workflow patterns based on requests:
+The supervisor can create various workflow patterns based on requests:
 
 #### Sequential Pattern
 
@@ -147,7 +147,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: |
         You are a technical expert. Focus on:
         - Feasibility
@@ -157,7 +157,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         You are a business analyst. Focus on:
         - Strategic impact
@@ -176,7 +176,7 @@ nodes:
 
 ### Built-in Supervisor Tools
 
-Supervisors automatically have access to specialized tools:
+The supervisor automatically has access to specialized tools:
 
 #### workflow_template_selector
 
@@ -184,7 +184,7 @@ Analyzes user requests and selects appropriate workflow patterns:
 
 * Determines if sequential, parallel, or conditional pattern is needed
 * Selects agents that should participate
-* Provides justification for decisions
+* Provides rationale for decisions
 
 #### dynamic_workflow_executor
 
@@ -221,19 +221,16 @@ system_prompt: |
   - business_analyst: Strategy, market analysis, business impact
 
   Workflow patterns:
-  - Sequential: When tasks need to be performed in specific order
+  - Sequential: When tasks need to be performed in a specific order
   - Parallel Review: When multiple perspectives are needed
   - Single Specialist: For domain-specific questions
-  - Parallel Review: When comprehensive multi-angle analysis is needed
-  - Sequential (Legal → Technical → Business): For implementation planning
-  - Single Specialist: When specific expertise is needed
-  - Parallel Review: For comprehensive multi-angle analysis
+  - Comprehensive Analysis: When parallel review includes consolidation
 
   Decision guidelines:
   - Complex projects → Parallel Review with consolidation
-  - Implementation planning → Sequential (Legal → Technical → Business)
+  - Implementation plans → Sequential (Legal → Technical → Business)
   - Specific expertise needed → Single Specialist
-  - Multifaceted analysis → Parallel Review
+  - Multi-faceted analysis → Parallel Review
 
   Always explain workflow selection and provide comprehensive results.
 ```
@@ -275,7 +272,7 @@ agents:
   - id: "test_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4.1"
+      model: "google/gemini-2.5-pro"
       system_prompt: |
         You are a test supervisor. Use tools to analyze the request
         and create an appropriate workflow with your team.
@@ -284,7 +281,7 @@ agents:
   - id: "expert_a"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1-mini"
+      model: "anthropic/claude-sonnet-4"
       system_prompt: "You are Expert A. Provide perspective A on all topics."
 
   - id: "expert_b"

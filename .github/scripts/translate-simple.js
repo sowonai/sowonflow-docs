@@ -2,6 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+// Load environment variables
+try {
+  require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+} catch (error) {
+  // dotenv is optional, continue without it
+}
+
 // 번역 후처리 함수 - 품질 개선
 function postProcessTranslation(translated, original) {
   let result = translated;
@@ -31,7 +38,155 @@ function postProcessTranslation(translated, original) {
   return result;
 }
 
-// Google Translate CLI를 사용한 간단한 번역
+// OpenRouter API를 사용한 파일 단위 AI 번역
+async function translateFileWithOpenRouter(content, fromLang = 'Korean', toLang = 'English') {
+  try {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      console.warn('OPENROUTER_API_KEY not found, falling back to line-by-line translation');
+      return null; // 라인별 번역으로 폴백
+    }
+
+    const prompt = `Translate the entire markdown document from ${fromLang} to ${toLang}.
+
+IMPORTANT RULES:
+1. This is technical documentation about AI agents and workflows
+2. Preserve ALL markdown formatting (headers, links, code blocks, etc.)
+3. Keep YAML code blocks intact but translate Korean text within them
+4. Maintain technical terminology consistency
+5. Keep the same document structure and hierarchy
+6. Translate Korean text in YAML system_prompt, name, description fields
+7. Do NOT translate: URLs, code syntax, technical identifiers, file paths
+
+Document to translate:
+
+${content}
+
+Provide ONLY the translated document without any explanations or additional text:`;
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
+        'X-Title': 'SowonFlow Documentation Translation'
+      },
+      body: JSON.stringify({
+        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a professional technical translator specializing in AI and software documentation. Translate the entire document while preserving all markdown formatting and technical accuracy.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 8000, // 더 긴 문서 처리를 위해 증가
+        top_p: 0.9
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.log('API response structure:', {
+        hasChoices: !!data.choices,
+        choicesLength: data.choices?.length,
+        hasMessage: !!data.choices?.[0]?.message,
+        errorDetails: data.error || 'No error field'
+      });
+      throw new Error(`Invalid response format from OpenRouter API`);
+    }
+
+    const translation = data.choices[0].message.content.trim();
+    return translation;
+    
+  } catch (error) {
+    console.warn(`OpenRouter file translation warning: ${error.message}`);
+    return null; // 라인별 번역으로 폴백
+  }
+}
+
+// OpenRouter API를 사용한 AI 번역 (무료 모델 사용)
+async function translateWithOpenRouter(text, fromLang = 'Korean', toLang = 'English') {
+  try {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      console.warn('OPENROUTER_API_KEY not found, falling back to Google Translate');
+      return translateWithGoogle(text);
+    }
+
+    const prompt = `Translate the following ${fromLang} text to ${toLang}. 
+This is technical documentation about AI agents and workflows.
+
+Guidelines:
+- Maintain technical accuracy and use proper technical terminology
+- Keep the same tone, style, and formatting
+- For YAML/code-related terms, use standard English conventions
+- Preserve any special formatting or structure
+- Make the translation natural and professional
+
+Text to translate: "${text}"
+
+Provide only the translation without any explanation:`;
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
+        'X-Title': 'SowonFlow Documentation Translation'
+      },
+      body: JSON.stringify({
+        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free', // 기본값: 무료 Mistral 모델
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a professional technical translator specializing in AI and software documentation. Provide accurate, natural translations while preserving technical terminology and formatting.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 1500,
+        top_p: 0.9
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Invalid response format from OpenRouter API');
+    }
+
+    const translation = data.choices[0].message.content.trim();
+    
+    // 따옴표 제거 (AI가 번역을 따옴표로 감쌀 수 있음)
+    return translation.replace(/^["']|["']$/g, '');
+    
+  } catch (error) {
+    console.warn(`OpenRouter translation warning: ${error.message}`);
+    return translateWithGoogle(text); // AI 번역 실패시 구글 번역으로 폴백
+  }
+}
+
+// Google Translate CLI를 사용한 폴백 번역
 function translateWithGoogle(text, fromLang = 'ko', toLang = 'en') {
   try {
     // trans CLI 도구 사용 (https://github.com/soimort/translate-shell)
@@ -46,7 +201,7 @@ function translateWithGoogle(text, fromLang = 'ko', toLang = 'en') {
   }
 }
 
-// 파일 번역 및 저장 (Google Translate 버전)
+// 파일 번역 및 저장 (파일 단위 AI 번역 우선, 라인별 번역 폴백)
 async function translateFileSimple(koFilePath) {
   try {
     console.log(`📝 Translating: ${koFilePath}`);
@@ -75,127 +230,151 @@ async function translateFileSimple(koFilePath) {
     if (!fs.existsSync(enDir)) {
       fs.mkdirSync(enDir, { recursive: true });
     }
+
+    // 먼저 파일 단위 AI 번역 시도
+    console.log(`🤖 Attempting AI file-level translation...`);
+    const aiTranslation = await translateFileWithOpenRouter(koContent);
     
-    // 마크다운 파일을 라인별로 처리
-    const lines = koContent.split('\n');
-    const translatedLines = [];
-    let inCodeBlock = false;
-    let inYamlBlock = false;
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+    if (aiTranslation) {
+      // AI 번역 성공 - 후처리 적용
+      const processedTranslation = postProcessTranslation(aiTranslation, koContent);
       
-      // 코드 블록 감지
-      if (line.trim().startsWith('```')) {
-        if (line.includes('yaml')) {
-          inYamlBlock = !inYamlBlock;
-        } else {
-          inCodeBlock = !inCodeBlock;
-        }
-        translatedLines.push(line);
-        continue;
-      }
-      
-      // YAML 블록 내부에서 한국어 텍스트 번역
-      if (inYamlBlock) {
-        // YAML 내부의 문자열 값만 번역 (키는 번역하지 않음)
-        if (line.includes(':') && !line.trim().startsWith('#')) {
-          const colonIndex = line.indexOf(':');
-          const key = line.substring(0, colonIndex + 1);
-          const value = line.substring(colonIndex + 1).trim();
-          
-          // 값이 한국어를 포함하고 있고, 파이프(|) 다음 라인이거나 따옴표로 감싸진 문자열인 경우
-          if (value && value !== '|' && !/^[a-zA-Z0-9_\-\.\[\]"]+$/.test(value)) {
-            try {
-              // 따옴표 제거하고 번역
-              let cleanValue = value.replace(/^["']|["']$/g, '');
-              if (cleanValue.length > 0 && /[가-힣]/.test(cleanValue)) {
-                let translated = translateWithGoogle(cleanValue);
-                translated = postProcessTranslation(translated, cleanValue);
-                
-                // 원래 따옴표 형식 유지
-                if (value.startsWith('"') && value.endsWith('"')) {
-                  translated = `"${translated}"`;
-                } else if (value.startsWith("'") && value.endsWith("'")) {
-                  translated = `'${translated}'`;
-                } else if (value.includes('|')) {
-                  // 멀티라인 문자열은 그대로
-                  translated = value;
-                }
-                
-                translatedLines.push(key + ' ' + translated);
-                console.log(`  ✓ YAML: "${cleanValue.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
-                await new Promise(resolve => setTimeout(resolve, 300));
-                continue;
-              }
-            } catch (error) {
-              console.warn(`  ⚠️  YAML translation failed for: "${value}"`);
-            }
-          }
-        }
-        // YAML 멀티라인 문자열 (|, >, |- 등) 처리
-        else if (line.trim() && !line.trim().startsWith('#') && !line.includes(':') && /[가-힣]/.test(line)) {
-          try {
-            const indent = line.match(/^\s*/)[0];
-            const content = line.trim();
-            let translated = translateWithGoogle(content);
-            translated = postProcessTranslation(translated, content);
-            translatedLines.push(indent + translated);
-            console.log(`  ✓ YAML multiline: "${content.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
-            await new Promise(resolve => setTimeout(resolve, 300));
-            continue;
-          } catch (error) {
-            console.warn(`  ⚠️  YAML multiline translation failed for: "${line.trim()}"`);
-          }
-        }
-        
-        translatedLines.push(line);
-        continue;
-      }
-      
-      // 번역하지 않을 라인들
-      if (inCodeBlock || 
-          line.trim() === '' ||
-          line.startsWith('---') ||
-          line.trim().startsWith('http') ||
-          line.trim().startsWith('![') ||
-          line.includes('](')) {
-        translatedLines.push(line);
-        continue;
-      }
-      
-      // 헤더나 일반 텍스트 번역
-      if (line.trim().length > 0) {
-        try {
-          let translated = translateWithGoogle(line);
-          
-          // 후처리: 번역 품질 개선
-          translated = postProcessTranslation(translated, line);
-          
-          translatedLines.push(translated);
-          console.log(`  ✓ "${line.substring(0, 50)}..." -> "${translated.substring(0, 50)}..."`);
-        } catch (error) {
-          console.warn(`  ⚠️  Translation failed for: "${line.substring(0, 30)}..."`);
-          translatedLines.push(line); // 원문 유지
-        }
-        
-        // API 레이트 리밋 방지
-        await new Promise(resolve => setTimeout(resolve, 300));
-      } else {
-        translatedLines.push(line);
-      }
+      // 영어 파일 저장
+      fs.writeFileSync(absoluteEnPath, processedTranslation, 'utf8');
+      console.log(`✅ AI translation completed: ${relativePath} -> ${enFilePath}`);
+      console.log(`📊 Original: ${koContent.length} chars → Translated: ${processedTranslation.length} chars`);
+      return;
     }
-    
-    const translatedContent = translatedLines.join('\n');
-    
-    // 영어 파일 저장
-    fs.writeFileSync(absoluteEnPath, translatedContent, 'utf8');
-    console.log(`✅ Translation completed: ${relativePath} -> ${enFilePath}`);
+
+    // AI 번역 실패 - 라인별 번역으로 폴백
+    console.log(`⚠️  AI translation failed, falling back to line-by-line translation...`);
+    await translateFileLineByLine(koFilePath, koContent, absoluteEnPath, relativePath, enFilePath);
     
   } catch (error) {
     console.error(`❌ Error translating ${koFilePath}:`, error.message);
     // 에러가 발생해도 다른 파일 번역은 계속 진행
   }
+}
+
+// 라인별 번역 (기존 로직)
+async function translateFileLineByLine(koFilePath, koContent, absoluteEnPath, relativePath, enFilePath) {
+  console.log(`📝 Using line-by-line translation for: ${koFilePath}`);
+  
+  // 마크다운 파일을 라인별로 처리
+  const lines = koContent.split('\n');
+  const translatedLines = [];
+  let inCodeBlock = false;
+  let inYamlBlock = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // 코드 블록 감지
+    if (line.trim().startsWith('```')) {
+      if (line.includes('yaml')) {
+        inYamlBlock = !inYamlBlock;
+      } else {
+        inCodeBlock = !inCodeBlock;
+      }
+      translatedLines.push(line);
+      continue;
+    }
+    
+    // YAML 블록 내부에서 한국어 텍스트 번역
+    if (inYamlBlock) {
+      // YAML 내부의 문자열 값만 번역 (키는 번역하지 않음)
+      if (line.includes(':') && !line.trim().startsWith('#')) {
+        const colonIndex = line.indexOf(':');
+        const key = line.substring(0, colonIndex + 1);
+        const value = line.substring(colonIndex + 1).trim();
+        
+        // 값이 한국어를 포함하고 있고, 파이프(|) 다음 라인이거나 따옴표로 감싸진 문자열인 경우
+        if (value && value !== '|' && !/^[a-zA-Z0-9_\-\.\[\]"]+$/.test(value)) {
+          try {
+            // 따옴표 제거하고 번역
+            let cleanValue = value.replace(/^["']|["']$/g, '');
+            if (cleanValue.length > 0 && /[가-힣]/.test(cleanValue)) {
+              let translated = await translateWithOpenRouter(cleanValue);
+              translated = postProcessTranslation(translated, cleanValue);
+              
+              // 원래 따옴표 형식 유지
+              if (value.startsWith('"') && value.endsWith('"')) {
+                translated = `"${translated}"`;
+              } else if (value.startsWith("'") && value.endsWith("'")) {
+                translated = `'${translated}'`;
+              } else if (value.includes('|')) {
+                // 멀티라인 문자열은 그대로
+                translated = value;
+              }
+              
+              translatedLines.push(key + ' ' + translated);
+              console.log(`  ✓ YAML: "${cleanValue.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
+              await new Promise(resolve => setTimeout(resolve, 1000)); // 요청 제한 방지
+              continue;
+            }
+          } catch (error) {
+            console.warn(`  ⚠️  YAML translation failed for: "${value}"`);
+          }
+        }
+      }
+      // YAML 멀티라인 문자열 (|, >, |- 등) 처리
+      else if (line.trim() && !line.trim().startsWith('#') && !line.includes(':') && /[가-힣]/.test(line)) {
+        try {
+          const indent = line.match(/^\s*/)[0];
+          const content = line.trim();
+          let translated = await translateWithOpenRouter(content);
+          translated = postProcessTranslation(translated, content);
+          translatedLines.push(indent + translated);
+          console.log(`  ✓ YAML multiline: "${content.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
+          await new Promise(resolve => setTimeout(resolve, 1000)); // 요청 제한 방지
+          continue;
+        } catch (error) {
+          console.warn(`  ⚠️  YAML multiline translation failed for: "${line.trim()}"`);
+        }
+      }
+      
+      translatedLines.push(line);
+      continue;
+    }
+    
+    // 번역하지 않을 라인들
+    if (inCodeBlock || 
+        line.trim() === '' ||
+        line.startsWith('---') ||
+        line.trim().startsWith('http') ||
+        line.trim().startsWith('![') ||
+        line.includes('](')) {
+      translatedLines.push(line);
+      continue;
+    }
+    
+    // 헤더나 일반 텍스트 번역
+    if (line.trim().length > 0) {
+      try {
+        let translated = await translateWithOpenRouter(line);
+        
+        // 후처리: 번역 품질 개선
+        translated = postProcessTranslation(translated, line);
+        
+        translatedLines.push(translated);
+        console.log(`  ✓ "${line.substring(0, 50)}..." -> "${translated.substring(0, 50)}..."`);
+      } catch (error) {
+        console.warn(`  ⚠️  Translation failed for: "${line.substring(0, 30)}..."`);
+        translatedLines.push(line); // 원문 유지
+      }
+      
+      // API 레이트 리밋 방지
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } else {
+      translatedLines.push(line);
+    }
+  }
+  
+  const translatedContent = translatedLines.join('\n');
+  
+  // 영어 파일 저장
+  fs.writeFileSync(absoluteEnPath, translatedContent, 'utf8');
+  console.log(`✅ Line-by-line translation completed: ${relativePath} -> ${enFilePath}`);
 }
 
 // 메인 실행 함수
@@ -210,13 +389,22 @@ async function main() {
     return;
   }
   
-  // trans CLI 도구 설치 확인
-  try {
-    execSync('which trans', { encoding: 'utf8' });
-    console.log('✅ translate-shell (trans) is available');
-  } catch (error) {
-    console.error('❌ translate-shell (trans) is not installed. Please install it first.');
-    process.exit(1);
+  // API 키 및 도구 확인
+  const openrouterKey = process.env.OPENROUTER_API_KEY;
+  if (openrouterKey) {
+    console.log('✅ OpenRouter API key found - using AI translation');
+  } else {
+    console.log('⚠️  OpenRouter API key not found - will use Google Translate as fallback');
+    
+    // trans CLI 도구 설치 확인 (폴백용)
+    try {
+      execSync('which trans', { encoding: 'utf8' });
+      console.log('✅ translate-shell (trans) is available for fallback');
+    } catch (error) {
+      console.error('❌ Neither OpenRouter API key nor translate-shell is available.');
+      console.error('Please set OPENROUTER_API_KEY environment variable or install translate-shell.');
+      process.exit(1);
+    }
   }
   
   // 변경된 파일 목록 파싱

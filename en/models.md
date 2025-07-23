@@ -1,6 +1,6 @@
-# Models
+# Model
 
-## default models
+## Base Models
 
 ### openai
 
@@ -20,12 +20,10 @@ google/gemini-2.5-pro
 
 google/gemini-2.5-flash
 
+## Local Models
 
+Local models are supported starting from the Team subscription.
 
-## local models
+vllm - Coming soon
 
-Local model is supported starting from team subscription.
-
-vllm - soon
-
-ollama - soon
+ollama - Coming soon

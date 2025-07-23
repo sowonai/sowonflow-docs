@@ -2,17 +2,17 @@
 
 ## MCP Integration
 
-MCP (Model Context Protocol) integration allows agents to access external systems and services through standardized protocols. The `@sowonai/agent` package provides seamless MCP server integration for extending agent capabilities.
+MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `@sowonai/agent` package provides smooth MCP server integration for extending agent functionality.
 
 ### What is MCP?
 
-MCP (Model Context Protocol) is a standardized way for AI agents to interact with external systems like databases, APIs, file systems, and other services. It provides a secure and structured method for agents to access tools and resources outside their core capabilities.
+MCP (Model Context Protocol) is a standardized way for AI agents to interact with external systems such as databases, APIs, file systems, and other services. It provides a safe and structured method for agents to access tools and resources beyond their core functionality.
 
 ### Basic MCP Configuration
 
-#### Adding MCP Servers
+#### Adding MCP Server
 
-Configure MCP servers in your workflow definition:
+Configure an MCP server in your workflow definition:
 
 ```yaml
 version: "agentflow/v1"
@@ -27,7 +27,7 @@ agents:
       model: "google/gemini-2.5-flash"
       system_prompt: |
         You are a Gmail assistant that can search and manage emails.
-        Use MCP tools (prefixed with "mcp__") to access Gmail functionality.
+        Use MCP tools (with "mcp__" prefix) to access Gmail functionality.
       mcp: ["gmail"]  # Reference MCP server by name
 
 nodes:
@@ -35,14 +35,14 @@ nodes:
     type: "agent_task"
     agent: "gmail_agent"
     next: "end"
-  
+
   end:
     type: "end"
 ```
 
-#### MCP Server Configuration
+#### Configuring MCP Server
 
-When creating a workflow, specify MCP server configurations:
+Specify MCP server configuration when creating your workflow:
 
 ```typescript
 const workflow = new Workflow({
@@ -75,12 +75,12 @@ agents:
       model: "openai/gpt-4"
       system_prompt: |
         You are an email management assistant.
-        
+
         Available Gmail MCP tools:
         - mcp__gmail__search_emails: Search emails using Gmail syntax
-        - mcp__gmail__get_email: Get detailed email content
+        - mcp__gmail__get_email: Retrieve detailed email content
         - mcp__gmail__send_email: Send new emails
-        
+
         Gmail search syntax examples:
         - from:sender@example.com
         - subject:meeting
@@ -116,7 +116,7 @@ agents:
         - Read and write files
         - List directory contents
         - Search for files
-        
+
         Use MCP tools with "mcp__fs__" prefix for file operations.
       mcp: ["filesystem"]
 ```
@@ -137,16 +137,16 @@ agents:
       mcp: ["database"]
 ```
 
-### Complete Example: Gmail Email Management
+### Complete Example: Email Management with Gmail
 
-Here's a complete workflow for email management using Gmail MCP:
+A complete workflow for email management using Gmail MCP:
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Email Management Workflow"
-  description: "Manage emails using Gmail MCP integration"
+  description: "Email management using Gmail MCP integration"
 
 agents:
   - id: "email_manager"
@@ -155,28 +155,28 @@ agents:
       model: "openai/gpt-4o-mini"
       system_prompt: |
         You are a professional email management assistant.
-        
-        CAPABILITIES:
+
+        Capabilities:
         - Search emails using Gmail search syntax
-        - Read email contents in detail
-        - Categorize emails (work, personal, promotional)
+        - Read detailed email content
+        - Categorize emails (work, personal, promotions)
         - Summarize important communications
-        
-        GUIDELINES:
-        - Process work-related and personal emails separately
+
+        Guidelines:
+        - Separate work-related emails from personal emails
         - Ignore promotional/spam emails
-        - When finding important emails, retrieve their full content
+        - Search full content if important email is found
         - Provide structured summaries with key information
-        
-        TOOLS AVAILABLE:
-        - mcp__gmail__search_emails: Search with Gmail syntax
-        - mcp__gmail__get_email: Get detailed email content
-        
-        CURRENT CONTEXT:
+
+        Available tools:
+        - mcp__gmail__search_emails: Search using Gmail syntax
+        - mcp__gmail__get_email: Retrieve detailed email content
+
+        Current context:
         - Company: SowonLabs (AI products, SowonFlow development)
-        - User Role: CEO
-        - Current Date: {{{current_time}}}
-        
+        - User role: CEO
+        - Current date: {{{current_time}}}
+
         <document name="Gmail Search Syntax">
         {{{documents.gmail_search_usage.content}}}
         </document>
@@ -187,7 +187,7 @@ nodes:
     type: "agent_task"
     agent: "email_manager"
     next: "end"
-  
+
   end:
     type: "end"
 ```
@@ -200,19 +200,19 @@ const workflow = new Workflow({
   documents: {
     'gmail_search_usage': `
     ## Gmail Search Syntax
-    
-    ### Common Operators:
-    - from:sender@example.com - Find emails from specific sender
-    - to:recipient@example.com - Find emails sent to recipient
-    - subject:keyword - Search in subject line
+
+    ### Common operators:
+    - from:sender@example.com - Find emails from a specific sender
+    - to:recipient@example.com - Find emails sent to a specific recipient
+    - subject:keyword - Search in subject
     - has:attachment - Emails with attachments
-    - after:2024/01/01 - Emails after specific date
-    - before:2024/12/31 - Emails before specific date
-    - is:unread - Unread emails only
+    - after:2024/01/01 - Emails after a specific date
+    - before:2024/12/31 - Emails before a specific date
+    - is:unread - Only unread emails
     - is:important - Important emails
     - category:primary - Primary category emails
-    
-    ### Advanced Examples:
+
+    ### Advanced examples:
     - from:team@company.com after:2024/01/01 has:attachment
     - subject:(meeting OR call) -category:promotions
     - is:unread from:clients after:2024/01/15
@@ -228,45 +228,45 @@ const workflow = new Workflow({
 
 // Use the workflow
 const result = await workflow.ask(
-  "Find recent work-related emails and summarize important ones"
+  "Find recent work-related emails and summarize the important ones"
 );
 ```
 
 ### MCP Tool Usage Patterns
 
-#### Search and Analyze Pattern
+#### Search and Analysis Pattern
 
 ```yaml
 system_prompt: |
   Follow this pattern for email analysis:
-  
-  1. SEARCH: Use mcp__gmail__search_emails with relevant criteria
-  2. FILTER: Identify important emails from search results
-  3. RETRIEVE: Use mcp__gmail__get_email for detailed content
-  4. ANALYZE: Categorize and summarize findings
-  
-  Example workflow:
-  - Search: recent unread emails
-  - Filter: work-related communications
-  - Retrieve: full content of important emails
-  - Analyze: provide structured summary
+
+  1. Search: Use mcp__gmail__search_emails with relevant criteria
+  2. Filter: Identify important emails from search results
+  3. Retrieve: Use mcp__gmail__get_email for detailed content
+  4. Analyze: Categorize and summarize findings
+
+  Workflow example:
+  - Search: Recent unread emails
+  - Filter: Work-related communications
+  - Retrieve: Full content of important emails
+  - Analyze: Provide structured summary
 ```
 
 #### Batch Processing Pattern
 
 ```yaml
 system_prompt: |
-  For efficiency, batch your operations:
-  
-  RECOMMENDED:
-  ✓ Search once with comprehensive criteria
+  Process tasks in batches for efficiency:
+
+  Recommendations:
+  ✓ Search comprehensively with one call
   ✓ Collect multiple email IDs
-  ✓ Retrieve contents in single tool call when possible
-  
-  AVOID:
+  ✓ Retrieve content with single tool call when possible
+
+  To avoid:
   ✗ Multiple individual searches
   ✗ Opening emails one by one
-  ✗ Redundant API calls
+  ✗ Duplicate API calls
 ```
 
 ### Advanced MCP Configuration
@@ -295,7 +295,7 @@ const workflow = new Workflow({
 });
 ```
 
-#### Agent with Multiple MCP Services
+#### Agent Using Multiple MCP Services
 
 ```yaml
 agents:
@@ -306,9 +306,9 @@ agents:
       system_prompt: |
         You are a comprehensive digital assistant with access to:
         - Gmail (email management)
-        - Calendar (scheduling)
+        - Calendar (schedule management)
         - File system (document access)
-        
+
         Use appropriate MCP tools based on user requests.
       mcp: ["gmail", "calendar", "files"]
 ```
@@ -319,47 +319,47 @@ agents:
 
 ```yaml
 system_prompt: |
-  ERROR HANDLING:
-  - If MCP tool fails, explain the issue clearly
+  Error handling:
+  - Clearly explain problems when MCP tools fail
   - Suggest alternative approaches when possible
-  - Always validate tool parameters before calling
-  - Handle authentication issues gracefully
-  
-  EXAMPLE:
-  If Gmail search fails:
-  1. Check if search syntax is correct
+  - Always validate parameters before calling tools
+  - Gracefully handle authentication issues
+
+  Example:
+  When Gmail search fails:
+  1. Verify search syntax is correct
   2. Try simplified search criteria
-  3. Inform user of any limitations
+  3. Inform user of limitations
 ```
 
 #### Performance Optimization
 
 ```yaml
 system_prompt: |
-  PERFORMANCE GUIDELINES:
+  Performance guidelines:
   - Use specific search criteria to limit results
-  - Batch operations when possible
+  - Process tasks in batches when possible
   - Cache results when appropriate
   - Set reasonable limits (maxResults: 10-50)
-  
-  SEARCH OPTIMIZATION:
+
+  Search optimization:
   - Combine criteria: "from:team@company.com after:2024/01/01"
   - Use date ranges to limit scope
-  - Filter by categories when relevant
+  - Filter by category when relevant
 ```
 
 #### Security Considerations
 
 ```yaml
 system_prompt: |
-  SECURITY GUIDELINES:
-  - Never expose sensitive email content unnecessarily
+  Security guidelines:
+  - Avoid exposing sensitive email content unnecessarily
   - Respect privacy boundaries
   - Summarize rather than quote personal information
   - Handle authentication failures appropriately
 ```
 
-### Testing MCP Integration
+### MCP Integration Testing
 
 #### Basic MCP Test
 
@@ -376,7 +376,7 @@ describe('MCP Integration Tests', () => {
       }
     });
 
-    const result = await workflow.ask("Check for recent emails");
+    const result = await workflow.ask("Check my recent emails");
     expect(result.content).toBeDefined();
   });
 });
@@ -387,9 +387,9 @@ describe('MCP Integration Tests', () => {
 ```typescript
 it('should have MCP tools available', async () => {
   const result = await workflow.ask(
-    "List all available tools and their descriptions"
+    "List all available tools with their descriptions"
   );
-  
+
   expect(result.content).toContain('mcp__gmail__search_emails');
   expect(result.content).toContain('mcp__gmail__get_email');
 });

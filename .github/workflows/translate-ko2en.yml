@@ -30,16 +30,23 @@ jobs:
       with:
         files: ko/**/*.md
 
-    - name: Install translate-shell
+    - name: Install translate-shell (fallback)
       if: steps.changed-files.outputs.any_changed == 'true'
       run: |
         sudo apt-get update
         sudo apt-get install -y translate-shell
 
-    - name: Translate changed files
+    - name: Translate changed files with AI
       if: steps.changed-files.outputs.any_changed == 'true'
+      env:
+        OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        OPENROUTER_MODEL: "mistralai/mistral-7b-instruct:free"
       run: |
-        echo "Using improved Google Translate for translation..."
+        if [ -n "$OPENROUTER_API_KEY" ]; then
+          echo "Using OpenRouter AI translation with Mistral 7B..."
+        else
+          echo "OpenRouter API key not found, using Google Translate as fallback..."
+        fi
         node .github/scripts/translate-simple.js "${{ steps.changed-files.outputs.all_changed_files }}"
 
     - name: Commit and push translated files

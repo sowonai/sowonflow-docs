@@ -1,0 +1,41 @@
+/tmp
+/out-tsc
+
+# 노드 모듈 및 로그 파일
+/node_modules
+**/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/.pnp
+.pnp.js
+.DS_Store
+
+# IDE 설정
+.vscode/*
+/.idea/
+
+# 빌드 결과물
+**/dist
+**/.next
+.turbo
+
+# 환경 변수 파일
+**/.env*
+!**/.env.example
+
+# 패키지 잠금 파일
+**/package-lock.json
+
+# 특정 프로젝트 파일
+/api/node_modules/
+/api/dist/
+/web/node_modules/
+/web/.next/
+/packages/ui/node_modules/
+/packages/ui/dist/
+/desktop/node_modules/
+/desktop/dist-electron/
+/desktop/release/
+
+*credentials.json

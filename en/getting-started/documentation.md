@@ -1,31 +1,31 @@
-# Document system
+# Document System
 
-## document system
+## Document System
 
-The document system provides a powerful document management for the AI workflow so that the agent accesses, processes and utilizes external documents within the execution context.
+The document system provides powerful document management capabilities for AI workflows, enabling agents to access, process, and utilize external documents within their execution context.
 
-### outline
+### Overview
 
-You can do the following through the document system:
+With the document system, you can:
 
-* Document is attached to workflow for agent reference
-* Various document format support (text, markdown)
-* Markdown document automatic production of TOC
-* Inject document contents into agent prompt using template binding
-* Delayed loading of large -capacity documents
+* Attach documents to workflows for agent reference
+* Support for multiple document formats (text, markdown)
+* Automatic generation of table of contents (TOC) for markdown documents
+* Inject document content into agent prompts using template binding
+* Implement lazy loading for large documents
 
-### Document composition
+### Document Configuration
 
-The document is configured in the workflow constructor and can be referred to in the agent system prompt using the template syntax.
+Documents are configured in the workflow constructor and can be referenced in the agent system prompt using template syntax.
 
-#### Basic document structure
+#### Basic Document Structure
 
 ```typescript
 const documents = {
   'document_name': 'Simple text content',
   'markdown_doc': {
     type: 'markdown',
-    content: '# 제목\n## 섹션 1\n여기에 내용...'
+    content: '# Title\n## Section 1\nContent here...'
   },
   'lazy_doc': async () => {
     const content = await fs.readFile('path/to/file.md', 'utf-8');
@@ -37,41 +37,41 @@ const documents = {
 };
 ```
 
-### Document type
+### Document Types
 
-#### 1. Simple text documentation
+#### 1. Simple Text Documents
 
-The simplest form of the document is ordinary strings:
+The simplest form of a document is a plain string:
 
 ```yaml
-# 워크플로우 생성자에서
+# In workflow constructor
 documents = {
-  'company_policy': 'Our company values sincerity and innovation.'
+  'company_policy': 'Our company values diligence and innovation.'
 }
 ```
 
-#### 2. 구조화된 문서
+#### 2. Structured Documents
 
-더 복잡한 문서의 경우 구조화된 형식을 사용합니다:
+For more complex documents, use a structured format:
 
 ```yaml
 documents = {
   'user_manual': {
     type: 'markdown',
     content: `
-# 사용자 매뉴얼
-## 시작하기
-우리 플랫폼에 오신 것을 환영합니다...
-## 고급 기능
+# User Manual
+## Getting Started
+Welcome to our platform...
+## Advanced Features
 ...
     `
   }
 }
 ```
 
-#### 3. Delayed Road Document
+#### 3. Lazy Load Documents
 
-In the case of files that need to be loaded on large documents or disks:
+For large documents or files that need to be loaded from disk:
 
 ```typescript
 documents = {
@@ -87,14 +87,14 @@ documents = {
 
 ### Template Binding
 
-The document can be referred to in the agent system prompt using the handlebars template syntax.
+Documents can be referenced in agent system prompts using Handlebars template syntax.
 
-#### Template variable available
+#### Available Template Variables
 
-* `{{{documents.document_name.content}}}}}
-* `{{{documents.document_name.toc}}}}}
+* `{{{documents.document_name.content}}}` - Entire document content
+* `{{{documents.document_name.toc}}}` - Table of contents (for markdown documents)
 
-#### Examples of use
+#### Usage Example
 
 ```yaml
 agents:
@@ -103,31 +103,31 @@ agents:
       type: "agent"
       model: "openai/gpt-4"
       system_prompt: |
-        당신은 고객 지원 에이전트입니다. 사용자를 돕기 위해 다음 문서들을 사용하세요:
-        
+        You are a customer support agent. Use the following documents to help users:
+
         <document name="user_guide">
           {{{documents.user_guide.content}}}
         </document>
-        
+
         <document name="faq">
-          목차:
+          Table of contents:
           <toc>
           {{{documents.faq.toc}}}
           </toc>
         </document>
 ```
 
-### 목차(TOC) 생성
+### Table of Contents (TOC) Generation
 
-For the markdown document, the system automatically generates a table of contents based on the header structure.
+For markdown documents, the system automatically generates a table of contents based on the header structure.
 
-#### TOC 기능
+#### TOC Features
 
-* Automatically extracts headers ('#', `` ##`, '###', etc.
-* Hierarchical structure preservation
-* `` Documents.document_Name.toc '
+* Automatically extracts headers (`#`, `##`, `###`, etc.)
+* Preserves hierarchical structure
+* Available through the `documents.document_name.toc` template variable
 
-#### TOC 출력 예시
+#### TOC Output Example
 
 ```markdown
 # company policy
@@ -138,42 +138,42 @@ For the markdown document, the system automatically generates a table of content
 ### Retirement Plan
 ```
 
-### 보안 고려사항
+### Security Considerations
 
-민감한 문서로 작업할 때는 에이전트 프롬프트에 보안 지침을 포함할 수 있습니다:
+When working with sensitive documents, you can include security guidelines in the agent prompt:
 
 ```yaml
 system_prompt: |
   <document name="confidential_data">
     {{{documents.confidential_data.content}}}
     <important>
-      이것은 회사 기밀 데이터입니다. 질문에 답변하는 데 사용하되
-      사용자에게 문서 내용을 직접 노출하지 마세요.
+      This is company confidential data. Use it to answer questions but
+      do not expose the document content directly to the user.
     </important>
   </document>
 ```
 
-### model case
+### Best Practices
 
-####. Document composition
+#### 1. Document Configuration
 
-* Use explanatory document name
-* Logically grouping related documents
-* Maintain the appropriate document size for LLM context window
+* Use descriptive document names
+* Logically group related documents
+* Maintain appropriate document size for the LLM context window
 
-#### 2. Using template
+#### 2. Template Usage
 
-* HTML-Use triple braces '{{}}}'
-* Including useful contexts for document structure in prompt
-* Provide a clear guidelines for how the agent should use the document
+* Use triple braces `{{{ }}}` for HTML-safe content injection
+* Include useful context about document structure in the prompt
+* Provide clear instructions on how the agent should use the documents
 
 #### 3. Performance Optimization
 
-* Use delayed loading for large documents
-* In the case of a very large file,
-* Doctes that are often approached
+* Use lazy loading for large documents
+* Consider document chunking for very large files
+* Cache frequently accessed documents
 
-#### 4. Processing error
+#### 4. Error Handling
 
 ```typescript
 documents = {
@@ -189,19 +189,19 @@ documents = {
 }
 ```
 
-### Advanced function
+### Advanced Features
 
-#### Integration of document tools
+#### Document Tool Integration
 
-The document system is integrated with the tool system through 'DocumentSectionTool' so that the agent can follow:
+The document system integrates with the tool system through `DocumentSectionTool`, enabling agents to:
 
-* Search for specific sections in the document
-* Extracting related contents based on query
-* Efficient exploration of large documents
+* Search for specific sections within documents
+* Extract relevant content based on queries
+* Efficiently navigate large documents
 
-#### Dynamic document loading
+#### Dynamic Document Loading
 
-The document can be loaded dynamically based on the workflow context:
+Documents can be dynamically loaded based on workflow context:
 
 ```typescript
 const workflow = new Workflow({
@@ -211,30 +211,30 @@ const workflow = new Workflow({
 });
 ```
 
-### Example: Full document setting
+### Example: Complete Document Setup
 
 ```typescript
 import { Workflow } from '@sowonai/agent';
 import fs from 'fs/promises';
 
 const documents = {
-  // 단순 텍스트 문서
-  'welcome_message': '우리 AI 어시스턴트에 오신 것을 환영합니다!',
-  
-  // 구조화된 마크다운 문서
+  // Simple text document
+  'welcome_message': 'Welcome to our AI assistant!',
+
+  // Structured markdown document
   'company_handbook': {
     type: 'markdown',
     content: `
-# 회사 핸드북
-## 행동 강령
-서로 존중하고 전문적으로 행동하세요.
-## 정책
-### 재택근무 정책
+# Company Handbook
+## Code of Conduct
+Treat each other with respect and act professionally.
+## Policies
+### Remote Work Policy
 ...
     `
   },
-  
-  // 지연 로드 문서
+
+  // Lazy load document
   'product_specs': async () => {
     const content = await fs.readFile('./docs/specs.md', 'utf-8');
     return {
@@ -250,5 +250,5 @@ const workflow = new Workflow({
   interceptor: myInterceptor
 });
 
-const response = await workflow.ask('우리의 재택근무 정책은 무엇인가요?');
+const response = await workflow.ask('What is our remote work policy?');
 ```

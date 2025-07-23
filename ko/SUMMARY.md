@@ -11,4 +11,5 @@
 
 ## 예제들 <a href="#simple-examples" id="simple-examples"></a>
 
-* [예제1](simple-examples/1.md)
+* [Gmail MCP 서버를 활용한 이메일 관리 워크플로우](simple-examples/1.md)
+* [도메인 전문가 AI 에이전트를 활용한 문서 분석 워크플로우](simple-examples/3.md)

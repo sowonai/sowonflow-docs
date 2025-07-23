@@ -118,7 +118,7 @@ agents:
   - id: "document_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 문서 분석 전문가입니다. 문서를 철저히 분석하고
         다음을 포함한 구조화된 인사이트를 제공하세요:
@@ -144,16 +144,19 @@ nodes:
 
 ```yaml
 # OpenAI 모델
-model: "openai/gpt-4"
-model: "openai/gpt-3.5-turbo"
+model: "openai/gpt-4.1"
+model: "openai/gpt-4.1-mini"
 
 # Anthropic 모델
-model: "anthropic/claude-3-sonnet"
-model: "anthropic/claude-3-haiku"
+model: "anthropic/claude-sonnet-4"
+model: "anthropic/claude-3.5-haiku"
 
-# 로컬/Ollama 모델
-model: "ollama/llama3"
-model: "ollama/mistral"
+# Google 모델
+model: "google/gemini-2.5-pro"
+model: "google/gemini-2.5-flash"
+
+# 자체 모델
+vllm/ollama (team 구독부터 지원)
 ```
 
 #### 모델 매개변수
@@ -245,7 +248,7 @@ agents:
   - id: "qa_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         당신은 질문에 명확하고 간결하게 답변하는 도움이 되는
         어시스턴트입니다. 모르는 것이 있으면 추측하기보다는
@@ -259,7 +262,7 @@ agents:
   - id: "task_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 작업 실행 전문가입니다. 복잡한 요청을
         실행 가능한 단계로 나누고 상세한 구현 가이드를
@@ -281,7 +284,7 @@ agents:
   - id: "test_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         당신은 테스트 에이전트입니다. 모든 요청에 도움이 되도록
         응답하고 당신의 능력을 명확하게 보여주세요.

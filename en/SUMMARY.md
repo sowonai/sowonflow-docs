@@ -11,4 +11,5 @@
 
 ## Simple Examples <a href="#simple-examples" id="simple-examples"></a>
 
-* [Example 1](simple-examples/1.md)
+* [Email Management Workflow Using Gmail MCP Server](simple-examples/1.md)
+* [Document Analysis Workflow Using Domain Expert AI Agent](simple-examples/3.md)

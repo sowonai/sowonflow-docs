@@ -9,8 +9,8 @@ The document system provides powerful document management capabilities for AI wo
 With the document system, you can:
 
 * Attach documents to workflows for agent reference
-* Support for multiple document formats (text, markdown)
-* Automatic generation of table of contents (TOC) for markdown documents
+* Support multiple document formats (text, markdown)
+* Automatically generate table of contents (TOC) for markdown documents
 * Inject document content into agent prompts using template binding
 * Implement lazy loading for large documents
 
@@ -39,7 +39,7 @@ const documents = {
 
 ### Document Types
 
-#### 1. Simple Text Documents
+#### 1. Simple Text Document
 
 The simplest form of a document is a plain string:
 
@@ -50,7 +50,7 @@ documents = {
 }
 ```
 
-#### 2. Structured Documents
+#### 2. Structured Document
 
 For more complex documents, use a structured format:
 
@@ -69,7 +69,7 @@ Welcome to our platform...
 }
 ```
 
-#### 3. Lazy Load Documents
+#### 3. Lazy Load Document
 
 For large documents or files that need to be loaded from disk:
 
@@ -87,7 +87,7 @@ documents = {
 
 ### Template Binding
 
-Documents can be referenced in agent system prompts using Handlebars template syntax.
+Documents can be referenced in the agent system prompt using Handlebars template syntax.
 
 #### Available Template Variables
 
@@ -101,9 +101,9 @@ agents:
   - id: "support_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a customer support agent. Use the following documents to help users:
+        You are a customer support agent. Use the following documents to help the user:
 
         <document name="user_guide">
           {{{documents.user_guide.content}}}
@@ -201,7 +201,7 @@ The document system integrates with the tool system through `DocumentSectionTool
 
 #### Dynamic Document Loading
 
-Documents can be dynamically loaded based on workflow context:
+Documents can be dynamically loaded based on the workflow context:
 
 ```typescript
 const workflow = new Workflow({

@@ -24,9 +24,8 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are an expert researcher,
-        excellent at finding and compiling information from various sources.
-        Always provide well-structured and factual responses.
+        You are a professional researcher skilled at finding and gathering information from various sources.
+        Always provide systematic and fact-based answers.
 ```
 
 #### Agent Using Tools
@@ -38,8 +37,8 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a math assistant.
-        Use a calculator tool for all numerical calculations.
+        You are a math expert.
+        Use the calculator tool to calculate numbers.
       tools: ["calculator"]
 ```
 
@@ -52,15 +51,15 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a legal expert specializing in the following areas:
+        You are a legal expert specializing in the following fields:
         - Contract analysis and review
         - Compliance assessment
         - Risk assessment
         - Legal research and documentation
 
-        Always pay attention to regulatory requirements and potential risks
+        Always pay attention to regulatory requirements and potential risks,
         and provide thorough legal evaluations.
       tools: ["document_search"]
 ```
@@ -72,16 +71,15 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a technical expert specializing in the following areas:
+        You are a technical expert specializing in the following fields:
         - Software architecture and design
         - Technical evaluation and review
         - Implementation planning
         - Performance optimization
 
-        Provide detailed technical analysis
-        with practical implementation considerations.
+        Provide detailed technical analysis along with practical implementation considerations.
 ```
 
 #### Business Analyst
@@ -91,16 +89,15 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
-        You are a business analyst specializing in the following areas:
+        You are a business analyst specializing in the following fields:
         - Strategic planning and analysis
         - Market research and competitive analysis
         - ROI and financial impact assessment
         - Stakeholder analysis
 
-        Focus on business value and strategic implications
-        in your recommendations.
+        Focus on business value and strategic implications in your recommendations.
 ```
 
 ### Complete Workflow Example
@@ -112,7 +109,7 @@ version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Document Analysis"
-  description: "Document analysis with a specialized agent"
+  description: "Analyze documents with a specialized agent"
 
 agents:
   - id: "document_analyst"
@@ -125,8 +122,8 @@ agents:
         - Key findings and important points
         - Potential issues or concerns
         - Actionable recommendations
-        Always structure your responses clearly with headers and bullet points
-        for easy reading.
+        Always structure your response clearly with headers and bullet points
+        to make it easy to read.
 
 nodes:
   start:
@@ -202,7 +199,7 @@ agents:
 1. **Be specific**: Clearly define the agent's role and expertise
 2. **Set expectations**: Explain how the agent should respond
 3. **Include context**: Provide relevant background information
-4. **Format guidelines**: Specify output format preferences
+4. **Format instructions**: Specify output format preferences
 
 #### Example: Well-Structured System Prompt
 
@@ -220,7 +217,7 @@ system_prompt: |
   - Always respond helpfully, professionally, and empathetically
   - Provide step-by-step instructions when needed
   - Escalate appropriately when unable to resolve an issue
-  - Ask clear questions to better understand the issue
+  - Ask clear questions to better understand issues
 
   Response format:
   - Use clear and concise language
@@ -230,7 +227,7 @@ system_prompt: |
 
 #### Performance Tips
 
-1. **Choose the right model**: Use simpler models for basic tasks
+1. **Choose appropriate models**: Use simpler models for basic tasks
 2. **Optimize prompts**: Keep system prompts focused and clear
 3. **Limit tools**: Only include tools the agent actually needs
 4. **Set timeouts**: Configure appropriate response timeouts
@@ -260,7 +257,7 @@ agents:
       model: "openai/gpt-4"
       system_prompt: |
         You are a task execution expert. Break down complex requests into
-        actionable steps and provide detailed implementation guidance.
+        actionable steps and provide detailed implementation guides.
       tools: ["calculator", "current_time"]
 ```
 
@@ -280,8 +277,7 @@ agents:
       type: "agent"
       model: "openai/gpt-3.5-turbo"
       system_prompt: |
-        You are a test agent. Respond helpfully to all requests
-        and clearly demonstrate your capabilities.
+        You are a test agent. Respond helpfully to all requests and clearly demonstrate your capabilities.
 
 nodes:
   start:

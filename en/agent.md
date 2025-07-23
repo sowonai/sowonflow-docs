@@ -53,7 +53,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a legal expert specializing in the following fields:
+        You are a legal expert specializing in the following areas:
         - Contract analysis and review
         - Compliance assessment
         - Risk assessment
@@ -73,7 +73,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a technical expert specializing in the following fields:
+        You are a technical expert specializing in the following areas:
         - Software architecture and design
         - Technical evaluation and review
         - Implementation planning
@@ -91,7 +91,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a business analyst specializing in the following fields:
+        You are a business analyst specializing in the following areas:
         - Strategic planning and analysis
         - Market research and competitive analysis
         - ROI and financial impact assessment
@@ -115,7 +115,7 @@ agents:
   - id: "document_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a document analysis expert. Thoroughly analyze the document and
         provide structured insights including:
@@ -141,16 +141,19 @@ nodes:
 
 ```yaml
 # OpenAI models
-model: "openai/gpt-4"
-model: "openai/gpt-3.5-turbo"
+model: "openai/gpt-4.1"
+model: "openai/gpt-4.1-mini"
 
 # Anthropic models
-model: "anthropic/claude-3-sonnet"
-model: "anthropic/claude-3-haiku"
+model: "anthropic/claude-sonnet-4"
+model: "anthropic/claude-3.5-haiku"
 
-# Local/Ollama models
-model: "ollama/llama3"
-model: "ollama/mistral"
+# Google models
+model: "google/gemini-2.5-pro"
+model: "google/gemini-2.5-flash"
+
+# Custom models
+vllm/ollama (supported from team subscription)
 ```
 
 #### Model Parameters
@@ -188,7 +191,7 @@ agents:
       model: "openai/gpt-4"
       system_prompt: |
         You are a data analyst. Use the calculator tool for mathematical calculations,
-        and the current_time tool when referencing today's date in your analysis.
+        and the current_time tool to reference today's date in your analysis.
       tools: ["calculator", "current_time"]
 ```
 
@@ -196,10 +199,10 @@ agents:
 
 #### System Prompt Guidelines
 
-1. **Be specific**: Clearly define the agent's role and expertise
-2. **Set expectations**: Explain how the agent should respond
-3. **Include context**: Provide relevant background information
-4. **Format instructions**: Specify output format preferences
+1. **Be Specific**: Clearly define the agent's role and expertise
+2. **Set Expectations**: Explain how the agent should respond
+3. **Include Context**: Provide relevant background information
+4. **Format Instructions**: Specify output format preferences
 
 #### Example: Well-Structured System Prompt
 
@@ -216,7 +219,7 @@ system_prompt: |
   Guidelines:
   - Always respond helpfully, professionally, and empathetically
   - Provide step-by-step instructions when needed
-  - Escalate appropriately when unable to resolve an issue
+  - Escalate appropriately when unable to resolve issues
   - Ask clear questions to better understand issues
 
   Response format:
@@ -227,10 +230,10 @@ system_prompt: |
 
 #### Performance Tips
 
-1. **Choose appropriate models**: Use simpler models for basic tasks
-2. **Optimize prompts**: Keep system prompts focused and clear
-3. **Limit tools**: Only include tools the agent actually needs
-4. **Set timeouts**: Configure appropriate response timeouts
+1. **Choose Appropriate Models**: Use simpler models for basic tasks
+2. **Optimize Prompts**: Keep system prompts focused and clear
+3. **Limit Tools**: Only include tools the agent actually needs
+4. **Set Timeouts**: Configure appropriate response timeouts
 
 #### Common Patterns
 
@@ -241,7 +244,7 @@ agents:
   - id: "qa_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         You are an assistant that answers questions clearly and concisely.
         If you don't know something, be honest about it rather than guessing.
@@ -254,7 +257,7 @@ agents:
   - id: "task_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a task execution expert. Break down complex requests into
         actionable steps and provide detailed implementation guides.
@@ -275,7 +278,7 @@ agents:
   - id: "test_agent"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: |
         You are a test agent. Respond helpfully to all requests and clearly demonstrate your capabilities.
 

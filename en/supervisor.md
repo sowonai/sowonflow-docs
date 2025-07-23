@@ -6,11 +6,11 @@ A supervisor is a specialized agent that coordinates and manages multiple agents
 
 ### What is a Supervisor?
 
-A supervisor is an agent that can:
+A supervisor can:
 
 * **Analyze complex requests** and break them down into manageable tasks
 * **Select appropriate agents** for assignment from the management team
-* **Create dynamic workflows** based on the type of request
+* **Create dynamic workflows** based on request types
 * **Coordinate execution** among multiple specialist agents
 * **Consolidate results** from various agents to provide a consistent response
 
@@ -23,7 +23,7 @@ agents:
   - id: "project_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a project supervisor coordinating work with specialist agents.
 
@@ -102,7 +102,7 @@ Request → [Legal Expert, Technical Expert, Business Analyst] → Consolidation
 Dynamic routing based on request type:
 
 ```
-Request → Analysis → Routing to appropriate specialist(s) → Result
+Request → Analysis → Route to appropriate specialist(s) → Result
 ```
 
 ### Complete Workflow Example
@@ -184,7 +184,7 @@ Analyzes user requests and selects appropriate workflow patterns:
 
 * Determines if sequential, parallel, or conditional pattern is needed
 * Selects agents that should participate
-* Provides rationale for decisions
+* Provides justification for decisions
 
 #### dynamic_workflow_executor
 
@@ -225,13 +225,13 @@ system_prompt: |
   - Parallel Review: When multiple perspectives are needed
   - Single Specialist: For domain-specific questions
   - Parallel Review: When comprehensive multi-angle analysis is needed
-  - Sequential: For implementation plans (Legal → Technical → Business)
+  - Sequential (Legal → Technical → Business): For implementation planning
   - Single Specialist: When specific expertise is needed
   - Parallel Review: For comprehensive multi-angle analysis
 
   Decision guidelines:
   - Complex projects → Parallel Review with consolidation
-  - Implementation plans → Sequential (Legal → Technical → Business)
+  - Implementation planning → Sequential (Legal → Technical → Business)
   - Specific expertise needed → Single Specialist
   - Multifaceted analysis → Parallel Review
 

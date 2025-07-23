@@ -10,7 +10,7 @@ A supervisor is an agent that can:
 
 * **Analyze complex requests** and break them down into manageable tasks
 * **Select appropriate agents** for assignment from the management team
-* **Create dynamic workflows** based on request types
+* **Create dynamic workflows** based on the type of request
 * **Coordinate execution** among multiple specialist agents
 * **Consolidate results** from various agents to provide a consistent response
 
@@ -45,7 +45,7 @@ agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a supervisor managing specialist consultants.
         Use tools to create appropriate workflows based on requests.
@@ -55,7 +55,7 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a legal expert specializing in contract analysis,
         compliance, and legal risk assessment.
@@ -63,15 +63,15 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a technical expert specializing in software architecture,
-        technical assessments, and implementation plans.
+        technical evaluation, and implementation plans.
 
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a business analyst specializing in strategic planning,
         market analysis, and ROI assessment.
@@ -86,7 +86,7 @@ Supervisors can create various workflow patterns based on requests:
 Tasks are executed in order:
 
 ```
-Request → Legal Review → Technical Assessment → Business Analysis → Result
+Request → Legal Review → Technical Evaluation → Business Analysis → Result
 ```
 
 #### Parallel Review Pattern
@@ -118,7 +118,7 @@ agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a supervisor coordinating specialist analysis.
 
@@ -137,7 +137,7 @@ agents:
   - id: "legal_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a legal expert. Focus on:
         - Compliance
@@ -147,7 +147,7 @@ agents:
   - id: "tech_expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a technical expert. Focus on:
         - Feasibility
@@ -157,7 +157,7 @@ agents:
   - id: "business_analyst"
     inline:
       type: "agent"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a business analyst. Focus on:
         - Strategic impact
@@ -213,7 +213,7 @@ system_prompt: |
   Mandatory process:
   1. Always first use 'workflow_template_selector' to analyze request
   2. Always use 'dynamic_workflow_executor' to create and execute workflow
-  3. Prohibit providing manual responses without tool usage
+  3. Prohibited to provide manual responses without using tools
 
   Available specialists:
   - legal_expert: Contract analysis, compliance, legal risks
@@ -228,6 +228,12 @@ system_prompt: |
   - Sequential: For implementation plans (Legal → Technical → Business)
   - Single Specialist: When specific expertise is needed
   - Parallel Review: For comprehensive multi-angle analysis
+
+  Decision guidelines:
+  - Complex projects → Parallel Review with consolidation
+  - Implementation plans → Sequential (Legal → Technical → Business)
+  - Specific expertise needed → Single Specialist
+  - Multifaceted analysis → Parallel Review
 
   Always explain workflow selection and provide comprehensive results.
 ```
@@ -269,7 +275,7 @@ agents:
   - id: "test_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         You are a test supervisor. Use tools to analyze the request
         and create an appropriate workflow with your team.
@@ -278,13 +284,13 @@ agents:
   - id: "expert_a"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: "You are Expert A. Provide perspective A on all topics."
 
   - id: "expert_b"
     inline:
       type: "agent"
-      model: "openai/gpt-3.5-turbo"
+      model: "openai/gpt-4.1-mini"
       system_prompt: "You are Expert B. Provide perspective B on all topics."
 
 nodes:

@@ -23,7 +23,7 @@ agents:
   - id: "project_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4"
+      model: "openai/gpt-4.1"
       system_prompt: |
         당신은 전문 에이전트들과 함께 작업을 조율하는 
         프로젝트 감독자입니다.

@@ -6,11 +6,11 @@ A supervisor is a specialized agent that coordinates and manages multiple agents
 
 ### Key Roles
 
-* **Analyze** and manage complex requests into manageable tasks
-* **Select** appropriate agents for assignment from the management team
-* **Generate** dynamic workflows based on request types
-* **Coordinate** execution among multiple specialized agents
-* **Consolidate** results from various agents to provide a consistent response
+* **Analyze and manage** complex requests into manageable tasks
+* **Select appropriate agents** for assignment from the management team
+* **Generate dynamic workflows** based on request types
+* **Coordinate execution** among multiple specialized agents
+* **Consolidate results** from various agents to provide a consistent response
 
 ---
 
@@ -85,7 +85,7 @@ agents:
 
 ---
 
-## Detailed Specifications of supervisor_mode
+## Detailed Specifications for supervisor_mode
 
 In the supervisor type, you can explicitly specify the workflow execution pattern. You can choose one of the following four patterns using the `supervisor_mode` attribute:
 
@@ -180,17 +180,17 @@ nodes:
 
 ## Built-in Supervisor Tools
 
-The supervisor can automatically access specialized tools. The behavior of the tools also changes depending on the `supervisor_mode`.
+The supervisor can automatically access specialized tools. The behavior of these tools also changes depending on the `supervisor_mode`.
 
-* **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes user requests to select appropriate workflow patterns.
+* **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes the user request to select the appropriate workflow pattern.
   - Determine which pattern (sequential, parallel, branch) is needed
-  - Select agents that need to participate
+  - Select the agents that need to participate
   - Provide reasoning for the decision
 
 * **dynamic_workflow_executor**: Dynamically generates and executes workflows based on `supervisor_mode`.
-  - Configure workflows based on the selected pattern (sequential, parallel, branch, auto)
+  - Configure the workflow according to the selected pattern (sequential, parallel, branch, auto)
   - Coordinate agent execution
-  - Process data flow between agents
+  - Handle data flow between agents
   - Consolidate final results
 
 ## System Prompt Best Practices
@@ -223,13 +223,13 @@ Representative use cases for each `supervisor_mode` are as follows:
 #### Product Development Analysis
 ```
 User: "Evaluate the feasibility of launching a new AI-based feature"
-Supervisor: supervisor_mode: parallel → Legal (compliance), Technical (implementation), Business (market) analyze simultaneously
+Supervisor: supervisor_mode: parallel → Legal (compliance), Technical (implementation), Business (market) analysis simultaneously
 ```
 
 #### Contract Review Process
 ```
 User: "Please review this partnership contract"
-Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) analyze sequentially
+Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) sequential analysis
 ```
 
 #### Strategic Decision Making

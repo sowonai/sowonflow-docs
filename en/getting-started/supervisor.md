@@ -1,47 +1,51 @@
 # Supervisor
 
-## Supervisor
+## What is a Supervisor?
 
 A supervisor is a specialized agent that coordinates and manages multiple agents to handle complex tasks. It analyzes user requests, selects appropriate agents, and generates dynamic workflows to solve multifaceted problems.
 
-### What is a Supervisor?
+### Key Roles
 
-A supervisor can:
+* **Analyze** and manage complex requests into manageable tasks
+* **Select** appropriate agents for assignment from the management team
+* **Generate** dynamic workflows based on request types
+* **Coordinate** execution among multiple specialized agents
+* **Consolidate** results from various agents to provide a consistent response
 
-* **Analyze complex requests** and break them down into manageable tasks
-* **Select appropriate agents** for assignment from the management team
-* **Generate dynamic workflows** based on request types
-* **Coordinate execution** among multiple specialist agents
-* **Consolidate results** from various agents to provide a consistent response
+---
 
-### supervisor_mode Spec
+## Simple Supervisor Example
 
-The supervisor type has an added `supervisor_mode` attribute that explicitly specifies workflow execution patterns.
-
-#### supervisor_mode Attributes
-
-* `sequential`: Execute agents sequentially
-* `parallel`: Execute agents in parallel and then consolidate results
-* `branch`: Selectively execute certain agent(s) based on conditions (mutually exclusive)
-* `auto`: AI automatically selects the optimal mode based on request analysis (default)
-
-#### Example: Simple Supervisor
+The most basic supervisor definition can be written as follows:
 
 ```yaml
 agents:
   - id: "project_supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       supervisor_mode: "parallel"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
-        You are a project supervisor coordinating work with specialist agents.
+        You are a project supervisor coordinating work with specialized agents.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 ```
 
-#### Managed Agents
+---
 
-Define specialist agents that the supervisor can coordinate:
+## Specifying Workflow Patterns with supervisor_mode
+
+In the supervisor type, you can explicitly specify the workflow execution pattern. You can choose one of the following four patterns using the `supervisor_mode` attribute:
+
+* `sequential`: Execute agents sequentially
+* `parallel`: Execute agents in parallel and then consolidate results
+* `branch`: Select and execute specific agent(s) based on conditions (single choice)
+* `auto`: AI automatically selects the optimal mode by analyzing the request (default)
+
+---
+
+## Example of Managed Agents
+
+You can define specialized agents that the supervisor can coordinate together:
 
 ```yaml
 agents:
@@ -49,11 +53,11 @@ agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       supervisor_mode: "branch"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
-        You are a supervisor managing specialist consultants.
-        Generate appropriate workflows based on requests and supervisor_mode.
+        You are a supervisor managing specialized consultants.
+        Generate appropriate workflows based on requests according to supervisor_mode.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 
   # Managed agents
@@ -79,51 +83,58 @@ agents:
         You are a business analyst specializing in strategic planning, market analysis, and ROI evaluation.
 ```
 
-### Workflow Patterns and supervisor_mode
+---
 
-The workflow pattern is determined by the supervisor_mode:
+## Detailed Specifications of supervisor_mode
 
-#### sequential (Sequential)
-Tasks are executed in order:
-```
-Request → Legal Review → Technical Evaluation → Business Analysis → Result
-```
+In the supervisor type, you can explicitly specify the workflow execution pattern. You can choose one of the following four patterns using the `supervisor_mode` attribute:
 
-#### parallel (Parallel)
-Multiple specialists analyze simultaneously:
-```
-Request → [Legal Expert, Technical Expert, Business Analyst] → Consolidation → Result
-```
+* `sequential`: Execute agents sequentially
+* `parallel`: Execute agents in parallel and then consolidate results
+* `branch`: Select and execute specific agent(s) based on conditions (single choice)
+* `auto`: AI automatically selects the optimal mode by analyzing the request (default)
 
-#### branch (Branch)
-Selectively execute one specialist based on the request:
-```
-Request → Analysis → Branch to appropriate specialist → Result
-```
+The workflow execution method changes depending on the `supervisor_mode` value:
 
-#### auto (Auto)
-AI analyzes the request and automatically selects the optimal pattern:
-```
-Request → Analysis → (One of sequential/parallel/branch) → Result
-```
+* **sequential (Sequential)**: Tasks are executed in order
+  ```
+  Request → Legal Review → Technical Evaluation → Business Analysis → Result
+  ```
 
-### Complete Workflow Example (supervisor_mode Applied)
+* **parallel (Parallel)**: Multiple experts analyze simultaneously
+  ```
+  Request → [Legal Expert, Technical Expert, Business Analyst] → Consolidation → Result
+  ```
+
+* **branch (Branch)**: Selectively execute one expert based on the request
+  ```
+  Request → Analysis → Branch to appropriate expert → Result
+  ```
+
+* **auto (Auto)**: AI analyzes the request and automatically selects the optimal pattern
+  ```
+  Request → Analysis → (One of sequential/parallel/branch) → Result
+  ```
+
+## Complete Workflow Example
+
+A complete example of an actual workflow is as follows:
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "Multi-Specialist Analysis"
-  description: "Supervisor coordinating specialist analysis"
+  name: "Multi-expert Analysis"
+  description: "Supervisor coordinating expert analysis"
 
 agents:
   - id: "supervisor"
     inline:
       type: "supervisor"
-      model: "openai/gpt-4.1"
+      model: "anthropic/claude-sonnet-4"
       supervisor_mode: "auto"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
-        You are a supervisor coordinating specialist analysis.
+        You are a supervisor coordinating expert analysis.
         Determine the workflow pattern based on supervisor_mode.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 
@@ -132,7 +143,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a legal expert. Focus on:
+        You are a legal expert. Focus on the following:
         - Compliance
         - Contract terms and risks
         - Legal implications
@@ -142,8 +153,8 @@ agents:
       type: "agent"
       model: "anthropic/claude-sonnet-4"
       system_prompt: |
-        You are a technical expert. Focus on:
-        - Feasibility
+        You are a technical expert. Focus on the following:
+        - Feasibility of implementation
         - Technical architecture
         - Performance considerations
 
@@ -152,7 +163,7 @@ agents:
       type: "agent"
       model: "google/gemini-2.5-pro"
       system_prompt: |
-        You are a business analyst. Focus on:
+        You are a business analyst. Focus on the following:
         - Strategic impact
         - Market considerations
         - ROI and business value
@@ -167,80 +178,76 @@ nodes:
     type: "end"
 ```
 
-### Built-in Supervisor Tools
+## Built-in Supervisor Tools
 
-Supervisors automatically have access to specialized tools. The behavior of these tools also changes based on supervisor_mode.
+The supervisor can automatically access specialized tools. The behavior of the tools also changes depending on the `supervisor_mode`.
 
-#### workflow_template_selector
-Analyzes user requests and selects appropriate workflow patterns when supervisor_mode is auto.
-* Determines which pattern is needed (sequential, parallel, branch)
-* Selects agents that need to participate
-* Provides reasoning for the decision
+* **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes user requests to select appropriate workflow patterns.
+  - Determine which pattern (sequential, parallel, branch) is needed
+  - Select agents that need to participate
+  - Provide reasoning for the decision
 
-#### dynamic_workflow_executor
-Dynamically generates and executes workflows based on supervisor_mode.
-* Configures workflow based on selected pattern (sequential, parallel, branch, auto)
-* Coordinates agent execution
-* Handles data flow between agents
-* Consolidates final results
+* **dynamic_workflow_executor**: Dynamically generates and executes workflows based on `supervisor_mode`.
+  - Configure workflows based on the selected pattern (sequential, parallel, branch, auto)
+  - Coordinate agent execution
+  - Process data flow between agents
+  - Consolidate final results
 
-### System Prompt Best Practices (Reflecting supervisor_mode)
+## System Prompt Best Practices
 
-#### Mandatory Instructions
-1. **Tool Usage Requirement**: Always require the supervisor to use tools
-2. **Clear Process**: Define workflow generation process based on supervisor_mode
-3. **Agent Awareness**: List of available agents and their capabilities
-4. **Pattern Guidance**: Explanation of workflow patterns based on supervisor_mode
+Example of writing a system prompt using `supervisor_mode`:
 
-#### Example: Comprehensive System Prompt
 ```yaml
 system_prompt: |
-  You are a project supervisor managing a team of specialist consultants.
+  You are a project supervisor managing a team of specialized consultants.
   Determine the workflow pattern based on supervisor_mode.
 
   supervisor_mode:
     - sequential: When tasks need to be performed in a specific order
     - parallel: When diverse perspectives are needed
-    - branch: When only one specialist should be selected based on conditions
-    - auto: Let AI judge and select the optimal pattern
+    - branch: When only one expert needs to be selected based on conditions
+    - auto: AI makes the judgment and selects the optimal pattern
 
-  Available specialists:
+  Available experts:
     - legal_expert: Contract analysis, compliance, legal risks
     - tech_expert: Technical feasibility, architecture, implementation
     - business_analyst: Strategy, market analysis, business impact
 
-  Always explain your supervisor_mode and workflow selection, and provide comprehensive results.
+  Always explain the supervisor_mode and workflow selection, and provide comprehensive results.
 ```
 
-### Common Use Cases (supervisor_mode Examples)
+## Common Use Cases
+
+Representative use cases for each `supervisor_mode` are as follows:
 
 #### Product Development Analysis
 ```
 User: "Evaluate the feasibility of launching a new AI-based feature"
-Supervisor: supervisor_mode: parallel → Legal (compliance), Tech (implementation), Business (market) analyze simultaneously
+Supervisor: supervisor_mode: parallel → Legal (compliance), Technical (implementation), Business (market) analyze simultaneously
 ```
 
 #### Contract Review Process
 ```
-User: "Review this partnership contract"
-Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Tech (integration) analyze in sequence
+User: "Please review this partnership contract"
+Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) analyze sequentially
 ```
 
 #### Strategic Decision Making
 ```
 User: "Should we migrate to cloud infrastructure?"
-Supervisor: supervisor_mode: parallel → All specialists analyze simultaneously → Consolidate
+Supervisor: supervisor_mode: parallel → All experts analyze simultaneously → Consolidation
 ```
 
-#### Cases Requiring Only One Specialist (branch)
+#### Cases requiring only a specific expert (branch)
 ```
 User: "What are the technical considerations for this feature?"
-Supervisor: supervisor_mode: branch → Only tech_expert executes
+Supervisor: supervisor_mode: branch → Execute only tech_expert
 ```
 
-### Supervisor Testing (supervisor_mode Applied)
+## Supervisor Testing
 
-#### Simple Test
+You can write test workflows for each `supervisor_mode` as follows:
+
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"

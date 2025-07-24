@@ -14,9 +14,19 @@
 * **여러 전문 에이전트 간 실행 조정**
 * **다양한 에이전트의 결과를 종합**하여 일관된 응답 제공
 
-### 기본 수퍼바이저 구성
 
-#### 간단한 수퍼바이저
+### supervisor_mode 스펙
+
+수퍼바이저 타입에는 워크플로우 실행 패턴을 명시적으로 지정할 수 있는 `supervisor_mode` 속성이 추가되었습니다.
+
+#### supervisor_mode 속성
+
+* `sequential`: 에이전트들을 순차적으로 실행
+* `parallel`: 에이전트들을 병렬로 실행 후 결과 종합
+* `branch`: 조건에 따라 특정 에이전트(들)만 선택 실행 (택일)
+* `auto`: AI가 요청을 분석해서 최적의 모드 자동 선택 (기본값)
+
+#### 예시: 간단한 수퍼바이저
 
 ```yaml
 agents:
@@ -24,17 +34,12 @@ agents:
     inline:
       type: "supervisor"
       model: "openai/gpt-4.1"
+      supervisor_mode: "parallel"  # sequential, parallel, branch, auto 중 선택
       system_prompt: |
-        당신은 전문 에이전트들과 함께 작업을 조율하는 
-        프로젝트 감독자입니다.
-        
-        중요: 워크플로우 관리를 위해 항상 도구를 사용하세요:
-        1. 요청 분석을 위해 'workflow_template_selector' 사용
-        2. 워크플로우 생성 및 실행을 위해 'dynamic_workflow_executor' 사용
-        
-        사용 가능한 에이전트: legal_expert, tech_expert, business_analyst
+        당신은 전문 에이전트들과 함께 작업을 조율하는 프로젝트 감독자입니다.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 ```
+
 
 #### 관리되는 에이전트
 
@@ -47,9 +52,10 @@ agents:
     inline:
       type: "supervisor"
       model: "openai/gpt-4.1"
+      supervisor_mode: "branch"  # sequential, parallel, branch, auto 중 선택
       system_prompt: |
         당신은 전문 컨설턴트들을 관리하는 감독자입니다.
-        요청에 따라 적절한 워크플로우를 생성하기 위해 도구를 사용하세요.
+        요청에 따라 적절한 워크플로우를 supervisor_mode에 따라 생성하세요.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
   
   # 관리되는 에이전트들
@@ -58,55 +64,54 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        당신은 계약서 분석, 규정 준수, 법적 위험 평가를
-        전문으로 하는 법률 전문가입니다.
-        
+        당신은 계약서 분석, 규정 준수, 법적 위험 평가를 전문으로 하는 법률 전문가입니다.
+  
   - id: "tech_expert"
     inline:
       type: "agent"
       model: "anthropic/claude-sonnet-4"
       system_prompt: |
-        당신은 소프트웨어 아키텍처, 기술 평가, 구현 계획을
-        전문으로 하는 기술 전문가입니다.
-        
+        당신은 소프트웨어 아키텍처, 기술 평가, 구현 계획을 전문으로 하는 기술 전문가입니다.
+  
   - id: "business_analyst"
     inline:
       type: "agent"
       model: "google/gemini-2.5-pro"
       system_prompt: |
-        당신은 전략 계획, 시장 분석, ROI 평가를
-        전문으로 하는 비즈니스 분석가입니다.
+        당신은 전략 계획, 시장 분석, ROI 평가를 전문으로 하는 비즈니스 분석가입니다.
 ```
 
-### 워크플로우 패턴
 
-감독자는 요청에 따라 다양한 워크플로우 패턴을 생성할 수 있습니다:
+### 워크플로우 패턴과 supervisor_mode
 
-#### 순차 패턴
+supervisor_mode에 따라 워크플로우 패턴이 결정됩니다:
 
+#### sequential (순차)
 작업이 순서대로 실행됩니다:
-
 ```
 요청 → 법률 검토 → 기술 평가 → 비즈니스 분석 → 결과
 ```
 
-#### 병렬 검토 패턴
-
+#### parallel (병렬)
 여러 전문가가 동시에 분석합니다:
-
 ```
 요청 → [법률 전문가, 기술 전문가, 비즈니스 분석가] → 종합 → 결과
 ```
 
-#### 조건부 패턴
-
-요청 유형에 따른 동적 라우팅:
-
+#### branch (택일)
+요청에 따라 한 전문가만 선택적으로 실행:
 ```
-요청 → 분석 → 적절한 전문가(들)로 라우팅 → 결과
+요청 → 분석 → 적절한 전문가로 분기 → 결과
 ```
 
-### 완전한 워크플로우 예시
+#### auto (자동)
+AI가 요청을 분석해 최적의 패턴을 자동 선택:
+```
+요청 → 분석 → (sequential/parallel/branch 중 하나) → 결과
+```
+
+
+### 완전한 워크플로우 예시 (supervisor_mode 적용)
 
 ```yaml
 version: "agentflow/v1"
@@ -120,21 +125,12 @@ agents:
     inline:
       type: "supervisor"
       model: "openai/gpt-4.1"
+      supervisor_mode: "auto"  # sequential, parallel, branch, auto 중 선택
       system_prompt: |
         당신은 전문가 분석을 조정하는 감독자입니다.
-        
-        워크플로우 패턴:
-        - 순차: 단계별 프로세스 (법률 → 기술 → 비즈니스)
-        - 병렬 검토: 포괄적인 다각도 분석
-        - 단일 전문가: 도메인별 특정 질문
-        
-        중요: 항상 도구를 사용하세요:
-        1. 'workflow_template_selector' - 요청 분석 및 패턴 선택
-        2. 'dynamic_workflow_executor' - 워크플로우 생성 및 실행
-        
-        팀원: legal_expert, tech_expert, business_analyst
+        supervisor_mode에 따라 워크플로우 패턴을 결정하세요.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
-        
+  
   - id: "legal_expert"
     inline:
       type: "agent"
@@ -144,7 +140,7 @@ agents:
         - 규정 준수
         - 계약 조건 및 위험
         - 법적 함의
-        
+  
   - id: "tech_expert"
     inline:
       type: "agent"
@@ -154,7 +150,7 @@ agents:
         - 구현 가능성
         - 기술 아키텍처
         - 성능 고려사항
-        
+  
   - id: "business_analyst"
     inline:
       type: "agent"
@@ -175,93 +171,84 @@ nodes:
     type: "end"
 ```
 
+
 ### 내장 감독자 도구
 
-감독자는 자동으로 전문화된 도구에 접근할 수 있습니다:
+감독자는 자동으로 전문화된 도구에 접근할 수 있습니다. supervisor_mode에 따라 도구의 동작 방식도 달라집니다.
 
-#### workflow\_template\_selector
-
-사용자 요청을 분석하고 적절한 워크플로우 패턴을 선택합니다:
-
-* 순차, 병렬 또는 조건부 패턴이 필요한지 결정
+#### workflow_template_selector
+사용자 요청을 분석하고 supervisor_mode가 auto일 때 적절한 워크플로우 패턴을 선택합니다.
+* sequential, parallel, branch 중 어떤 패턴이 필요한지 결정
 * 참여해야 할 에이전트 선택
 * 결정에 대한 근거 제공
 
-#### dynamic\_workflow\_executor
-
-워크플로우를 동적으로 생성하고 실행합니다:
-
-* 선택된 템플릿을 기반으로 워크플로우 구성
+#### dynamic_workflow_executor
+supervisor_mode에 따라 워크플로우를 동적으로 생성하고 실행합니다.
+* 선택된 패턴(sequential, parallel, branch, auto)에 따라 워크플로우 구성
 * 에이전트 실행 조정
 * 에이전트 간 데이터 흐름 처리
 * 최종 결과 종합
 
-### 시스템 프롬프트 모범 사례
+
+### 시스템 프롬프트 모범 사례 (supervisor_mode 반영)
 
 #### 필수 지침
-
 1. **도구 사용 의무화**: 감독자가 항상 도구를 사용하도록 요구
-2. **명확한 프로세스**: 단계별 워크플로우 생성 프로세스 정의
+2. **명확한 프로세스**: supervisor_mode에 따라 워크플로우 생성 프로세스 정의
 3. **에이전트 인식**: 사용 가능한 에이전트와 능력 목록
-4. **패턴 가이드**: 다양한 워크플로우 패턴 사용 시기 설명
+4. **패턴 가이드**: supervisor_mode에 따른 워크플로우 패턴 설명
 
 #### 예시: 포괄적인 시스템 프롬프트
-
 ```yaml
 system_prompt: |
   당신은 전문 컨설턴트 팀을 관리하는 프로젝트 감독자입니다.
+  supervisor_mode에 따라 워크플로우 패턴을 결정하세요.
   
-  필수 프로세스:
-  1. 항상 먼저 'workflow_template_selector'를 사용하여 요청 분석
-  2. 항상 'dynamic_workflow_executor'를 사용하여 워크플로우 생성 및 실행
-  3. 도구 사용 없이 수동 응답 제공 금지
+  supervisor_mode:
+    - sequential: 특정 순서로 작업을 수행해야 할 때
+    - parallel: 다양한 관점이 필요할 때
+    - branch: 조건에 따라 한 전문가만 선택해야 할 때
+    - auto: AI가 판단해서 최적의 패턴 선택
   
   사용 가능한 전문가:
-  - legal_expert: 계약서 분석, 준수, 법적 위험
-  - tech_expert: 기술적 타당성, 아키텍처, 구현
-  - business_analyst: 전략, 시장 분석, 비즈니스 영향
+    - legal_expert: 계약서 분석, 준수, 법적 위험
+    - tech_expert: 기술적 타당성, 아키텍처, 구현
+    - business_analyst: 전략, 시장 분석, 비즈니스 영향
   
-  워크플로우 패턴:
-  - 순차: 특정 순서로 작업을 수행해야 할 때
-  - 병렬 검토: 다양한 관점이 필요할 때
-  - 단일 전문가: 도메인별 특정 질문
-  
-  결정 가이드라인:
-  - 복잡한 프로젝트 → 종합이 포함된 병렬 검토
-  - 구현 계획 → 순차 (법률 → 기술 → 비즈니스)
-  - 특정 전문성 필요 → 단일 전문가
-  - 다면적 분석 → 병렬 검토
-  
-  항상 워크플로우 선택을 설명하고 포괄적인 결과를 제공하세요.
+  항상 supervisor_mode와 워크플로우 선택을 설명하고 포괄적인 결과를 제공하세요.
 ```
 
-### 일반적인 사용 사례
+
+### 일반적인 사용 사례 (supervisor_mode 예시)
 
 #### 제품 개발 분석
-
 ```
 사용자: "새로운 AI 기반 기능 출시 타당성을 평가해주세요"
-감독자: 병렬 검토 → 법률(준수), 기술(구현), 비즈니스(시장)
+감독자: supervisor_mode: parallel → 법률(준수), 기술(구현), 비즈니스(시장) 동시 분석
 ```
 
 #### 계약서 검토 프로세스
-
 ```
 사용자: "이 파트너십 계약서를 검토해주세요"
-감독자: 순차 → 법률(조건) → 비즈니스(전략적 영향) → 기술(통합)
+감독자: supervisor_mode: sequential → 법률(조건) → 비즈니스(전략적 영향) → 기술(통합) 순차 분석
 ```
 
 #### 전략적 의사결정
-
 ```
 사용자: "클라우드 인프라로 마이그레이션해야 할까요?"
-감독자: 병렬 검토 → 모든 전문가가 동시 분석 → 종합
+감독자: supervisor_mode: parallel → 모든 전문가가 동시 분석 → 종합
 ```
 
-### 감독자 테스트
+#### 특정 전문가만 필요한 경우 (branch)
+```
+사용자: "이 기능에 대한 기술적 고려사항은 무엇인가요?"
+감독자: supervisor_mode: branch → tech_expert만 실행
+```
+
+
+### 감독자 테스트 (supervisor_mode 적용)
 
 #### 간단한 테스트
-
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
@@ -273,17 +260,17 @@ agents:
     inline:
       type: "supervisor"
       model: "google/gemini-2.5-pro"
+      supervisor_mode: "parallel"
       system_prompt: |
-        당신은 테스트 감독자입니다. 도구를 사용하여 요청을
-        분석하고 팀과 함께 적절한 워크플로우를 생성하세요.
+        당신은 테스트 감독자입니다. supervisor_mode에 따라 워크플로우를 생성하세요.
       agents: ["expert_a", "expert_b"]
-        
+  
   - id: "expert_a"
     inline:
       type: "agent"
       model: "anthropic/claude-sonnet-4"
       system_prompt: "당신은 전문가 A입니다. 모든 주제에 대해 관점 A를 제공하세요."
-        
+  
   - id: "expert_b"
     inline:
       type: "agent"
@@ -302,6 +289,6 @@ nodes:
 
 다음과 같은 요청으로 테스트하세요:
 
-* "원격 근무의 장단점을 분석해주세요" (병렬 검토)
-* "프로젝트 출시를 위한 단계별 계획을 세워주세요" (순차)
-* "이 기능에 대한 기술적 고려사항은 무엇인가요?" (단일 전문가)
+* supervisor_mode: parallel → "원격 근무의 장단점을 분석해주세요"
+* supervisor_mode: sequential → "프로젝트 출시를 위한 단계별 계획을 세워주세요"
+* supervisor_mode: branch → "이 기능에 대한 기술적 고려사항은 무엇인가요?"

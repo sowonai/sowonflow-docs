@@ -50,12 +50,12 @@ jobs:
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         
-        # 변경된 파일 확인
+        # Check for changed files
         echo "Checking for changes in en/ directory..."
         git status
         git add en/
         
-        # 스테이징된 변경사항이 있는지 확인
+        # Check if there are staged changes
         if ! git diff --staged --quiet; then
           echo "Changes detected, committing..."
           git commit -m "🤖 Auto-translate: Update English docs from Korean changes

@@ -134,7 +134,7 @@ npm run translate:all -- --pattern "ko/guides/*.md"
 npm run dev
 
 # In another terminal, edit Korean files
-echo "새로운 내용" >> ko/agent.md
+echo "New content" >> ko/agent.md
 
 # Translation happens automatically!
 ```
@@ -187,7 +187,7 @@ Automatic translation on push to `main` branch:
 ### Before (Google Translate)
 ```yaml
 system_prompt: |
-  당신은 다음 분야를 전문으로 하는 법률 전문가입니다:
+  You are a legal expert specializing in the following areas:
   -Conalization and review of contracts  # ❌ Typo
   -Recision compliance evaluation        # ❌ Wrong term
 ```

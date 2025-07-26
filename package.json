@@ -1,38 +1,12 @@
 {
   "name": "sowonflow-docs",
   "version": "1.0.0",
-  "description": "AI-powered documentation translation system for SowonFlow",
-  "main": ".github/scripts/translate-simple.js",
+  "description": "SowonFlow Documentation",
   "scripts": {
-    "translate": "node -r dotenv/config .github/scripts/translate-simple.js",
-    "translate:file": "node -r dotenv/config .github/scripts/scripts/translate-file.js",
-    "translate:all": "node -r dotenv/config .github/scripts/scripts/translate-all.js",
-    "translate:watch": "node -r dotenv/config .github/scripts/scripts/translate-watch.js",
-    "translate:validate": "node -r dotenv/config .github/scripts/scripts/validate-translations.js",
-    "setup": "node -r dotenv/config .github/scripts/scripts/setup.js",
-    "dev": "npm run translate:watch",
-    "build": "npm run translate:all",
-    "test": "npm run translate:validate",
-    "install-deps": "cd .github/scripts && npm install",
-    "env:check": "node -e \"console.log('OPENROUTER_API_KEY:', process.env.OPENROUTER_API_KEY ? '✅ Set' : '❌ Not set'); console.log('OPENROUTER_MODEL:', process.env.OPENROUTER_MODEL || 'Using default')\""
-  },
-  "dependencies": {
-    "chokidar": "^3.6.0",
-    "chalk": "^4.1.2",
-    "ora": "^5.4.1",
-    "inquirer": "^8.2.6",
-    "glob": "^10.3.10",
-    "commander": "^11.1.0"
-  },
-  "devDependencies": {
-    "dotenv": "^16.3.1"
+    "translate": "node .github/scripts/translate-simple.js"
   },
   "keywords": [
-    "translation",
     "documentation",
-    "ai",
-    "openrouter",
-    "markdown",
     "sowonflow"
   ],
   "repository": {
@@ -42,6 +16,6 @@
   "author": "SowonAI",
   "license": "MIT",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   }
 }

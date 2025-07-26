@@ -2,7 +2,7 @@
 
 ## MCP Integration
 
-MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `@sowonai/agent` package provides smooth MCP server integration for extending agent functionality.
+MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `sowonflow` package provides smooth MCP server integration for extending agent functionality.
 
 ### What is MCP?
 

@@ -214,7 +214,7 @@ const workflow = new Workflow({
 ### Example: Complete Document Setup
 
 ```typescript
-import { Workflow } from '@sowonai/agent';
+import { Workflow } from 'sowonflow';
 import fs from 'fs/promises';
 
 const documents = {

@@ -21,6 +21,8 @@ Most companies struggle with AI transformation despite having clear use cases an
 
 SowonFlow transforms complex AI orchestration into human-readable YAML configurations. Business analysts can define workflows that developers can immediately implement and maintain.
 
+**Core Package**: `sowonflow` - The main SowonFlow runtime library for creating and executing AI workflows.
+
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
@@ -43,4 +45,24 @@ nodes:
     next: "end"
   end:
     type: "end"
+```
+
+## Quick Start
+
+### Installation
+
+```bash
+npm install sowonflow
+```
+
+### Basic Usage
+
+```javascript
+import { Workflow } from 'sowonflow';
+
+const workflow = new Workflow({
+  mainWorkflow: yamlContent
+});
+
+const result = await workflow.ask("Your question here");
 ```

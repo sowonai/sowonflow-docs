@@ -21,11 +21,11 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/intro">
+            to="/intro">
             <Translate
               id="homepage.button.getStarted"
               description="The label for the get started button on the homepage">
-              Start document →
+              Get Started →
             </Translate>
           </Link>
         </div>
@@ -41,7 +41,7 @@ export default function Home(): ReactNode {
       title={`${siteConfig.title}`}
       description={translate({
         id: 'homepage.tagline',
-        message: 'YAML 기반 AI 워크플로우 엔진',
+        message: 'YAML-based AI workflow engine',
         description: 'The tagline for the homepage'
       })}>
       <HomepageHeader />

@@ -4,7 +4,8 @@ on:
   push:
     branches: [ main, master ]
     paths: 
-      - 'docs/**/*.md'
+      - 'docs-ko/**/*.md'
+  workflow_dispatch:  # 수동 실행 허용
 
 permissions:
   contents: write
@@ -28,7 +29,7 @@ jobs:
       id: changed-files
       uses: tj-actions/changed-files@v41
       with:
-        files: docs/**/*.md
+        files: docs-ko/**/*.md
 
     - name: Translate changed files with AI
       if: steps.changed-files.outputs.any_changed == 'true'
@@ -38,6 +39,7 @@ jobs:
       run: |
         if [ -n "$OPENROUTER_API_KEY" ]; then
           echo "✅ Using OpenRouter AI translation with Mistral Small..."
+          echo "📝 Files to translate: ${{ steps.changed-files.outputs.all_changed_files }}"
         else
           echo "❌ OpenRouter API key not found! Please set OPENROUTER_API_KEY secret."
           exit 1
@@ -51,17 +53,18 @@ jobs:
         git config --local user.name "GitHub Actions"
         
         # Check for changed files
-        echo "Checking for changes in en/ directory..."
+        echo "📂 Checking for changes in docs/ directory..."
         git status
-        git add en/
+        git add docs/
         
         # Check if there are staged changes
         if ! git diff --staged --quiet; then
-          echo "Changes detected, committing..."
+          echo "✅ Changes detected, committing..."
           git commit -m "🤖 Auto-translate: Update English docs from Korean changes
 
           Source files changed: ${{ steps.changed-files.outputs.all_changed_files }}"
           git push
+          echo "🚀 Translation completed and pushed successfully!"
         else
-          echo "No changes to commit in en/ directory"
+          echo "ℹ️ No changes to commit in docs/ directory"
         fi

@@ -1,252 +1,146 @@
-# SowonFlow Documentation Translation System
+# SowonFlow Documentation
 
-AI-powered translation system for SowonFlow documentation using OpenRouter and Google Translate fallback.
+The Missing Link in AI Transformation - Documentation site for YAML-based AI workflow engine.
 
-## 🚀 Quick Start
+## 🚀 Overview
 
-### 1. Install Dependencies
+This project is a SowonFlow documentation site built with Docusaurus. It primarily uses Korean as the source language and provides English versions through automated translation.
+
+## 🌟 Key Features
+
+- **Multilingual Support**: Korean source, automated English translation
+- **Automated Translation**: Automatically translates Korean documents to English when changed
+- **GitHub Pages Deployment**: Automated build and deployment
+- **Modern UI**: Responsive interface based on Docusaurus 3.x
+
+## 🛠️ Tech Stack
+
+- **Docusaurus 3.x**: Static site generator
+- **TypeScript**: Type safety
+- **GitHub Actions**: CI/CD pipeline
+- **OpenRouter API**: AI-powered automated translation
+
+## 🏃‍♂️ Quick Start
+
+### Development Setup
+
 ```bash
+# Install dependencies
 npm install
+
+# Start development server
+npm start
 ```
 
-### 2. Setup Environment
+### Build
+
 ```bash
-# Copy environment template
-cp .env.example .env
+# Production build
+npm run build
 
-# Run interactive setup (recommended)
-npm run setup
-
-# Or manually edit .env file
-# OPENROUTER_API_KEY=your_key_here
-# OPENROUTER_MODEL=mistralai/mistral-7b-instruct:free
+# Serve built site locally
+npm run serve
 ```
 
-### 3. Start Translating
-```bash
-# Translate a single file
-npm run translate:file ko/agent.md
+## 📝 Documentation Guide
 
+### Writing Korean Documentation
+
+1. Write markdown files in Korean in the `docs-ko/` directory
+2. Commit and push changes
+3. GitHub Actions automatically translates to English and saves to `docs/` directory
+
+### Translation Commands
+
+```bash
 # Translate all files
-npm run translate:all
+npm run translate
 
-# Watch mode (auto-translate on file changes)
-npm run dev
-
-# Validate translations
-npm run test
+# Translate specific file
+npm run translate docs-ko/specific-file.md
 ```
 
-## 📚 Available Scripts
+### Sidebar Configuration
 
-| Script | Description | Example |
-|--------|-------------|---------|
-| `npm run setup` | Initial setup wizard | Interactive configuration |
-| `npm run env:check` | Check environment variables | Show current settings |
-| `npm run translate:file` | Translate single file | `npm run translate:file ko/agent.md` |
-| `npm run translate:all` | Translate all Korean files | With options: `--force --concurrent 5` |
-| `npm run dev` | Watch mode for auto-translation | Monitors `ko/**/*.md` |
-| `npm run test` | Validate translation quality | Checks for issues |
-| `npm run build` | Full build (translate all) | Production ready |
+Configure navigation structure in the `sidebars.ts` file.
 
-## 🔧 Configuration
+## 🤖 Automated Translation System
 
-### Environment Variables
+### How It Works
 
-Create `.env` file or set environment variables:
+1. When markdown files in `docs-ko/` directory are changed
+2. GitHub Actions workflow is triggered
+3. AI translation is performed via OpenRouter API
+4. Translated documents are saved to `docs/` directory
 
-```bash
-# OpenRouter API (Recommended)
-OPENROUTER_API_KEY=your_api_key_here
-OPENROUTER_MODEL=mistralai/mistral-7b-instruct:free
+### Translation Quality Improvements
 
-# Alternative models
-# OPENROUTER_MODEL=meta-llama/llama-3.1-8b-instruct:free
-# OPENROUTER_MODEL=google/gemma-2-9b-it:free
-```
+- Maintains technical terminology consistency
+- Preserves brand names (SowonFlow)
+- Maintains markdown formatting
+- Translates text within YAML code blocks
 
-### Supported Models
-
-#### Free Models (OpenRouter)
-- `mistralai/mistral-7b-instruct:free` ⭐ Recommended
-- `meta-llama/llama-3.1-8b-instruct:free`
-- `google/gemma-2-9b-it:free`
-
-#### Paid Models (Higher Quality)
-- `openai/gpt-4-turbo`
-- `anthropic/claude-3.5-sonnet`
-- `mistralai/mistral-large`
-
-## 🎯 Features
-
-### AI Translation (OpenRouter)
-- ✅ Context-aware technical translation
-- ✅ Preserves YAML structure and code blocks
-- ✅ Consistent terminology
-- ✅ Natural, professional English
-- ✅ Free tier available
-
-### Smart Processing
-- 🔄 YAML block detection and translation
-- 📝 Markdown structure preservation
-- 🔗 Link and image handling
-- 📊 Translation validation
-- ⏱️ Rate limiting and error handling
-
-### Development Tools
-- 👀 File watching for automatic translation
-- 📈 Progress tracking and statistics
-- 🔍 Quality validation and issue detection
-- 📋 Detailed logging and error reporting
-
-## 📖 Usage Examples
-
-### Single File Translation
-```bash
-# Basic translation
-npm run translate:file ko/agent.md
-
-# Force retranslation
-npm run translate:file ko/agent.md -- --force
-
-# Verbose output
-npm run translate:file ko/agent.md -- --verbose
-```
-
-### Batch Translation
-```bash
-# All files
-npm run translate:all
-
-# Force retranslation
-npm run translate:all -- --force
-
-# Custom concurrency
-npm run translate:all -- --concurrent 5
-
-# Custom pattern
-npm run translate:all -- --pattern "ko/guides/*.md"
-```
-
-### Development Workflow
-```bash
-# Start watching for changes
-npm run dev
-
-# In another terminal, edit Korean files
-echo "New content" >> ko/agent.md
-
-# Translation happens automatically!
-```
-
-### Quality Assurance
-```bash
-# Validate all translations
-npm run test
-
-# Detailed validation report
-npm run test -- --verbose
-```
-
-## 🏗️ Architecture
+## 📁 Project Structure
 
 ```
-.
-├── package.json                    # Main package configuration
-├── .env                           # Environment variables (local)
+sowonflow-docs/
+├── docs/                          # English translated documents
+│   ├── index.md                   # Homepage
+│   ├── intro.md                   # Introduction
+│   ├── agent.md                   # Agent guide
+│   ├── supervisor.md              # Supervisor guide
+│   ├── models.md                  # Models guide
+│   ├── mcp.md                     # MCP guide
+│   ├── documentation.md           # Documentation guide
+│   └── examples/                  # Examples
+│       ├── 1.md
+│       └── 3.md
+├── docs-ko/                       # Korean source documents
+│   ├── intro.md                   # Introduction (Korean)
+│   ├── agent.md                   # Agent guide (Korean)
+│   ├── supervisor.md              # Supervisor guide (Korean)
+│   ├── models.md                  # Models guide (Korean)
+│   ├── mcp.md                     # MCP guide (Korean)
+│   ├── documentation.md           # Documentation guide (Korean)
+│   └── examples/                  # Examples (Korean)
+├── src/                           # React components
+├── static/                        # Static files
 ├── .github/
-│   ├── scripts/
-│   │   ├── translate-simple.js    # Core translation engine
-│   │   ├── package.json          # Script dependencies
-│   │   └── scripts/
-│   │       ├── translate-file.js  # Single file translation
-│   │       ├── translate-all.js   # Batch translation
-│   │       ├── translate-watch.js # File watcher
-│   │       ├── validate-translations.js # Quality validation
-│   │       └── setup.js          # Initial setup
-│   └── workflows/
-│       └── translate-ko2en.yml    # GitHub Actions workflow
-├── ko/                           # Korean documentation
-│   ├── agent.md
-│   └── ...
-└── en/                           # English documentation (generated)
-    ├── agent.md
-    └── ...
+│   ├── workflows/                 # CI/CD workflows
+│   └── scripts/                   # Translation scripts
+├── docusaurus.config.ts           # Docusaurus configuration
+└── sidebars.ts                    # Sidebar configuration
 ```
 
-## 🤖 GitHub Actions
+## 🚀 Deployment
 
-Automatic translation on push to `main` branch:
+This site is automatically deployed via GitHub Pages:
 
-1. **Setup Repository Secret**: Add `OPENROUTER_API_KEY` in repository settings
-2. **Push Changes**: Any changes to `ko/**/*.md` trigger translation
-3. **Auto Commit**: Translated files are automatically committed back
+- **URL**: https://sowonai.github.io/sowonflow-docs/
+- **Trigger**: When pushed to `main` branch
+- **Build**: Automatically performed in GitHub Actions
 
-## 🔍 Translation Quality
+## 🔧 Environment Variables
 
-### Before (Google Translate)
-```yaml
-system_prompt: |
-  You are a legal expert specializing in the following areas:
-  -Conalization and review of contracts  # ❌ Typo
-  -Recision compliance evaluation        # ❌ Wrong term
-```
+The following secrets are required for automated translation:
 
-### After (AI Translation)
-```yaml
-system_prompt: |
-  You are a legal expert specializing in the following areas:
-  - Contract analysis and review         # ✅ Correct
-  - Regulatory compliance evaluation     # ✅ Accurate
-```
+- `OPENROUTER_API_KEY`: OpenRouter API key
 
-## 🛠️ Troubleshooting
+## 🤝 Contributing
 
-### Common Issues
-
-**Translation not working?**
-```bash
-# Check API key
-echo $OPENROUTER_API_KEY
-
-# Check fallback
-which trans
-
-# Test single file
-npm run translate:file ko/README.md -- --verbose
-```
-
-**Quality issues?**
-```bash
-# Run validation
-npm run test -- --verbose
-
-# Try different model
-export OPENROUTER_MODEL="meta-llama/llama-3.1-8b-instruct:free"
-```
-
-**Performance issues?**
-```bash
-# Reduce concurrency
-npm run translate:all -- --concurrent 1
-
-# Check rate limits
-# OpenRouter free tier: 20 requests/minute
-```
-
-## 📝 Contributing
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Test your changes: `npm run test`
-4. Commit your changes: `git commit -m 'Add amazing feature'`
-5. Push to the branch: `git push origin feature/amazing-feature`
-6. Open a Pull Request
+1. Fork this repository
+2. Create a new branch (`git checkout -b feature/amazing-feature`)
+3. Write documentation in Korean in the `docs-ko/` directory
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Create a Pull Request
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
----
+## 🙏 Acknowledgments
 
-**Made with ❤️ by SowonAI**
+- [Docusaurus](https://docusaurus.io/) - Excellent documentation platform
+- [OpenRouter](https://openrouter.ai/) - AI translation service
+- [GitHub Pages](https://pages.github.com/) - Free hosting service

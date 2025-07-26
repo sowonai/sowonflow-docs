@@ -245,7 +245,7 @@ async function translateFileSimple(koFilePath) {
     
     // Calculate English file path (based on absolute path)
     const relativePath = path.relative(process.cwd(), absoluteKoPath);
-    const enFilePath = relativePath.replace(/^docs-ko\//, 'docs/');
+    const enFilePath = relativePath.replace(/^ko\//, 'en/');
     const absoluteEnPath = path.resolve(process.cwd(), enFilePath);
     const enDir = path.dirname(absoluteEnPath);
     
@@ -402,10 +402,15 @@ async function translateFileLineByLine(koFilePath, koContent, absoluteEnPath, re
 
 // Main execution function
 async function main() {
-  const specifiedFile = process.argv[2];
+  const changedFiles = process.argv[2];
   
   console.log(`Current working directory: ${process.cwd()}`);
   console.log(`Script arguments:`, process.argv);
+  
+  if (!changedFiles) {
+    console.log('No changed files specified');
+    return;
+  }
   
   // Check API key and tools
   const openrouterKey = process.env.OPENROUTER_API_KEY;
@@ -425,29 +430,16 @@ async function main() {
     }
   }
   
-  let files = [];
+  // Parse changed files list
+  const files = changedFiles.split(' ').filter(file => file.trim());
   
-  if (specifiedFile) {
-    // Single file specified
-    files = [specifiedFile];
-    console.log(`Found 1 specified Korean file:`);
-  } else {
-    // No file specified - translate all files in docs-ko
-    console.log('No specific file provided, translating all files in docs-ko/');
-    try {
-      files = getAllMarkdownFiles('docs-ko');
-      console.log(`Found ${files.length} Korean files to translate:`);
-    } catch (error) {
-      console.error('Error finding files:', error.message);
-      return;
-    }
-  }
-  
-  for (const file of files) {
-    const absolutePath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
+  console.log(`Found ${files.length} changed Korean files:`);
+  files.forEach(file => {
     console.log(`  - ${file}`);
-    console.log(`    → Absolute path: ${absolutePath} (exists: ${fs.existsSync(absolutePath)})`);
-  }
+    const absolutePath = path.resolve(process.cwd(), file);
+    const exists = fs.existsSync(absolutePath);
+    console.log(`    → Absolute path: ${absolutePath} (exists: ${exists})`);
+  });
   
   // Translate each file
   for (const file of files) {
@@ -455,32 +447,6 @@ async function main() {
   }
   
   console.log('🎉 All translations completed!');
-}
-
-// Helper function to get all markdown files recursively
-function getAllMarkdownFiles(dir) {
-  const files = [];
-  
-  function scanDirectory(directory) {
-    const items = fs.readdirSync(directory);
-    
-    for (const item of items) {
-      const fullPath = path.join(directory, item);
-      const stat = fs.statSync(fullPath);
-      
-      if (stat.isDirectory()) {
-        scanDirectory(fullPath);
-      } else if (item.endsWith('.md')) {
-        files.push(fullPath);
-      }
-    }
-  }
-  
-  if (fs.existsSync(dir)) {
-    scanDirectory(dir);
-  }
-  
-  return files;
 }
 
 // Execute script

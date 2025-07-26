@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
     paths: 
-      - 'docs/**/*.md'
+      - 'ko/**/*.md'
 
 permissions:
   contents: write
@@ -28,7 +28,7 @@ jobs:
       id: changed-files
       uses: tj-actions/changed-files@v41
       with:
-        files: docs/**/*.md
+        files: ko/**/*.md
 
     - name: Translate changed files with AI
       if: steps.changed-files.outputs.any_changed == 'true'

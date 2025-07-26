@@ -1,0 +1,21 @@
+{
+  "servers": {
+    "Context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "shrimp-task-manager": {
+      "command": "npx",
+      "args": ["-y", "mcp-shrimp-task-manager"],
+      "env": {
+        "DATA_DIR": "${workspaceFolder}/data",
+        "TEMPLATES_USE": "en",
+        "ENABLE_GUI": "false"
+      }
+    }
+  }
+}

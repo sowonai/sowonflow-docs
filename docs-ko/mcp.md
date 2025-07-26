@@ -2,7 +2,7 @@
 
 ## MCP 통합
 
-MCP (Model Context Protocol) 통합을 통해 에이전트는 표준화된 프로토콜을 통해 외부 시스템 및 서비스에 접근할 수 있습니다. `@sowonai/agent` 패키지는 에이전트 기능 확장을 위한 원활한 MCP 서버 통합을 제공합니다.
+MCP (Model Context Protocol) 통합을 통해 에이전트는 표준화된 프로토콜을 통해 외부 시스템 및 서비스에 접근할 수 있습니다. `sowonflow` 패키지는 에이전트 기능 확장을 위한 원활한 MCP 서버 통합을 제공합니다.
 
 ### MCP란 무엇인가요?
 

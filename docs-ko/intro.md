@@ -21,6 +21,8 @@ SowonFlow는 비즈니스 요구사항과 AI 구현 사이의 격차를 해소�
 
 SowonFlow는 복잡한 AI 오케스트레이션을 사람이 읽을 수 있는 YAML 구성으로 변환합니다. 비즈니스 분석가가 정의한 워크플로우를 개발자가 즉시 구현하고 유지할 수 있습니다.
 
+**핵심 패키지**: `sowonflow` - AI 워크플로우를 생성하고 실행하는 메인 SowonFlow 런타임 라이브러리입니다.
+
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
@@ -43,4 +45,24 @@ nodes:
     next: "end"
   end:
     type: "end"
+```
+
+## 빠른 시작
+
+### 설치
+
+```bash
+npm install sowonflow
+```
+
+### 기본 사용법
+
+```javascript
+import { Workflow } from 'sowonflow';
+
+const workflow = new Workflow({
+  mainWorkflow: yamlContent
+});
+
+const result = await workflow.ask("여기에 질문을 입력하세요");
 ```

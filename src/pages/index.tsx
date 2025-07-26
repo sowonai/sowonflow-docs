@@ -21,11 +21,11 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/">
+            to="/docs/intro">
             <Translate
               id="homepage.button.getStarted"
               description="The label for the get started button on the homepage">
-              문서 시작하기 →
+              Start document →
             </Translate>
           </Link>
         </div>

@@ -9,31 +9,20 @@ try {
   // dotenv is optional, continue without it
 }
 
-// Post-process translation to improve quality
+// Post-process translation to fix formatting issues
 function postProcessTranslation(translated, original) {
   let result = translated;
   
-  // 1. Preserve brand names
-  result = result.replace(/SOWONFLOW/g, 'SowonFlow');
-  result = result.replace(/sowonflow/g, 'SowonFlow');
-  
-  // 2. Capitalize titles
-  if (original.startsWith('# ')) {
-    result = result.replace(/^# [a-z]/, match => match.toUpperCase());
-  }
-  
-  // 3. Restore markdown formatting
+  // 1. Restore markdown formatting (AI sometimes breaks these)
   result = result.replace(/\*\*\* ([^*]+) \*\*/g, '* **$1**');  // *** Text ** → * **Text**
   result = result.replace(/\\\s*"/g, '"');  // \" → "
   result = result.replace(/\\\s*'/g, "'");  // \' → '
+  result = result.replace(/^\s*\*\*\*\s*/gm, '* **'); // Fix list formatting
   
-  // 4. Common translation improvements
+  // 2. Domain-specific term corrections (only if AI gets them wrong)
   result = result.replace(/The introduction of corporate AI/g, 'Corporate AI adoption');
   result = result.replace(/Lost ring/g, 'Missing Link');
   result = result.replace(/lost ring/g, 'missing link');
-  
-  // 5. Restore markdown list formatting
-  result = result.replace(/^\s*\*\*\*\s*/gm, '* **');
   
   return result;
 }
@@ -77,6 +66,8 @@ IMPORTANT RULES:
 5. Keep the same document structure and hierarchy
 6. Translate Korean text in YAML system_prompt, name, description fields
 7. Do NOT translate: URLs, code syntax, technical identifiers, file paths
+8. For npm package names: Keep @sowonai/sowonflow exactly as-is (lowercase sowonflow)
+9. For product names: Use SowonFlow (proper case)
 
 Document to translate:
 
@@ -233,13 +224,13 @@ async function translateFileSimple(koFilePath) {
       throw new Error('AI translation failed - no fallback available');
     }
 
-    // AI translation successful - apply post-processing
-    const processedTranslation = postProcessTranslation(aiTranslation, koContent);
+    // AI translation successful - save directly (post-processing removed)
+    // const processedTranslation = postProcessTranslation(aiTranslation, koContent);
     
     // Save English file
-    fs.writeFileSync(absoluteEnPath, processedTranslation, 'utf8');
+    fs.writeFileSync(absoluteEnPath, aiTranslation, 'utf8');
     console.log(`✅ AI translation completed: ${relativePath} -> ${enFilePath}`);
-    console.log(`📊 Original: ${koContent.length} chars → Translated: ${processedTranslation.length} chars`);
+    console.log(`📊 Original: ${koContent.length} chars → Translated: ${aiTranslation.length} chars`);
     
   } catch (error) {
     console.error(`❌ Error translating ${koFilePath}:`, error.message);

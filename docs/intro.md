@@ -17,7 +17,7 @@ Enterprise AI adoption faces significant bottlenecks:
 
 Most companies struggle with AI transformation despite having clear use cases and budgets.
 
-### Our Solution: YAML-Based AI Workflows
+### Our Solution: YAML-based AI Workflows
 
 SowonFlow transforms complex AI orchestration into human-readable YAML configurations. Business analysts can define workflows that developers can immediately implement and maintain.
 
@@ -64,7 +64,8 @@ import { Workflow, createConfig } from '@sowonai/sowonflow';
 
 // Create configuration
 const config = createConfig({
-  apiKey: 'your-api-key'
+  apiKey: 'your-api-key',
+  spaceId: 'your-space-id'
 });
 ```
 
@@ -109,10 +110,11 @@ console.log(result.content);
 
 ### Using Environment Variables
 
-For production environments, it's better to use environment variables:
+For production environments, it's best to use environment variables:
 
 ```javascript
 const config = createConfig({
-  apiKey: process.env.LLM_API_KEY
+  apiKey: 'your-api-key',
+  spaceId: 'your-space-id'
 });
 ```

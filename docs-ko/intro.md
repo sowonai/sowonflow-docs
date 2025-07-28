@@ -86,7 +86,7 @@ agents:
   - id: "assistant"
     inline:
       type: "agent"
-      model: "gpt-4"
+      model: "openai/gpt-4.1-mini"
       system_prompt: "당신은 도움이 되는 AI 어시스턴트입니다."
 
 nodes:

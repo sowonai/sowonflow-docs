@@ -21,14 +21,14 @@ Most companies struggle with AI transformation despite having clear use cases an
 
 SowonFlow transforms complex AI orchestration into human-readable YAML configurations. Business analysts can define workflows that developers can immediately implement and maintain.
 
-**Core Package**: `@sowonai/sowonflow` - The main SowonFlow runtime library for creating and executing AI workflows.
+**Core Package**: `@sowonai/SowonFlow` - The main SowonFlow runtime library for creating and executing AI workflows.
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Email Agent"
-  description: "Agent that can perform email-related functions using the gmail mcp server."
+  description: "Agent that can perform email-related functions using gmail mcp server."
 
 agents:
   - id: "email_agent"
@@ -52,17 +52,70 @@ nodes:
 ### Installation
 
 ```bash
-npm install @sowonai/sowonflow
+npm install @sowonai/SowonFlow
+```
+
+### Basic Configuration
+
+Configure AI model access before using SowonFlow:
+
+```javascript
+import { Workflow, createConfig } from '@sowonai/SowonFlow';
+
+// Create configuration
+const config = createConfig({
+  apiKey: 'your-api-key'
+});
 ```
 
 ### Basic Usage
 
 ```javascript
-import { Workflow } from '@sowonai/sowonflow';
+import { Workflow } from '@sowonai/SowonFlow';
 
+// YAML workflow definition
+const yamlContent = `
+version: "agentflow/v1"
+kind: "WorkflowSpec"
+metadata:
+  name: "Simple Example"
+  description: "Basic usage example"
+
+agents:
+  - id: "assistant"
+    inline:
+      type: "agent"
+      model: "gpt-4"
+      system_prompt: "You are a helpful AI assistant."
+
+nodes:
+  start:
+    type: "agent_task"
+    agent: "assistant"
+    next: "end"
+  end:
+    type: "end"
+`;
+
+// Execute workflow
 const workflow = new Workflow({
-  mainWorkflow: yamlContent
+  mainWorkflow: yamlContent,
+  config: config
 });
 
 const result = await workflow.ask("Enter your question here");
+console.log(result.content);
 ```
+
+### Using Environment Variables
+
+For production environments, it's best to use environment variables:
+
+```javascript
+const config = createConfig({
+  apiKey: process.env.LLM_API_KEY
+});
+```
+
+# Test Change
+This is a translation test.

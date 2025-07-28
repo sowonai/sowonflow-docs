@@ -2,7 +2,7 @@
 
 ## MCP Integration
 
-MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `sowonflow` package provides smooth MCP server integration for extending agent functionality.
+MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `SowonFlow` package provides smooth MCP server integration for extending agent capabilities.
 
 ### What is MCP?
 
@@ -353,7 +353,7 @@ system_prompt: |
 ```yaml
 system_prompt: |
   Security guidelines:
-  - Don't expose sensitive email content unnecessarily
+  - Avoid exposing sensitive email content unnecessarily
   - Respect privacy boundaries
   - Summarize rather than quote personal information
   - Handle authentication failures appropriately

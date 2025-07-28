@@ -110,7 +110,7 @@ agents:
         </document>
 
         <document name="faq">
-          Table of Contents:
+          Table of contents:
           <toc>
           {{{documents.faq.toc}}}
           </toc>
@@ -214,7 +214,7 @@ const workflow = new Workflow({
 ### Example: Complete Document Setup
 
 ```typescript
-import { Workflow } from 'sowonflow';
+import { Workflow } from '@sowonai/sowonflow';
 import fs from 'fs/promises';
 
 const documents = {

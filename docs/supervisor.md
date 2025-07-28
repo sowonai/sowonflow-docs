@@ -6,11 +6,11 @@ A supervisor is a specialized agent that coordinates and manages multiple agents
 
 ### Key Roles
 
-* **Analyze** and manage complex requests into manageable tasks
-* **Select** appropriate agents for assignment from the management team
-* **Generate** dynamic workflows based on request types
-* **Coordinate** execution among multiple specialist agents
-* **Consolidate** results from various agents to provide a consistent response
+* **Analyze and manage** complex requests into manageable tasks
+* **Select appropriate agents** for assignment from the management team
+* **Generate dynamic workflows** based on request types
+* **Coordinate execution** among multiple specialized agents
+* **Consolidate results** from various agents to provide a consistent response
 
 ---
 
@@ -26,7 +26,7 @@ agents:
       model: "anthropic/claude-sonnet-4"
       supervisor_mode: "parallel"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
-        You are a project supervisor coordinating work with specialist agents.
+        You are a project supervisor coordinating work with specialized agents.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 ```
 
@@ -45,7 +45,7 @@ In the supervisor type, you can explicitly specify the workflow execution patter
 
 ## Example of Managed Agents
 
-You can define specialist agents that the supervisor can coordinate together:
+You can define specialized agents that the supervisor can coordinate together:
 
 ```yaml
 agents:
@@ -56,7 +56,7 @@ agents:
       model: "anthropic/claude-sonnet-4"
       supervisor_mode: "branch"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
-        You are a supervisor managing specialist consultants.
+        You are a supervisor managing specialized consultants.
         Generate appropriate workflows based on requests according to supervisor_mode.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 
@@ -125,7 +125,7 @@ version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Multi-expert Analysis"
-  description: "Supervisor coordinating expert analysis"
+  description: "Supervisor coordinates expert analysis"
 
 agents:
   - id: "supervisor"
@@ -180,17 +180,17 @@ nodes:
 
 ## Built-in Supervisor Tools
 
-The supervisor can automatically access specialized tools. The way these tools operate also changes depending on the `supervisor_mode`.
+The supervisor can automatically access specialized tools. The behavior of the tools also changes depending on the `supervisor_mode`.
 
 * **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes the user request to select the appropriate workflow pattern.
   - Determine which pattern (sequential, parallel, branch) is needed
-  - Select the agents that need to participate
+  - Select agents that need to participate
   - Provide reasoning for the decision
 
 * **dynamic_workflow_executor**: Dynamically generates and executes workflows based on `supervisor_mode`.
   - Configure workflows based on the selected pattern (sequential, parallel, branch, auto)
   - Coordinate agent execution
-  - Handle data flow between agents
+  - Process data flow between agents
   - Consolidate final results
 
 ## System Prompt Best Practices
@@ -199,16 +199,16 @@ Example of writing a system prompt using `supervisor_mode`:
 
 ```yaml
 system_prompt: |
-  You are a project supervisor managing a team of specialist consultants.
+  You are a project supervisor managing a team of specialized consultants.
   Determine the workflow pattern based on supervisor_mode.
 
   supervisor_mode:
     - sequential: When tasks need to be performed in a specific order
     - parallel: When diverse perspectives are needed
-    - branch: When only one specialist needs to be selected based on conditions
+    - branch: When only one expert needs to be selected based on conditions
     - auto: AI makes the judgment and selects the optimal pattern
 
-  Available specialists:
+  Available experts:
     - legal_expert: Contract analysis, compliance, legal risks
     - tech_expert: Technical feasibility, architecture, implementation
     - business_analyst: Strategy, market analysis, business impact
@@ -229,16 +229,16 @@ Supervisor: supervisor_mode: parallel → Legal (compliance), Technical (impleme
 #### Contract Review Process
 ```
 User: "Please review this partnership contract"
-Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) analysis in sequence
+Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) sequential analysis
 ```
 
 #### Strategic Decision Making
 ```
 User: "Should we migrate to cloud infrastructure?"
-Supervisor: supervisor_mode: parallel → All specialists analyze simultaneously → Consolidation
+Supervisor: supervisor_mode: parallel → All experts analyze simultaneously → Consolidation
 ```
 
-#### Cases requiring only a specific specialist (branch)
+#### Cases requiring only a specific expert (branch)
 ```
 User: "What are the technical considerations for this feature?"
 Supervisor: supervisor_mode: branch → Execute only tech_expert

@@ -22,7 +22,7 @@ google/gemini-2.5-flash
 
 ## Local Models
 
-Local models are supported starting from the Team subscription.
+Local models are supported from the team subscription.
 
 vllm - Coming soon
 

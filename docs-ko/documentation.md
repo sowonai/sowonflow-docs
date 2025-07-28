@@ -214,7 +214,7 @@ const workflow = new Workflow({
 ### 예시: 완전한 문서 설정
 
 ```typescript
-import { Workflow } from 'sowonflow';
+import { Workflow } from '@sowonai/sowonflow';
 import fs from 'fs/promises';
 
 const documents = {

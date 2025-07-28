@@ -40,19 +40,17 @@ function postProcessTranslation(translated, original) {
 
 // File-level AI translation using OpenRouter API
 async function translateFileWithOpenRouter(content, fromLang = 'Korean', toLang = 'English', filePath = '') {
-  try {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      console.warn('OPENROUTER_API_KEY not found, falling back to line-by-line translation');
-      return null; // Fallback to line-by-line translation
-    }
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENROUTER_API_KEY not found in environment variables');
+  }
 
-    // Special handling for SUMMARY.md files
-    const isSummaryFile = filePath.includes('SUMMARY.md');
-    
-    let prompt;
-    if (isSummaryFile) {
-      prompt = `Translate this GitBook table of contents from ${fromLang} to ${toLang}.
+  // Special handling for SUMMARY.md files
+  const isSummaryFile = filePath.includes('SUMMARY.md');
+  
+  let prompt;
+  if (isSummaryFile) {
+    prompt = `Translate this GitBook table of contents from ${fromLang} to ${toLang}.
 
 CRITICAL RULES FOR TABLE OF CONTENTS:
 1. This is ONLY a navigation menu - translate ONLY the display text
@@ -68,8 +66,8 @@ Document to translate:
 ${content}
 
 Provide ONLY the translated table of contents without any additional content:`;
-    } else {
-      prompt = `Translate the entire markdown document from ${fromLang} to ${toLang}.
+  } else {
+    prompt = `Translate the entire markdown document from ${fromLang} to ${toLang}.
 
 IMPORTANT RULES:
 1. This is technical documentation about AI agents and workflows
@@ -85,70 +83,63 @@ Document to translate:
 ${content}
 
 Provide ONLY the translated document without any explanations or additional text:`;
-    }
-
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
-        'X-Title': 'SowonFlow Documentation Translation'
-      },
-      body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-small-3.2-24b-instruct:free',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a professional technical translator specializing in AI and software documentation. Translate the entire document while preserving all markdown formatting and technical accuracy.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 8000, // Increased for longer documents
-        top_p: 0.9
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.log('API response structure:', {
-        hasChoices: !!data.choices,
-        choicesLength: data.choices?.length,
-        hasMessage: !!data.choices?.[0]?.message,
-        errorDetails: data.error || 'No error field'
-      });
-      throw new Error(`Invalid response format from OpenRouter API`);
-    }
-
-    const translation = data.choices[0].message.content.trim();
-    return translation;
-    
-  } catch (error) {
-    console.warn(`OpenRouter file translation warning: ${error.message}`);
-    return null; // Fallback to line-by-line translation
   }
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
+      'X-Title': 'SowonFlow Documentation Translation'
+    },
+    body: JSON.stringify({
+      model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-small-3.2-24b-instruct:free',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a professional technical translator specializing in AI and software documentation. Translate the entire document while preserving all markdown formatting and technical accuracy.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.1,
+      max_tokens: 8000, // Increased for longer documents
+      top_p: 0.9
+    })
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
+  }
+
+  const data = await response.json();
+  
+  if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+    console.log('API response structure:', {
+      hasChoices: !!data.choices,
+      choicesLength: data.choices?.length,
+      hasMessage: !!data.choices?.[0]?.message,
+      errorDetails: data.error || 'No error field'
+    });
+    throw new Error(`Invalid response format from OpenRouter API`);
+  }
+
+  const translation = data.choices[0].message.content.trim();
+  return translation;
 }
 
-// AI translation using OpenRouter API (free models)
+// AI translation using OpenRouter API
 async function translateWithOpenRouter(text, fromLang = 'Korean', toLang = 'English') {
-  try {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      console.warn('OPENROUTER_API_KEY not found, falling back to Google Translate');
-      return translateWithGoogle(text);
-    }
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENROUTER_API_KEY not found in environment variables');
+  }
 
-    const prompt = `Translate the following ${fromLang} text to ${toLang}. 
+  const prompt = `Translate the following ${fromLang} text to ${toLang}. 
 This is technical documentation about AI agents and workflows.
 
 Guidelines:
@@ -162,69 +153,49 @@ Text to translate: "${text}"
 
 Provide only the translation without any explanation:`;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
-        'X-Title': 'SowonFlow Documentation Translation'
-      },
-      body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free', // Default: free Mistral model
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a professional technical translator specializing in AI and software documentation. Provide accurate, natural translations while preserving technical terminology and formatting.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 1500,
-        top_p: 0.9
-      })
-    });
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://github.com/sowonai/sowonflow-docs',
+      'X-Title': 'SowonFlow Documentation Translation'
+    },
+    body: JSON.stringify({
+      model: process.env.OPENROUTER_MODEL || 'mistralai/mistral-small-3.2-24b-instruct:free',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a professional technical translator specializing in AI and software documentation. Provide accurate, natural translations while preserving technical terminology and formatting.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.1,
+      max_tokens: 1500,
+      top_p: 0.9
+    })
+  });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Invalid response format from OpenRouter API');
-    }
-
-    const translation = data.choices[0].message.content.trim();
-    
-    // Remove quotes (AI might wrap translation in quotes)
-    return translation.replace(/^["']|["']$/g, '');
-    
-  } catch (error) {
-    console.warn(`OpenRouter translation warning: ${error.message}`);
-    return translateWithGoogle(text); // Fallback to Google Translate on AI failure
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`);
   }
+
+  const data = await response.json();
+  if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+    throw new Error('Invalid response format from OpenRouter API');
+  }
+
+  const translation = data.choices[0].message.content.trim();
+  
+  // Remove quotes (AI might wrap translation in quotes)
+  return translation.replace(/^["']|["']$/g, '');
 }
 
-// Fallback translation using Google Translate CLI
-function translateWithGoogle(text, fromLang = 'ko', toLang = 'en') {
-  try {
-    // Uses trans CLI tool (https://github.com/soimort/translate-shell)
-    // Escape special characters and quotes
-    const escapedText = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/'/g, "\\'");
-    const command = `echo '${escapedText}' | trans -brief ${fromLang}:${toLang}`;
-    const result = execSync(command, { encoding: 'utf8', maxBuffer: 1024 * 1024 });
-    return result.trim();
-  } catch (error) {
-    console.warn(`Google Translate warning: ${error.message}`);
-    return text; // Return original text on translation failure
-  }
-}
-
-// File translation and saving (file-level AI translation first, line-by-line fallback)
+// File translation and saving (file-level AI translation only)
 async function translateFileSimple(koFilePath) {
   try {
     console.log(`📝 Translating: ${koFilePath}`);
@@ -258,146 +229,22 @@ async function translateFileSimple(koFilePath) {
     console.log(`🤖 Attempting AI file-level translation...`);
     const aiTranslation = await translateFileWithOpenRouter(koContent, 'Korean', 'English', relativePath);
     
-    if (aiTranslation) {
-      // AI translation successful - apply post-processing
-      const processedTranslation = postProcessTranslation(aiTranslation, koContent);
-      
-      // Save English file
-      fs.writeFileSync(absoluteEnPath, processedTranslation, 'utf8');
-      console.log(`✅ AI translation completed: ${relativePath} -> ${enFilePath}`);
-      console.log(`📊 Original: ${koContent.length} chars → Translated: ${processedTranslation.length} chars`);
-      return;
+    if (!aiTranslation) {
+      throw new Error('AI translation failed - no fallback available');
     }
 
-    // AI translation failed - fallback to line-by-line translation
-    console.log(`⚠️  AI translation failed, falling back to line-by-line translation...`);
-    await translateFileLineByLine(koFilePath, koContent, absoluteEnPath, relativePath, enFilePath);
+    // AI translation successful - apply post-processing
+    const processedTranslation = postProcessTranslation(aiTranslation, koContent);
+    
+    // Save English file
+    fs.writeFileSync(absoluteEnPath, processedTranslation, 'utf8');
+    console.log(`✅ AI translation completed: ${relativePath} -> ${enFilePath}`);
+    console.log(`📊 Original: ${koContent.length} chars → Translated: ${processedTranslation.length} chars`);
     
   } catch (error) {
     console.error(`❌ Error translating ${koFilePath}:`, error.message);
-    // Continue with other files even if error occurs
+    throw error; // Re-throw to stop execution on translation failure
   }
-}
-
-// Line-by-line translation (existing logic)
-async function translateFileLineByLine(koFilePath, koContent, absoluteEnPath, relativePath, enFilePath) {
-  console.log(`📝 Using line-by-line translation for: ${koFilePath}`);
-  
-  // Process markdown file line by line
-  const lines = koContent.split('\n');
-  const translatedLines = [];
-  let inCodeBlock = false;
-  let inYamlBlock = false;
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    
-    // Detect code blocks
-    if (line.trim().startsWith('```')) {
-      if (line.includes('yaml')) {
-        inYamlBlock = !inYamlBlock;
-      } else {
-        inCodeBlock = !inCodeBlock;
-      }
-      translatedLines.push(line);
-      continue;
-    }
-    
-    // Translate Korean text inside YAML blocks
-    if (inYamlBlock) {
-      // Only translate string values in YAML (not keys)
-      if (line.includes(':') && !line.trim().startsWith('#')) {
-        const colonIndex = line.indexOf(':');
-        const key = line.substring(0, colonIndex + 1);
-        const value = line.substring(colonIndex + 1).trim();
-        
-        // If value contains Korean and is not a pipe (|) or alphanumeric only
-        if (value && value !== '|' && !/^[a-zA-Z0-9_\-\.\[\]"]+$/.test(value)) {
-          try {
-            // Remove quotes and translate
-            let cleanValue = value.replace(/^["']|["']$/g, '');
-            if (cleanValue.length > 0 && /[가-힣]/.test(cleanValue)) {
-              let translated = await translateWithOpenRouter(cleanValue);
-              translated = postProcessTranslation(translated, cleanValue);
-              
-              // Maintain original quote format
-              if (value.startsWith('"') && value.endsWith('"')) {
-                translated = `"${translated}"`;
-              } else if (value.startsWith("'") && value.endsWith("'")) {
-                translated = `'${translated}'`;
-              } else if (value.includes('|')) {
-                // Keep multiline strings as is
-                translated = value;
-              }
-              
-              translatedLines.push(key + ' ' + translated);
-              console.log(`  ✓ YAML: "${cleanValue.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
-              await new Promise(resolve => setTimeout(resolve, 1000)); // Prevent rate limiting
-              continue;
-            }
-          } catch (error) {
-            console.warn(`  ⚠️  YAML translation failed for: "${value}"`);
-          }
-        }
-      }
-      // Handle YAML multiline strings (|, >, |- etc.)
-      else if (line.trim() && !line.trim().startsWith('#') && !line.includes(':') && /[가-힣]/.test(line)) {
-        try {
-          const indent = line.match(/^\s*/)[0];
-          const content = line.trim();
-          let translated = await translateWithOpenRouter(content);
-          translated = postProcessTranslation(translated, content);
-          translatedLines.push(indent + translated);
-          console.log(`  ✓ YAML multiline: "${content.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Prevent rate limiting
-          continue;
-        } catch (error) {
-          console.warn(`  ⚠️  YAML multiline translation failed for: "${line.trim()}"`);
-        }
-      }
-      
-      translatedLines.push(line);
-      continue;
-    }
-    
-    // Lines not to translate
-    if (inCodeBlock || 
-        line.trim() === '' ||
-        line.startsWith('---') ||
-        line.trim().startsWith('http') ||
-        line.trim().startsWith('![') ||
-        line.includes('](')) {
-      translatedLines.push(line);
-      continue;
-    }
-    
-    // Translate headers and general text
-    if (line.trim().length > 0) {
-      try {
-        let translated = await translateWithOpenRouter(line);
-        
-        // Post-process: improve translation quality
-        translated = postProcessTranslation(translated, line);
-        
-        translatedLines.push(translated);
-        console.log(`  ✓ "${line.substring(0, 50)}..." -> "${translated.substring(0, 50)}..."`);
-      } catch (error) {
-        console.warn(`  ⚠️  Translation failed for: "${line.substring(0, 30)}..."`);
-        translatedLines.push(line); // Keep original text
-      }
-      
-      // Prevent API rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } else {
-      translatedLines.push(line);
-    }
-  }
-  
-  const translatedContent = translatedLines.join('\n');
-  
-  // Save English file
-  fs.writeFileSync(absoluteEnPath, translatedContent, 'utf8');
-  console.log(`✅ Line-by-line translation completed: ${relativePath} -> ${enFilePath}`);
 }
 
 // Main execution function
@@ -407,23 +254,15 @@ async function main() {
   console.log(`Current working directory: ${process.cwd()}`);
   console.log(`Script arguments:`, process.argv);
   
-  // Check API key and tools
+  // Check API key
   const openrouterKey = process.env.OPENROUTER_API_KEY;
-  if (openrouterKey) {
-    console.log('✅ OpenRouter API key found - using AI translation');
-  } else {
-    console.log('⚠️  OpenRouter API key not found - will use Google Translate as fallback');
-    
-    // Check trans CLI tool availability (for fallback)
-    try {
-      execSync('which trans', { encoding: 'utf8' });
-      console.log('✅ translate-shell (trans) is available for fallback');
-    } catch (error) {
-      console.error('❌ Neither OpenRouter API key nor translate-shell is available.');
-      console.error('Please set OPENROUTER_API_KEY environment variable or install translate-shell.');
-      process.exit(1);
-    }
+  if (!openrouterKey) {
+    console.error('❌ OpenRouter API key not found.');
+    console.error('Please set OPENROUTER_API_KEY environment variable in .env file.');
+    process.exit(1);
   }
+  
+  console.log('✅ OpenRouter API key found - using AI translation');
   
   let files = [];
   

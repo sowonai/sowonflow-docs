@@ -64,7 +64,8 @@ import { Workflow, createConfig } from '@sowonai/sowonflow';
 
 // 설정 생성
 const config = createConfig({
-  apiKey: 'your-api-key'
+  apiKey: 'your-api-key',
+  spaceId: 'your-space-id'
 });
 ```
 
@@ -113,6 +114,7 @@ console.log(result.content);
 
 ```javascript
 const config = createConfig({
-  apiKey: process.env.LLM_API_KEY
+  apiKey: 'your-api-key',
+  spaceId: 'your-space-id'
 });
 ```

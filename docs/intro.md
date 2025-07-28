@@ -6,7 +6,7 @@
 
 SowonFlow is an innovative YAML-based AI workflow engine that bridges the gap between business requirements and AI implementation. We address the critical **missing link** in enterprise AI adoption - the disconnect between business teams that understand the problems and technical teams that implement the solutions.
 
-This is the first test.
+This is the second test.
 
 ### Problems We Solve
 
@@ -23,14 +23,14 @@ Most companies struggle with AI transformation despite having clear use cases an
 
 SowonFlow transforms complex AI orchestration into human-readable YAML configurations. Business analysts can define workflows that developers can immediately implement and maintain.
 
-**Core Package**: `@sowonai/SowonFlow` - The main SowonFlow runtime library for creating and executing AI workflows.
+**Core package**: `@sowonai/sowonflow` - The main SowonFlow runtime library for creating and executing AI workflows.
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Email Agent"
-  description: "Agent that can perform email-related functions using the gmail mcp server."
+  description: "Agent that can perform email-related functions using gmail mcp server."
 
 agents:
   - id: "email_agent"
@@ -54,7 +54,7 @@ nodes:
 ### Installation
 
 ```bash
-npm install @sowonai/SowonFlow
+npm install @sowonai/sowonflow
 ```
 
 ### Basic Configuration
@@ -62,7 +62,7 @@ npm install @sowonai/SowonFlow
 Configure AI model access before using SowonFlow:
 
 ```javascript
-import { Workflow, createConfig } from '@sowonai/SowonFlow';
+import { Workflow, createConfig } from '@sowonai/sowonflow';
 
 // Create configuration
 const config = createConfig({
@@ -73,7 +73,7 @@ const config = createConfig({
 ### Basic Usage
 
 ```javascript
-import { Workflow } from '@sowonai/SowonFlow';
+import { Workflow } from '@sowonai/sowonflow';
 
 // YAML workflow definition
 const yamlContent = `

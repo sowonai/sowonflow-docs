@@ -1,0 +1,121 @@
+name: Translate and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+    paths: 
+      - 'docs-ko/**/*.md'  # 한국어 파일 변경시에만 트리거
+      - 'src/**/*'
+      - 'docusaurus.config.ts'
+      - 'sidebars.ts'
+      - 'package.json'
+  workflow_dispatch:  # 수동 실행 허용
+    inputs:
+      reason:
+        description: 'Deploy reason'
+        required: false
+        default: 'Manual deployment'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  translate-and-deploy:
+    name: Translate Korean files and Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    # 번역 봇의 커밋인 경우 실행하지 않음 (무한 루프 방지)
+    if: ${{ !contains(github.event.head_commit.message, '🤖 Auto-translate:') }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # 번역 단계: docs-ko 파일이 변경된 경우에만 실행
+    - name: Get changed Korean files
+      id: changed-files
+      uses: tj-actions/changed-files@v41
+      with:
+        files: docs-ko/**/*.md
+
+    - name: Translate changed Korean files
+      if: steps.changed-files.outputs.any_changed == 'true'
+      env:
+        OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        OPENROUTER_MODEL: "mistralai/mistral-small-3.2-24b-instruct:free"
+      run: |
+        if [ -n "$OPENROUTER_API_KEY" ]; then
+          echo "✅ Using OpenRouter AI translation with Mistral Small..."
+          echo "📝 Files to translate: ${{ steps.changed-files.outputs.all_changed_files }}"
+          
+          # 번역 실행
+          node .github/scripts/translate-simple.js "${{ steps.changed-files.outputs.all_changed_files }}"
+        else
+          echo "❌ OpenRouter API key not found! Please set OPENROUTER_API_KEY secret."
+          exit 1
+        fi
+
+    - name: Commit translated files
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        
+        # Check for changed files
+        echo "📂 Checking for changes in docs/ directory..."
+        git status
+        git add docs/
+        
+        # Check if there are staged changes
+        if ! git diff --staged --quiet; then
+          echo "✅ Changes detected, committing..."
+          git commit -m "🤖 Auto-translate: Update English docs from Korean changes
+
+          Source files changed: ${{ steps.changed-files.outputs.all_changed_files }}"
+          git push
+          echo "🚀 Translation completed and pushed successfully!"
+        else
+          echo "ℹ️ No changes to commit in docs/ directory"
+        fi
+
+    # 배포 단계: 항상 실행 (번역이 있었든 없었든)
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build website
+      run: npm run build
+
+    - name: Upload Build Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: translate-and-deploy
+    if: success()
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

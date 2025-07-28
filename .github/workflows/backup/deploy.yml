@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'docs/**/*.md'
-      - 'docs-ko/**/*.md'
+      - 'docs-ko/**/*.md'  # 한국어 파일 변경 시에만 직접 트리거
       - 'src/**/*'
       - 'docusaurus.config.ts'
       - 'sidebars.ts'
@@ -16,6 +15,11 @@ on:
     types:
       - completed
   workflow_dispatch:  # 수동 실행 허용
+    inputs:
+      reason:
+        description: 'Deploy reason'
+        required: false
+        default: 'Manual deployment'
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
@@ -29,11 +33,17 @@ jobs:
     name: Build Docusaurus
     runs-on: ubuntu-latest
     # workflow_run으로 트리거된 경우, 번역 워크플로우가 성공했을 때만 실행
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    # push로 트리거된 경우, 번역 봇의 커밋이 아니고 skip-deploy-trigger 태그가 없을 때만 실행
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'push' && !contains(github.event.head_commit.message, '🤖 Auto-translate:') && !contains(github.event.head_commit.message, '[skip-deploy-trigger]')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # 번역 워크플로우의 커밋을 포함한 최신 상태 확인
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: 20

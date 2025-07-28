@@ -55,14 +55,66 @@ nodes:
 npm install @sowonai/sowonflow
 ```
 
+### 기본 설정
+
+SowonFlow를 사용하기 전에 AI 모델 접속을 위한 설정이 필요합니다:
+
+```javascript
+import { Workflow, createConfig } from '@sowonai/sowonflow';
+
+// 설정 생성
+const config = createConfig({
+  apiKey: 'your-api-key'
+});
+```
+
 ### 기본 사용법
 
 ```javascript
 import { Workflow } from '@sowonai/sowonflow';
 
+// YAML 워크플로우 정의
+const yamlContent = `
+version: "agentflow/v1"
+kind: "WorkflowSpec"
+metadata:
+  name: "간단한 예시"
+  description: "기본 사용법 예시"
+
+agents:
+  - id: "assistant"
+    inline:
+      type: "agent"
+      model: "gpt-4"
+      system_prompt: "당신은 도움이 되는 AI 어시스턴트입니다."
+
+nodes:
+  start:
+    type: "agent_task"
+    agent: "assistant"
+    next: "end"
+  end:
+    type: "end"
+`;
+
+// 워크플로우 실행
 const workflow = new Workflow({
-  mainWorkflow: yamlContent
+  mainWorkflow: yamlContent,
+  config: config
 });
 
 const result = await workflow.ask("여기에 질문을 입력하세요");
+console.log(result.content);
 ```
+
+### 환경 변수 사용
+
+실제 프로덕션 환경에서는 환경 변수를 사용하는 것이 좋습니다:
+
+```javascript
+const config = createConfig({
+  apiKey: process.env.LLM_API_KEY
+});
+```
+# 테스트 변경
+이것은 번역 테스트입니다.

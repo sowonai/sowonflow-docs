@@ -2,12 +2,12 @@
 
 ## Overview
 
-In SowonFlow, Tools are a core feature that extends an agent's capabilities, allowing it to interact with external systems. Through tools, agents can perform tasks such as retrieving data, calling APIs, and processing files.
+In SowonFlow, Tools are a core feature that extends an agent's capabilities, allowing it to interact with external systems. Agents can perform tasks such as retrieving data, calling APIs, and processing files through tools.
 
 ## Understanding the Tool System
 
 ### What are Tools?
-A tool is a function that an agent can call, characterized by:
+A tool is a function that an agent can call, characterized by the following:
 
 - **Structured Input**: Parameters defined with a clear schema
 - **Asynchronous Execution**: Asynchronous support for external API calls or file processing
@@ -22,7 +22,6 @@ A tool is a function that an agent can call, characterized by:
 ### Differences from MCP
 
 MCP (Model Context Protocol) tools are implemented as separate servers, allowing for reuse across multiple projects and are suitable for complex external system integrations. For more details, refer to the [MCP Guide](./mcp.md).
-Second lesson!
 
 ## Basic Tool Implementation
 
@@ -84,19 +83,19 @@ const workflow = new Workflow({
 
 ## Real-world Examples: Business System Tools
 
-### Calendar Management Tool
+### Schedule Management Tool
 
 ```javascript
 const calendarTool = new DynamicStructuredTool({
   name: "search_calendar",
-  description: "Searches for events on a specific date.",
+  description: "Searches for schedules on a specific date.",
   schema: z.object({
     date: z.string().describe("Date to search (today, tomorrow, or YYYY-MM-DD)"),
     query: z.string().optional().describe("Search keyword (optional)")
   }),
   func: async ({ date, query }) => {
     try {
-      // Integrate with Google Calendar API or internal scheduling system
+      // Integrate Google Calendar API or internal scheduling system
       if (date === 'today') {
         const today = new Date().toISOString().split('T')[0];
         const events = await calendarAPI.getEvents(today);
@@ -109,11 +108,11 @@ const calendarTool = new DynamicStructuredTool({
         return `Tomorrow's (${tomorrowStr}) schedule: ${events.map(e => e.summary).join(', ')}`;
       } else if (date.match(/\d{4}-\d{2}-\d{2}/)) {
         const events = await calendarAPI.getEvents(date);
-        return `${date} schedule: ${events.length > 0 ? events.map(e => e.summary).join(', ') : 'No events scheduled.'}`;
+        return `${date} schedule: ${events.length > 0 ? events.map(e => e.summary).join(', ') : 'No scheduled events.'}`;
       }
       return 'Please enter a valid date format.';
     } catch (error) {
-      return `An error occurred while searching the calendar: ${error.message}`;
+      return `An error occurred while searching for schedules: ${error.message}`;
     }
   }
 });
@@ -124,14 +123,14 @@ const calendarTool = new DynamicStructuredTool({
 ```javascript
 const hrTool = new DynamicStructuredTool({
   name: "search_hr_policies",
-  description: "Searches HR policies and regulations.",
+  description: "Searches for HR policies and regulations.",
   schema: z.object({
-    topic: z.string().describe("Search topic (e.g., travel expenses, leave, welfare)"),
+    topic: z.string().describe("Search topic (e.g., business travel expenses, vacation, welfare)"),
     department: z.string().optional().describe("Department name (optional)")
   }),
   func: async ({ topic, department }) => {
     try {
-      // Integrate with HR system or document database
+      // Integrate HR system or document database
       const policies = await hrSystem.searchPolicies(topic, department);
       
       if (policies.length === 0) {
@@ -145,7 +144,7 @@ const hrTool = new DynamicStructuredTool({
         last_updated: policy.updated_date
       }));
     } catch (error) {
-      return `An error occurred while searching HR policies: ${error.message}`;
+      return `An error occurred while searching for HR policies: ${error.message}`;
     }
   }
 });
@@ -192,7 +191,7 @@ const fileProcessorTool = new DynamicStructuredTool({
 });
 ```
 
-## Best Practices for Tool Design
+## Tool Design Best Practices
 
 ### 1. Clear Schema Definition
 
@@ -277,7 +276,7 @@ const dataProcessingTool = new DynamicStructuredTool({
     // Step 1: Data collection
     const rawData = await dataCollector.fetch(data_source);
     
-    // Step 2: Data cleansing
+    // Step 2: Data cleaning
     const cleanData = await dataProcessor.clean(rawData);
     
     // Step 3: Perform analysis
@@ -430,7 +429,7 @@ nodes:
 
 2. **Performance Issues**
    - Long execution times: Consider caching and batch processing
-   - Memory usage: Process large data streams
+   - Memory usage: Handle large data streams
 
 3. **Error Handling**
    - Return clear error messages that the agent can understand
@@ -442,7 +441,7 @@ nodes:
 // Tool execution logging
 const debugTool = new DynamicStructuredTool({
   name: "debug_tool",
-  description: "Example tool with debugging",
+  description: "Example tool with debugging.",
   schema: z.object({
     input: z.string()
   }),
@@ -502,4 +501,4 @@ func: async ({ user_id, action }) => {
 }
 ```
 
-Tools are one of SowonFlow's powerful features, and when designed and implemented appropriately, they can significantly enhance an agent's capabilities. Follow the guidelines above to develop safe and efficient tools.
+Tools are one of SowonFlow's powerful features, and when properly designed and implemented, they can significantly enhance an agent's capabilities. Follow the guidelines above to develop secure and efficient tools.

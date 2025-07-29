@@ -1,4 +1,4 @@
-# 커스텀 노드(Custom Nodes) 가이드
+# 커스텀 노드(Custom Node) 가이드
 
 ## 개요
 

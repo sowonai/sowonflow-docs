@@ -19,57 +19,9 @@ SowonFlow에서 도구(Tools)는 에이전트의 능력을 확장하여 외부 �
 - **Custom Functions**: 사용자 정의 함수
 - **MCP Tools**: Model Context Protocol 도구
 
-### Tools vs MCP의 차이점
+### MCP와의 차이점
 
-| 구분 | Tools (DynamicStructuredTool) | MCP (Model Context Protocol) |
-|------|-------------------------------|-------------------------------|
-| **정의 방식** | JavaScript/TypeScript 함수로 직접 구현 | 별도의 MCP 서버로 구현 |
-| **실행 환경** | 워크플로우와 동일한 프로세스 | 독립적인 프로세스 (IPC 통신) |
-| **개발 복잡도** | 간단 (함수 정의만) | 중간 (서버 구현 필요) |
-| **재사용성** | 프로젝트 내 제한적 | 여러 프로젝트에서 공유 가능 |
-| **표준화** | 프로젝트별 구현 | 표준 프로토콜 (MCP) |
-| **성능** | 직접 호출 (빠름) | IPC 통신 (약간 느림) |
-| **격리성** | 낮음 (같은 프로세스) | 높음 (별도 프로세스) |
-| **생태계** | LangChain 도구 생태계 | MCP 서버 생태계 |
-
-### 언제 어떤 것을 사용할까?
-
-**DynamicStructuredTool 사용 권장:**
-- 간단한 비즈니스 로직 (데이터베이스 조회, 계산 등)
-- 프로젝트 특화 기능
-- 빠른 프로토타이핑
-- 외부 의존성이 적은 경우
-
-**MCP 사용 권장:**
-- 복잡한 외부 시스템 연동 (Gmail, Google Drive, GitHub 등)
-- 여러 프로젝트에서 공유할 기능
-- 표준화된 통합이 필요한 경우
-- 보안이 중요한 외부 서비스 연동
-
-### MCP를 통한 도구 확장 가속화
-
-SowonFlow는 MCP 서버를 활용하여 도구 생태계를 빠르게 확장할 수 있습니다:
-
-```yaml
-# MCP 서버를 활용한 워크플로우 예제
-agents:
-  - id: "productivity_agent"
-    inline:
-      type: "agent"
-      model: "openai/gpt-4.1-mini"
-      system_prompt: "다양한 외부 서비스를 활용하는 생산성 어시스턴트입니다."
-      mcp: ["gmail", "github", "slack"]  # 여러 MCP 서버 동시 사용
-      tools: ["custom_calculator"]  # 커스텀 도구와 함께 사용
-```
-
-**인기 MCP 서버들:**
-- **@gongrzhe/server-gmail-autoauth-mcp**: Gmail 통합
-- **@modelcontextprotocol/server-github**: GitHub 통합  
-- **@modelcontextprotocol/server-filesystem**: 파일 시스템 접근
-- **@modelcontextprotocol/server-postgres**: PostgreSQL 연동
-- **@modelcontextprotocol/server-slack**: Slack 통합
-
-더 많은 MCP 서버는 [MCP 가이드](./mcp.md)에서 확인할 수 있습니다.
+MCP(Model Context Protocol) 도구는 별도의 서버로 구현되어 여러 프로젝트에서 재사용 가능하며, 복잡한 외부 시스템 연동에 적합합니다. 더 자세한 내용은 [MCP 가이드](./mcp.md)를 참조하세요.
 
 ## 기본 도구 구현
 

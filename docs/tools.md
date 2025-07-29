@@ -1,31 +1,32 @@
-# Tools Usage Guide
+# Guide to Using Tools
 
 ## Overview
 
-In SowonFlow, tools are core features that extend the capabilities of agents to interact with external systems. Agents can perform tasks such as searching for data, calling APIs, and processing files through tools.
+In SowonFlow, Tools are a core feature that extends the capabilities of agents, allowing them to interact with external systems. Agents can perform tasks such as retrieving data, calling APIs, and processing files through tools.
 
 ## Understanding the Tool System
 
 ### What are Tools?
-Tools are functions that agents can call, with the following characteristics:
+A tool is a function that an agent can call, characterized by the following:
 
-- **Structured Input**: Parameters defined by a clear schema
-- **Asynchronous Execution**: Support for asynchronous operations like external API calls or file processing
+- **Structured Input**: Parameters defined with a clear schema
+- **Asynchronous Execution**: Asynchronous support for external API calls or file processing
 - **Error Handling**: Error handling for safe execution
-- **Type Safety**: Runtime type verification through Zod schemas
+- **Type Safety**: Runtime type validation via Zod schema
 
 ### Supported Tool Formats
-- **DynamicStructuredTool**: LangChain compatible tools (recommended)
+- **DynamicStructuredTool**: LangChain compatible tool (recommended)
 - **Custom Functions**: User-defined functions
 - **MCP Tools**: Model Context Protocol tools
 
-### Differences with MCP
+### Differences from MCP
 
-MCP (Model Context Protocol) tools are implemented as separate servers, making them reusable across multiple projects and suitable for complex external system integrations. For more details, refer to the [MCP Guide](./mcp.md).
+MCP (Model Context Protocol) tools are implemented as separate servers, allowing for reuse across multiple projects and are suitable for complex external system integrations. For more details, refer to the [MCP Guide](./mcp.md).
+First lesson!
 
 ## Basic Tool Implementation
 
-### Using DynamicStructuredTool
+### How to Use DynamicStructuredTool
 
 ```javascript
 import { DynamicStructuredTool } from '@langchain/core/tools';
@@ -46,7 +47,7 @@ const searchTool = new DynamicStructuredTool({
 });
 ```
 
-### Connecting Tools to Workflows
+### Connecting Tools to a Workflow
 
 ```yaml
 version: "agentflow/v1"
@@ -59,7 +60,7 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are a research expert. Use tools to search for and analyze information."
+      system_prompt: "You are a research expert. Use tools to search and analyze information."
       tools: ["search_database", "analyze_data"]
 
 nodes:
@@ -67,7 +68,7 @@ nodes:
     type: "agent_task"
     agent: "research_agent"
     input:
-      template: "Research the following topic: {{user_query}}"
+      template: "Please research the following topic: {{user_query}}"
     next: "end"
   end:
     type: "end"
@@ -81,21 +82,21 @@ const workflow = new Workflow({
 });
 ```
 
-## Real-world Examples: Business System Tools
+## Real-world Example: Business System Tools
 
-### Scheduling Tool
+### Calendar Management Tool
 
 ```javascript
 const calendarTool = new DynamicStructuredTool({
   name: "search_calendar",
-  description: "Searches for schedules on a specific date.",
+  description: "Searches for events on a specific date.",
   schema: z.object({
     date: z.string().describe("Date to search (today, tomorrow, or YYYY-MM-DD)"),
     query: z.string().optional().describe("Search keyword (optional)")
   }),
   func: async ({ date, query }) => {
     try {
-      // Connect to Google Calendar API or internal scheduling system
+      // Integrate with Google Calendar API or internal calendar system
       if (date === 'today') {
         const today = new Date().toISOString().split('T')[0];
         const events = await calendarAPI.getEvents(today);
@@ -108,11 +109,11 @@ const calendarTool = new DynamicStructuredTool({
         return `Tomorrow's (${tomorrowStr}) schedule: ${events.map(e => e.summary).join(', ')}`;
       } else if (date.match(/\d{4}-\d{2}-\d{2}/)) {
         const events = await calendarAPI.getEvents(date);
-        return `${date} schedule: ${events.length > 0 ? events.map(e => e.summary).join(', ') : 'No scheduled events.'}`;
+        return `${date} schedule: ${events.length > 0 ? events.map(e => e.summary).join(', ') : 'No events scheduled.'}`;
       }
       return 'Please enter a valid date format.';
     } catch (error) {
-      return `An error occurred while searching for schedules: ${error.message}`;
+      return `An error occurred while searching the calendar: ${error.message}`;
     }
   }
 });
@@ -123,20 +124,20 @@ const calendarTool = new DynamicStructuredTool({
 ```javascript
 const hrTool = new DynamicStructuredTool({
   name: "search_hr_policies",
-  description: "Searches for HR policies and regulations.",
+  description: "Searches HR policies and regulations.",
   schema: z.object({
-    topic: z.string().describe("Search topic (e.g., travel expenses, leave, benefits)"),
+    topic: z.string().describe("Search topic (e.g., travel expenses, vacation, benefits)"),
     department: z.string().optional().describe("Department name (optional)")
   }),
   func: async ({ topic, department }) => {
     try {
-      // Connect to HR system or document database
+      // Integrate with HR system or document database
       const policies = await hrSystem.searchPolicies(topic, department);
-
+      
       if (policies.length === 0) {
         return `No HR policies found for "${topic}".`;
       }
-
+      
       return policies.map(policy => ({
         title: policy.title,
         summary: policy.summary,
@@ -144,7 +145,7 @@ const hrTool = new DynamicStructuredTool({
         last_updated: policy.updated_date
       }));
     } catch (error) {
-      return `An error occurred while searching for HR policies: ${error.message}`;
+      return `An error occurred while searching HR policies: ${error.message}`;
     }
   }
 });
@@ -157,30 +158,30 @@ const fileProcessorTool = new DynamicStructuredTool({
   name: "process_document",
   description: "Processes document files and extracts content.",
   schema: z.object({
-    file_path: z.string().describe("File path to process"),
+    file_path: z.string().describe("Path to the file to process"),
     action: z.enum(["extract_text", "summarize", "analyze"]).describe("Action to perform"),
     options: z.object({
-      max_length: z.number().optional().describe("Maximum character length limit"),
+      max_length: z.number().optional().describe("Maximum character limit"),
       language: z.string().optional().describe("Document language")
     }).optional()
   }),
   func: async ({ file_path, action, options = {} }) => {
     try {
       const fileContent = await fileSystem.readFile(file_path);
-
+      
       switch (action) {
         case "extract_text":
           const text = await documentProcessor.extractText(fileContent);
           return options.max_length ? text.substring(0, options.max_length) : text;
-
+          
         case "summarize":
           const summary = await documentProcessor.summarize(fileContent, options);
           return summary;
-
+          
         case "analyze":
           const analysis = await documentProcessor.analyze(fileContent, options);
           return JSON.stringify(analysis);
-
+          
         default:
           return "Unsupported action.";
       }
@@ -198,13 +199,13 @@ const fileProcessorTool = new DynamicStructuredTool({
 ```javascript
 // Good example: Clear and specific description
 schema: z.object({
-  user_id: z.string().describe("User's unique identifier (e.g., emp_12345)"),
+  user_id: z.string().describe("Unique identifier for the user (e.g., emp_12345)"),
   start_date: z.string().describe("Start date (YYYY-MM-DD format)"),
   end_date: z.string().describe("End date (YYYY-MM-DD format)"),
-  include_weekends: z.boolean().default(false).describe("Include weekends")
+  include_weekends: z.boolean().default(false).describe("Whether to include weekends")
 })
 
-// Bad example: Vague description
+// Bad example: Ambiguous description
 schema: z.object({
   id: z.string().describe("ID"),
   date: z.string().describe("Date"),
@@ -221,19 +222,19 @@ func: async (params) => {
     if (!params.required_field) {
       return "Required field is missing.";
     }
-
+    
     // Execute business logic
     const result = await externalAPI.call(params);
-
-    // Validate result
+    
+    // Result validation
     if (!result || result.error) {
       return `API call failed: ${result?.error || 'Unknown error'}`;
     }
-
+    
     return result.data;
   } catch (error) {
     console.error('Tool execution error:', error);
-    return `An error occurred while executing the tool: ${error.message}`;
+    return `An error occurred during tool execution: ${error.message}`;
   }
 }
 ```
@@ -241,7 +242,7 @@ func: async (params) => {
 ### 3. Appropriate Response Format
 
 ```javascript
-// JSON response needed
+// When JSON response is required
 func: async (params) => {
   const result = await processData(params);
   return JSON.stringify({
@@ -251,10 +252,10 @@ func: async (params) => {
   });
 }
 
-// Text response appropriate
+// When text response is appropriate
 func: async (params) => {
   const count = await database.count(params.query);
-  return `Search results: ${count} items found.`;
+  return `Search results: Found ${count} items.`;
 }
 ```
 
@@ -262,7 +263,7 @@ func: async (params) => {
 
 ### Chaining Tools
 
-Link multiple tools to perform complex tasks:
+Perform complex tasks by linking multiple tools:
 
 ```javascript
 const dataProcessingTool = new DynamicStructuredTool({
@@ -275,13 +276,13 @@ const dataProcessingTool = new DynamicStructuredTool({
   func: async ({ data_source, analysis_type }) => {
     // Step 1: Data collection
     const rawData = await dataCollector.fetch(data_source);
-
+    
     // Step 2: Data cleaning
     const cleanData = await dataProcessor.clean(rawData);
-
+    
     // Step 3: Perform analysis
     const analysis = await analyzer.analyze(cleanData, analysis_type);
-
+    
     return {
       data_points: cleanData.length,
       analysis_result: analysis,
@@ -298,39 +299,39 @@ Implement caching for performance improvement:
 ```javascript
 const cachedSearchTool = new DynamicStructuredTool({
   name: "cached_search",
-  description: "Search tool with caching.",
+  description: "A search tool with caching applied.",
   schema: z.object({
     query: z.string().describe("Search query"),
-    cache_duration: z.number().default(300).describe("Cache duration (seconds)")
+    cache_duration: z.number().default(300).describe("Cache retention time (seconds)")
   }),
   func: async ({ query, cache_duration }) => {
     const cacheKey = `search:${query}`;
-
+    
     // Check cache
     const cached = await cache.get(cacheKey);
     if (cached) {
       return `[Cached] ${cached}`;
     }
-
+    
     // Perform actual search
     const result = await searchEngine.search(query);
-
+    
     // Cache result
     await cache.set(cacheKey, result, cache_duration);
-
+    
     return result;
   }
 });
 ```
 
-## Integration Example: Complete Multi-tool Workflow
+## Integrated Example: Complete Multi-Tool Workflow
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Comprehensive Business Assistant"
-  description: "Multi-agent system utilizing various tools"
+  description: "A multi-agent system utilizing various tools"
 
 state:
   variables:
@@ -344,20 +345,20 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are a coordinator that analyzes tasks and assigns them to appropriate experts."
-
+      system_prompt: "You are a coordinator who analyzes tasks and assigns them to appropriate experts."
+      
   - id: "data_specialist"
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are an expert in data search and analysis."
+      system_prompt: "You are an expert responsible for data retrieval and analysis."
       tools: ["search_database", "process_document", "cached_search"]
-
+      
   - id: "business_specialist"
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are an expert in business processes and policies."
+      system_prompt: "You are an expert responsible for business processes and policies."
       tools: ["search_calendar", "search_hr_policies", "update_employee_info"]
 
 nodes:
@@ -369,7 +370,7 @@ nodes:
     output:
       to_state: "task_type"
     next: "route_task"
-
+    
   route_task:
     type: "branch"
     method: "condition"
@@ -379,41 +380,41 @@ nodes:
       "BUSINESS": "business_processing"
       "MIXED": "parallel_processing"
     default: "general_response"
-
+    
   parallel_processing:
     type: "parallel"
     branches: ["data_processing", "business_processing"]
-
+    
   data_processing:
     type: "agent_task"
     agent: "data_specialist"
     input:
       template: "Perform data-related tasks: {{user_query}}"
     next: "join_results"
-
+    
   business_processing:
     type: "agent_task"
     agent: "business_specialist"
     input:
       template: "Perform business-related tasks: {{user_query}}"
     next: "join_results"
-
+    
   join_results:
     type: "join"
     next: "final_summary"
-
+    
   final_summary:
     type: "agent_task"
     agent: "coordinator"
     input:
-      template: "Combine all results and provide a final answer."
+      template: "Consolidate all results and provide a final answer."
     next: "end"
-
+    
   general_response:
     type: "agent_task"
     agent: "coordinator"
     next: "end"
-
+    
   end:
     type: "end"
 ```
@@ -424,15 +425,15 @@ nodes:
 
 1. **Tool Execution Failure**
    - Schema validation errors: Check input parameter types
-   - Asynchronous processing errors: Ensure proper use of async/await
-   - External API connection failure: Verify network and authentication
+   - Asynchronous processing errors: Correct use of async/await
+   - External API connection failure: Check network and authentication
 
 2. **Performance Issues**
    - Long execution times: Consider caching and batch processing
-   - Memory usage: Stream processing for large data
+   - Memory usage: Handle large data streams
 
 3. **Error Handling**
-   - Return clear error messages that agents can understand
+   - Return clear error messages that the agent can understand
    - Provide useful information even in case of partial failure
 
 ### Debugging Tips
@@ -447,7 +448,7 @@ const debugTool = new DynamicStructuredTool({
   }),
   func: async ({ input }) => {
     console.log(`[DEBUG] Tool called with input: ${input}`);
-
+    
     try {
       const result = await processInput(input);
       console.log(`[DEBUG] Tool result: ${JSON.stringify(result)}`);
@@ -475,14 +476,14 @@ func: async ({ file_path }) => {
   if (file_path.includes('../') || file_path.startsWith('/')) {
     return "File path not allowed for security reasons.";
   }
-
+  
   // File extension validation
   const allowedExtensions = ['.txt', '.pdf', '.docx'];
   const ext = path.extname(file_path).toLowerCase();
   if (!allowedExtensions.includes(ext)) {
     return "Unsupported file format.";
   }
-
+  
   // Normal processing
   return await processFile(file_path);
 }
@@ -496,9 +497,9 @@ func: async ({ user_id, action }) => {
   if (!permissions.includes(action)) {
     return "You do not have permission to perform this action.";
   }
-
+  
   return await performAction(action);
 }
 ```
 
-Tools are a powerful feature of SowonFlow that, when designed and implemented properly, can significantly enhance the capabilities of agents. Follow the guidelines above to develop safe and efficient tools.
+Tools are one of SowonFlow's powerful features, and when properly designed and implemented, they can significantly enhance an agent's capabilities. Follow the guidelines above to develop secure and efficient tools.

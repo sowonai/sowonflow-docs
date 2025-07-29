@@ -51,7 +51,7 @@ jobs:
       if: steps.changed-files.outputs.any_changed == 'true'
       env:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        OPENROUTER_MODEL: "mistralai/mistral-small-3.2-24b-instruct:free"
+        OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'mistralai/mistral-small-3.2-24b-instruct:free' }}
       run: |
         if [ -n "$OPENROUTER_API_KEY" ]; then
           echo "✅ Using OpenRouter AI translation with Mistral Small..."

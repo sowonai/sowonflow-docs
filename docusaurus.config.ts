@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'SowonFlow Documentation',
   tagline: 'The Missing Link in AI Transformation',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/LogoIcon2.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -83,7 +83,7 @@ const config: Config = {
       title: 'SowonFlow',
       logo: {
         alt: 'SowonFlow Logo',
-        src: 'img/logo.svg',
+        src: 'img/LogoIcon2.png',
       },
       items: [
         {
@@ -121,7 +121,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} SowonAI. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} SowonLabs.`,
     },
     prism: {
       theme: prismThemes.github,

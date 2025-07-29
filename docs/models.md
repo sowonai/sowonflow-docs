@@ -1,4 +1,4 @@
-# Model
+# Models
 
 ## Base Models
 
@@ -22,8 +22,8 @@ google/gemini-2.5-flash
 
 ## Local Models
 
-Local models are supported from the team subscription.
+Local models are supported starting from the Team subscription.
 
-vllm - Coming soon
+vllm - Coming Soon
 
-ollama - Coming soon
+ollama - Coming Soon

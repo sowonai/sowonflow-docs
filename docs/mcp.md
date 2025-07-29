@@ -2,11 +2,30 @@
 
 ## MCP Integration
 
-MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `sowonflow` package provides smooth MCP server integration for extending agent capabilities.
+Through MCP (Model Context Protocol) integration, agents can access external systems and services via a standardized protocol. The `sowonflow` package provides seamless MCP server integration for extending agent capabilities.
 
 ### What is MCP?
 
-MCP (Model Context Protocol) is a standardized way for AI agents to interact with external systems such as databases, APIs, file systems, and other services. It provides a safe and structured method for agents to access tools and resources beyond their core functionality.
+MCP (Model Context Protocol) is a standardized method for AI agents to interact with external systems such as databases, APIs, file systems, and other services. It provides a secure and structured way for agents to access tools and resources beyond their core functionalities.
+
+### MCP vs Tools Comparison
+
+MCP is complementary to SowonFlow's [Tools](./tools.md) system:
+
+| Category | MCP | Tools (DynamicStructuredTool) |
+|---|---|---|
+| **Architecture** | Server running as a separate process | Direct function within workflow |
+| **Communication Method** | JSON-RPC over stdio/HTTP | Direct function call |
+| **Reusability** | High (shared across multiple projects) | Medium (within project) |
+| **Development Complexity** | High (server implementation) | Low (function definition) |
+| **Standardization** | MCP standard protocol | LangChain tool specification |
+| **Ecosystem** | MCP server marketplace | LangChain tool ecosystem |
+| **Isolation** | High (process separation) | Low (same process) |
+| **Performance** | Slightly slower (IPC) | Faster (direct call) |
+
+**Recommended Usage Scenarios:**
+- **Use MCP**: For complex external service integrations like Gmail, GitHub, Slack.
+- **Use Tools**: For internal business logic, database queries, simple calculations.
 
 ### Basic MCP Configuration
 
@@ -26,8 +45,8 @@ agents:
       type: "agent"
       model: "google/gemini-2.5-flash"
       system_prompt: |
-        You are a Gmail assistant that can search for and manage emails.
-        Use MCP tools (prefixed with "mcp__") to access Gmail functionality.
+        You are a Gmail assistant that can search and manage emails.
+        Use MCP tools (prefixed with "mcp__") to access Gmail features.
       mcp: ["gmail"]  # Reference MCP server by name
 
 nodes:
@@ -35,14 +54,14 @@ nodes:
     type: "agent_task"
     agent: "gmail_agent"
     next: "end"
-
+  
   end:
     type: "end"
 ```
 
 #### Configuring an MCP Server
 
-Specify MCP server configuration when creating your workflow:
+Specify MCP server configuration when creating a workflow:
 
 ```typescript
 const workflow = new Workflow({
@@ -65,7 +84,7 @@ const workflow = new Workflow({
 
 #### Gmail MCP Server
 
-Access Gmail functionality for email management:
+Access Gmail features for email management:
 
 ```yaml
 agents:
@@ -75,13 +94,13 @@ agents:
       model: "openai/gpt-4.1"
       system_prompt: |
         You are an email management assistant.
-
+        
         Available Gmail MCP tools:
         - mcp__gmail__search_emails: Search emails using Gmail syntax
         - mcp__gmail__get_email: Retrieve detailed email content
-        - mcp__gmail__send_email: Send new emails
-
-        Gmail search syntax examples:
+        - mcp__gmail__send_email: Send a new email
+        
+        Example Gmail search syntax:
         - from:sender@example.com
         - subject:meeting
         - has:attachment
@@ -116,14 +135,14 @@ agents:
         - Read and write files
         - List directory contents
         - Search for files
-
+        
         Use MCP tools prefixed with "mcp__fs__" for file operations.
       mcp: ["filesystem"]
 ```
 
 #### Database MCP Server
 
-Connect to databases for data operations:
+Connect to a database for data operations:
 
 ```yaml
 agents:
@@ -133,11 +152,11 @@ agents:
       model: "openai/gpt-4.1"
       system_prompt: |
         You are a data analyst with database access.
-        Use MCP database tools to query and analyze data.
+        Query and analyze data using MCP database tools.
       mcp: ["database"]
 ```
 
-### Complete Example: Email Management with Gmail
+### Complete Example: Gmail Email Management
 
 A complete workflow for email management using Gmail MCP:
 
@@ -155,28 +174,28 @@ agents:
       model: "openai/gpt-4.1-mini"
       system_prompt: |
         You are a professional email management assistant.
-
+        
         Capabilities:
         - Search emails using Gmail search syntax
-        - Read detailed email content
-        - Categorize emails (work, personal, promotions)
+        - Read email content in detail
+        - Categorize emails (work, personal, promotional)
         - Summarize important communications
-
+        
         Guidelines:
-        - Handle work-related and personal emails separately
+        - Handle work-related emails and personal emails separately
         - Ignore promotional/spam emails
-        - Search full content for important emails
-        - Provide structured summaries of key information
-
+        - If an important email is found, retrieve its full content
+        - Provide structured summaries with key information
+        
         Available tools:
-        - mcp__gmail__search_emails: Search using Gmail syntax
+        - mcp__gmail__search_emails: Search with Gmail syntax
         - mcp__gmail__get_email: Retrieve detailed email content
-
+        
         Current context:
         - Company: SowonLabs (AI products, SowonFlow development)
         - User role: CEO
         - Current date: {{{current_time}}}
-
+        
         <document name="Gmail Search Syntax">
         {{{documents.gmail_search_usage.content}}}
         </document>
@@ -187,7 +206,7 @@ nodes:
     type: "agent_task"
     agent: "email_manager"
     next: "end"
-
+  
   end:
     type: "end"
 ```
@@ -200,19 +219,19 @@ const workflow = new Workflow({
   documents: {
     'gmail_search_usage': `
     ## Gmail Search Syntax
-
-    ### Common operators:
+    
+    ### Common Operators:
     - from:sender@example.com - Find emails from a specific sender
     - to:recipient@example.com - Find emails sent to a specific recipient
-    - subject:keyword - Search in subject
+    - subject:keyword - Search in the subject line
     - has:attachment - Emails with attachments
     - after:2024/01/01 - Emails after a specific date
     - before:2024/12/31 - Emails before a specific date
-    - is:unread - Only unread emails
+    - is:unread - Unread emails only
     - is:important - Important emails
-    - category:primary - Primary category emails
-
-    ### Advanced examples:
+    - category:primary - Emails in the primary category
+    
+    ### Advanced Examples:
     - from:team@company.com after:2024/01/01 has:attachment
     - subject:(meeting OR call) -category:promotions
     - is:unread from:clients after:2024/01/15
@@ -226,7 +245,7 @@ const workflow = new Workflow({
   }
 });
 
-// Use the workflow
+// Using the workflow
 const result = await workflow.ask(
   "Find recent work-related emails and summarize the important ones"
 );
@@ -234,22 +253,22 @@ const result = await workflow.ask(
 
 ### MCP Tool Usage Patterns
 
-#### Search and Analysis Pattern
+#### Search and Analyze Pattern
 
 ```yaml
 system_prompt: |
   Follow this pattern for email analysis:
-
+  
   1. Search: Use mcp__gmail__search_emails with relevant criteria
-  2. Filter: Identify important emails from search results
+  2. Filter: Identify important emails from the search results
   3. Retrieve: Use mcp__gmail__get_email for detailed content
   4. Analyze: Categorize and summarize findings
-
+  
   Workflow example:
   - Search: Recent unread emails
   - Filter: Work-related communications
   - Retrieve: Full content of important emails
-  - Analyze: Provide structured summary
+  - Analyze: Provide a structured summary
 ```
 
 #### Batch Processing Pattern
@@ -257,16 +276,16 @@ system_prompt: |
 ```yaml
 system_prompt: |
   Process tasks in batches for efficiency:
-
+  
   Recommendations:
-  ✓ Search comprehensively with one call
+  ✓ Search once with comprehensive criteria
   ✓ Collect multiple email IDs
-  ✓ Retrieve content with single tool call when possible
-
-  To avoid:
+  ✓ Retrieve content with a single tool call if possible
+  
+  Things to avoid:
   ✗ Multiple individual searches
   ✗ Opening emails one by one
-  ✗ Duplicate API calls
+  ✗ Redundant API calls
 ```
 
 ### Advanced MCP Configuration
@@ -306,9 +325,9 @@ agents:
       system_prompt: |
         You are a comprehensive digital assistant with access to:
         - Gmail (email management)
-        - Calendar (scheduling)
+        - Calendar (schedule management)
         - File system (document access)
-
+        
         Use the appropriate MCP tools based on user requests.
       mcp: ["gmail", "calendar", "files"]
 ```
@@ -319,32 +338,32 @@ agents:
 
 ```yaml
 system_prompt: |
-  Error handling:
-  - Clearly explain problems when MCP tools fail
-  - Suggest alternative approaches when possible
-  - Always validate parameters before calling tools
-  - Gracefully handle authentication issues
-
+  Error Handling:
+  - If an MCP tool fails, clearly explain the issue
+  - Suggest alternative approaches if possible
+  - Always validate parameters before calling a tool
+  - Handle authentication issues gracefully
+  
   Example:
-  When Gmail search fails:
-  1. Verify the search syntax is correct
-  2. Try simplified search criteria
-  3. Inform the user of limitations
+  If a Gmail search fails:
+  1. Check if the search syntax is correct
+  2. Try a simplified search criterion
+  3. Inform the user about limitations
 ```
 
 #### Performance Optimization
 
 ```yaml
 system_prompt: |
-  Performance guidelines:
+  Performance Guidelines:
   - Use specific search criteria to limit results
-  - Process tasks in batches when possible
+  - Process tasks in batches if possible
   - Cache results when appropriate
   - Set reasonable limits (maxResults: 10-50)
-
-  Search optimization:
+  
+  Search Optimization:
   - Combine criteria: "from:team@company.com after:2024/01/01"
-  - Use date ranges to limit scope
+  - Use date ranges for scope limitation
   - Filter by category when relevant
 ```
 
@@ -352,10 +371,10 @@ system_prompt: |
 
 ```yaml
 system_prompt: |
-  Security guidelines:
-  - Avoid exposing sensitive email content unnecessarily
+  Security Guidelines:
+  - Do not expose sensitive email content unnecessarily
   - Respect privacy boundaries
-  - Summarize rather than quote personal information
+  - Summarize personal information rather than quoting it
   - Handle authentication failures appropriately
 ```
 
@@ -376,7 +395,7 @@ describe('MCP Integration Tests', () => {
       }
     });
 
-    const result = await workflow.ask("Please check my recent emails");
+    const result = await workflow.ask("Please check recent emails");
     expect(result.content).toBeDefined();
   });
 });
@@ -387,9 +406,9 @@ describe('MCP Integration Tests', () => {
 ```typescript
 it('should have MCP tools available', async () => {
   const result = await workflow.ask(
-    "List all available tools with their descriptions"
+    "List all available tools and their descriptions"
   );
-
+  
   expect(result.content).toContain('mcp__gmail__search_emails');
   expect(result.content).toContain('mcp__gmail__get_email');
 });

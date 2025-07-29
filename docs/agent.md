@@ -1,17 +1,17 @@
-# Agent
+# Agents
 
-## Agent
+## Agents
 
-An agent is an AI-based entity that can understand natural language, reason about problems, and execute tasks using large language models (LLMs). They are the core components of **SowonFlow**.
+Agents are AI-powered entities that can understand natural language, reason about problems, and execute tasks using Large Language Models (LLMs). They are a core component of **SowonFlow**.
 
 ### What is an Agent?
 
-An agent is defined as follows:
+An agent is defined by:
 
-* **Role**: The domain in which the agent specializes (e.g., legal expert, technical analyst)
-* **Model**: The LLM to use (e.g., gpt 4.1, gemini 2.5 pro)
-* **System Prompt**: Guidelines that define the agent's expertise and behavior
-* **Tools**: Optional functions that the agent can call to extend its capabilities
+*   **Role**: The area of specialization for the agent (e.g., legal expert, technical analyst).
+*   **Model**: The LLM to be used (e.g., gpt 4.1, gemini 2.5 pro).
+*   **System Prompt**: Instructions that define the agent's expertise and behavior.
+*   **Tools**: Optional functions the agent can call to extend its capabilities.
 
 ### Basic Agent Configuration
 
@@ -24,11 +24,12 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a professional researcher skilled at finding and gathering information from various sources.
+        You are a professional researcher,
+        skilled at finding and gathering information from various sources.
         Always provide systematic and fact-based answers.
 ```
 
-#### Agent Using Tools
+#### Agent with Tools
 
 ```yaml
 agents:
@@ -38,7 +39,7 @@ agents:
       model: "openai/gpt-4.1"
       system_prompt: |
         You are a math expert.
-        Use the calculator tool to calculate numbers.
+        Use the calculator tool to perform calculations.
       tools: ["calculator"]
 ```
 
@@ -55,12 +56,12 @@ agents:
       system_prompt: |
         You are a legal expert specializing in the following areas:
         - Contract analysis and review
-        - Compliance assessment
+        - Regulatory compliance assessment
         - Risk assessment
         - Legal research and documentation
-
-        Always pay attention to regulatory requirements and potential risks,
-        and provide thorough legal evaluations.
+        
+        Always provide thorough legal evaluations, paying attention to
+        regulatory requirements and potential risks.
       tools: ["document_search"]
 ```
 
@@ -78,8 +79,9 @@ agents:
         - Technical evaluation and review
         - Implementation planning
         - Performance optimization
-
-        Provide detailed technical analysis along with practical implementation considerations.
+        
+        Provide detailed technical analysis along with practical
+        implementation considerations.
 ```
 
 #### Business Analyst
@@ -96,20 +98,21 @@ agents:
         - Market research and competitive analysis
         - ROI and financial impact assessment
         - Stakeholder analysis
-
-        Focus on business value and strategic implications in your recommendations.
+        
+        Focus on business value and strategic implications in your
+        recommendations.
 ```
 
 ### Complete Workflow Example
 
-Here is a complete workflow using a single agent:
+Here's a complete workflow using a single agent:
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Document Analysis"
-  description: "Analyze documents with a specialized agent"
+  description: "Document analysis with a specialized agent"
 
 agents:
   - id: "document_analyst"
@@ -117,20 +120,20 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a document analysis expert. Thoroughly analyze the document and
+        You are a document analysis expert. Thoroughly analyze documents and
         provide structured insights including:
         - Key findings and important points
         - Potential issues or concerns
         - Actionable recommendations
-        Always structure your response clearly with headers and bullet points
-        for easy reading.
+        Always clearly structure your responses with headers and bullet points
+        for readability.
 
 nodes:
   start:
     type: "agent_task"
     agent: "document_analyst"
     next: "end"
-
+  
   end:
     type: "end"
 ```
@@ -140,19 +143,19 @@ nodes:
 #### Supported Models
 
 ```yaml
-# OpenAI models
+# OpenAI Models
 model: "openai/gpt-4.1"
 model: "openai/gpt-4.1-mini"
 
-# Anthropic models
+# Anthropic Models
 model: "anthropic/claude-sonnet-4"
 model: "anthropic/claude-3.5-haiku"
 
-# Google models
+# Google Models
 model: "google/gemini-2.5-pro"
 model: "google/gemini-2.5-flash"
 
-# Custom models
+# Custom Models
 vllm/ollama (supported from team subscription)
 ```
 
@@ -166,8 +169,8 @@ agents:
       model: "openai/gpt-4"
       system_prompt: "You are a creative writing assistant."
       temperature: 0.9        # Set high for creativity
-      max_tokens: 2000        # Response length limit
-      timeout: 30000          # 30 second timeout
+      max_tokens: 2000        # Limit response length
+      timeout: 30000          # 30-second timeout
 ```
 
 ### Available Tools
@@ -191,7 +194,7 @@ agents:
       model: "openai/gpt-4.1"
       system_prompt: |
         You are a data analyst. Use the calculator tool for mathematical calculations,
-        and the current_time tool to reference today's date in your analysis.
+        and the current_time tool when referencing today's date in your analysis.
       tools: ["calculator", "current_time"]
 ```
 
@@ -199,41 +202,41 @@ agents:
 
 #### System Prompt Guidelines
 
-1. **Write Specifically**: Clearly define the agent's role and expertise
-2. **Set Expectations**: Explain how the agent should respond
-3. **Include Context**: Provide relevant background information
-4. **Format Instructions**: Specify output format preferences
+1.  **Be Specific**: Clearly define the agent's role and expertise.
+2.  **Set Expectations**: Describe how the agent should respond.
+3.  **Include Context**: Provide relevant background information.
+4.  **Format Instructions**: Specify output format preferences.
 
 #### Example: Well-Structured System Prompt
 
 ```yaml
 system_prompt: |
   You are a customer service agent for a SaaS company.
-
+  
   Areas of Expertise:
   - Product features and limitations
   - Billing and subscription management
   - Basic technical troubleshooting
   - Account management procedures
-
+  
   Guidelines:
-  - Always respond helpfully, professionally, and empathetically
-  - Provide step-by-step instructions when needed
-  - Escalate appropriately when unable to resolve issues
-  - Ask clear questions to better understand issues
-
+  - Always be helpful, professional, and empathetic in your responses.
+  - Provide step-by-step instructions when necessary.
+  - Escalate appropriately if you cannot resolve an issue.
+  - Ask clarifying questions to better understand the issue.
+  
   Response Format:
-  - Use clear and concise language
-  - Structure responses with headers and bullet points
-  - Include relevant links or references when helpful
+  - Use clear and concise language.
+  - Structure responses with headers and bullet points.
+  - Include relevant links or references when helpful.
 ```
 
 #### Performance Tips
 
-1. **Choose Appropriate Models**: Use simpler models for basic tasks
-2. **Optimize Prompts**: Keep system prompts focused and clear
-3. **Limit Tools**: Only include tools the agent actually needs
-4. **Set Timeouts**: Configure appropriate response timeouts
+1.  **Choose Appropriate Model**: Use simpler models for basic tasks.
+2.  **Optimize Prompt**: Keep system prompts focused and clear.
+3.  **Limit Tools**: Include only the tools the agent truly needs.
+4.  **Set Timeouts**: Configure appropriate response timeouts.
 
 #### Common Patterns
 
@@ -246,8 +249,8 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1-mini"
       system_prompt: |
-        You are an assistant that answers questions clearly and concisely.
-        If you don't know something, be honest about it rather than guessing.
+        You are a helpful assistant that answers questions clearly and concisely.
+        If you don't know something, state that you don't know rather than guessing.
 ```
 
 **Task Execution Agent**
@@ -280,21 +283,22 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1-mini"
       system_prompt: |
-        You are a test agent. Respond helpfully to all requests and clearly demonstrate your capabilities.
+        You are a test agent. Respond helpfully to all requests and clearly
+        demonstrate your capabilities.
 
 nodes:
   start:
     type: "agent_task"
     agent: "test_agent"
     next: "end"
-
+  
   end:
     type: "end"
 ```
 
 Test this workflow with various inputs to verify the agent's behavior:
 
-* Simple questions
-* Complex analysis requests
-* Tasks requiring tool usage
-* Edge cases and error conditions
+*   Simple questions
+*   Complex analytical requests
+*   Tasks requiring tool usage
+*   Edge cases and error conditions

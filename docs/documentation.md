@@ -2,21 +2,21 @@
 
 ## Document System
 
-The document system provides powerful document management capabilities for AI workflows, enabling agents to access, process, and utilize external documents within their execution context.
+The document system provides powerful document management capabilities for AI workflows, allowing agents to access, process, and utilize external documents within their execution context.
 
 ### Overview
 
-With the document system, you can:
+The document system allows you to:
 
 * Attach documents to workflows for agent reference
 * Support multiple document formats (text, markdown)
-* Automatically generate table of contents (TOC) for markdown documents
+* Automatically generate Table of Contents (TOC) for Markdown documents
 * Inject document content into agent prompts using template binding
 * Implement lazy loading for large documents
 
 ### Document Configuration
 
-Documents are configured in the workflow constructor and can be referenced in the agent system prompt using template syntax.
+Documents are configured in the workflow constructor and can be referenced in the agent's system prompt using template syntax.
 
 #### Basic Document Structure
 
@@ -44,9 +44,9 @@ const documents = {
 The simplest form of a document is a plain string:
 
 ```yaml
-# In workflow constructor
+# In the workflow constructor
 documents = {
-  'company_policy': 'Our company values diligence and innovation.'
+  'company_policy': 'Our company values integrity and innovation.'
 }
 ```
 
@@ -69,7 +69,7 @@ Welcome to our platform...
 }
 ```
 
-#### 3. Lazy Load Document
+#### 3. Lazy-Loaded Document
 
 For large documents or files that need to be loaded from disk:
 
@@ -87,12 +87,12 @@ documents = {
 
 ### Template Binding
 
-Documents can be referenced in the agent system prompt using Handlebars template syntax.
+Documents can be referenced in the agent's system prompt using Handlebars template syntax.
 
 #### Available Template Variables
 
-* `{{{documents.document_name.content}}}` - Entire document content
-* `{{{documents.document_name.toc}}}` - Table of contents (for markdown documents)
+* `{{{documents.document_name.content}}}` - Full document content
+* `{{{documents.document_name.toc}}}` - Table of Contents (for Markdown documents)
 
 #### Usage Example
 
@@ -104,13 +104,13 @@ agents:
       model: "openai/gpt-4.1"
       system_prompt: |
         You are a customer support agent. Use the following documents to help the user:
-
+        
         <document name="user_guide">
           {{{documents.user_guide.content}}}
         </document>
-
+        
         <document name="faq">
-          Table of contents:
+          Table of Contents:
           <toc>
           {{{documents.faq.toc}}}
           </toc>
@@ -119,13 +119,13 @@ agents:
 
 ### Table of Contents (TOC) Generation
 
-For markdown documents, the system automatically generates a table of contents based on the header structure.
+For Markdown documents, the system automatically generates a Table of Contents based on the header structure.
 
 #### TOC Features
 
 * Automatically extracts headers (`#`, `##`, `###`, etc.)
 * Preserves hierarchical structure
-* Available through the `documents.document_name.toc` template variable
+* Available via the `documents.document_name.toc` template variable
 
 #### TOC Output Example
 
@@ -147,24 +147,24 @@ system_prompt: |
   <document name="confidential_data">
     {{{documents.confidential_data.content}}}
     <important>
-      This is company confidential data. Use it to answer questions but
-      do not expose the document content directly to the user.
+      This is confidential company data. Use it to answer questions, but
+      do not directly expose the document content to the user.
     </important>
   </document>
 ```
 
 ### Best Practices
 
-#### 1. Document Configuration
+#### 1. Document Organization
 
 * Use descriptive document names
 * Logically group related documents
-* Maintain appropriate document size for the LLM context window
+* Maintain appropriate document sizes to fit within the LLM context window
 
 #### 2. Template Usage
 
-* Use triple braces `{{{ }}}` for HTML-safe content injection
-* Include useful context about document structure in the prompt
+* Use triple curly braces `{{{ }}}` for HTML-safe content injection
+* Include useful context about the document structure in the prompt
 * Provide clear instructions on how the agent should use the documents
 
 #### 3. Performance Optimization
@@ -193,7 +193,7 @@ documents = {
 
 #### Document Tool Integration
 
-The document system integrates with the tool system through `DocumentSectionTool`, enabling agents to:
+The document system integrates with the tool system via `DocumentSectionTool`, allowing agents to:
 
 * Search for specific sections within documents
 * Extract relevant content based on queries
@@ -220,21 +220,21 @@ import fs from 'fs/promises';
 const documents = {
   // Simple text document
   'welcome_message': 'Welcome to our AI assistant!',
-
-  // Structured markdown document
+  
+  // Structured Markdown document
   'company_handbook': {
     type: 'markdown',
     content: `
 # Company Handbook
 ## Code of Conduct
-Treat each other with respect and act professionally.
+Treat each other with respect and professionalism.
 ## Policies
-### Remote Work Policy
+### Work-from-home Policy
 ...
     `
   },
-
-  // Lazy load document
+  
+  // Lazy-loaded document
   'product_specs': async () => {
     const content = await fs.readFile('./docs/specs.md', 'utf-8');
     return {
@@ -250,5 +250,5 @@ const workflow = new Workflow({
   interceptor: myInterceptor
 });
 
-const response = await workflow.ask('What is our remote work policy?');
+const response = await workflow.ask('What is our work-from-home policy?');
 ```

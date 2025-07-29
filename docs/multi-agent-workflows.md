@@ -2,12 +2,12 @@
 
 ## Overview
 
-SowonFlow supports sophisticated multi-agent workflows that can orchestrate multiple specialist agents to handle complex business scenarios, enabling parallel processing, intelligent routing, and collaborative problem-solving.
+SowonFlow supports sophisticated multi-agent workflows that can orchestrate multiple specialized agents to handle complex business scenarios. This enables parallel processing, intelligent routing, and collaborative problem-solving.
 
 ## Key Features
 
 ### Parallel Processing
-Execute multiple agents simultaneously to shorten response times and efficiently handle complex queries.
+Execute multiple agents simultaneously to reduce response times and efficiently process complex queries.
 
 ### Intelligent Routing
 Automatically route user queries to the most appropriate agent based on content analysis.
@@ -16,7 +16,7 @@ Automatically route user queries to the most appropriate agent based on content 
 Share data and context between agents throughout the workflow execution.
 
 ### Result Combination
-Combine responses from multiple agents into a consistent and comprehensive answer.
+Synthesize responses from multiple agents into a coherent and comprehensive answer.
 
 ## Basic Multi-Agent Structure
 
@@ -25,7 +25,7 @@ version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Multi-Agent Example"
-  description: "Orchestrates multiple specialist agents"
+  description: "Orchestrates multiple specialized agents"
 
 state:
   variables:
@@ -39,14 +39,14 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You coordinate multiple specialist agents."
-
+      system_prompt: "You are responsible for coordinating multiple specialized agents."
+  
   - id: "expert"
     inline:
       type: "agent"
-      model: "openai/gpt-4.1-mini"
+      model: "openai/gpt-4.1-mini" 
       system_prompt: "You are an expert in a specific domain."
-      tools: ["domain_search"]
+      tools: ["DOMAIN_SEARCH"]
 
 nodes:
   start:
@@ -55,7 +55,7 @@ nodes:
     output:
       to_state: "route_decision"
     next: "route_check"
-
+    
   route_check:
     type: "branch"
     method: "condition"
@@ -63,26 +63,26 @@ nodes:
     branches:
       "expert": "expert_task"
     default: "direct_answer"
-
+    
   expert_task:
     type: "agent_task"
     agent: "expert"
     output:
       to_state: "expert_response"
     next: "combine_results"
-
+    
   combine_results:
     type: "agent_task"
     agent: "coordinator"
     input:
       template: "Combine the results: {{expert_response}}"
     next: "end"
-
+    
   direct_answer:
     type: "agent_task"
     agent: "coordinator"
     next: "end"
-
+    
   end:
     type: "end"
 ```
@@ -96,17 +96,17 @@ nodes:
   parallel_processing:
     type: "parallel"
     branches: ["agent_a_task", "agent_b_task"]
-
+    
   agent_a_task:
     type: "agent_task"
     agent: "agent_a"
     next: "join"
-
+    
   agent_b_task:
     type: "agent_task"
     agent: "agent_b"
     next: "join"
-
+    
   join:
     type: "join"
     next: "combine_results"
@@ -127,16 +127,16 @@ nodes:
     default: "general_handler"
 ```
 
-## Use Case: Business Query Router
+## Real-World Example: Business Query Router
 
-Example showing how to route business queries to the appropriate department:
+An example demonstrating how to route business queries to the appropriate department:
 
 ```yaml
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Business Query Router"
-  description: "Routes queries to HR, scheduling, or finance experts"
+  description: "Routes queries to HR, Calendar, or Finance experts"
 
 state:
   variables:
@@ -152,21 +152,21 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "Analyze the query and determine the appropriate department. Respond with HR, scheduling, both, or general."
-
+      system_prompt: "Analyze the query and determine the appropriate department. Respond with HR, CALENDAR, BOTH, or GENERAL."
+      
   - id: "hr_expert"
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are an HR expert. Handle queries about policies, benefits, and employees."
-      tools: ["HR_policy_search"]
-
+      system_prompt: "You are an HR expert. Handle queries related to policies, benefits, and employee matters."
+      tools: ["HR_POLICY_SEARCH"]
+      
   - id: "calendar_expert"
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are a scheduling expert. Handle queries about scheduling and availability."
-      tools: ["calendar_search"]
+      system_prompt: "You are a calendar management expert. Handle scheduling and availability queries."
+      tools: ["CALENDAR_SEARCH"]
 
 nodes:
   start:
@@ -181,7 +181,7 @@ nodes:
         type: string
         enum: [HR, CALENDAR, BOTH, GENERAL]
     next: "route_query"
-
+    
   route_query:
     type: "branch"
     method: "condition"
@@ -191,53 +191,53 @@ nodes:
       "HR": "hr_task"
       "CALENDAR": "calendar_task"
     default: "general_response"
-
+    
   parallel_processing:
     type: "parallel"
     branches: ["hr_task", "calendar_task"]
-
+    
   hr_task:
     type: "agent_task"
     agent: "hr_expert"
     input:
-      template: "Handle this HR query: {{user_query}}"
+      template: "Process this HR query: {{user_query}}"
     output:
       to_state: "hr_response"
     next: "join_responses"
-
+    
   calendar_task:
     type: "agent_task"
     agent: "calendar_expert"
     input:
-      template: "Handle this scheduling query: {{user_query}}"
+      template: "Process this calendar query: {{user_query}}"
     output:
       to_state: "calendar_response"
     next: "join_responses"
-
+    
   join_responses:
     type: "join"
     next: "combine_responses"
-
+    
   combine_responses:
     type: "agent_task"
     agent: "router"
     input:
       template: |
         Original query: {{user_query}}
-
+        
         HR response: {{hr_response}}
-        Scheduling response: {{calendar_response}}
-
-        Combine this information to provide a comprehensive response.
+        Calendar response: {{calendar_response}}
+        
+        Combine the above information to provide a comprehensive response.
     next: "end"
-
+    
   general_response:
     type: "agent_task"
     agent: "router"
     input:
-      template: "Provide a general response to this query: {{user_query}}"
+      template: "Provide a general response to the following query: {{user_query}}"
     next: "end"
-
+    
   end:
     type: "end"
 ```
@@ -245,15 +245,15 @@ nodes:
 ## Node Type Reference
 
 ### Parallel Node
-Execute multiple branches simultaneously:
+Executes multiple branches concurrently:
 ```yaml
 parallel_node:
-  type: "parallel"
+  type: "parallel" 
   branches: ["task1", "task2", "task3"]
 ```
 
 ### Join Node
-Wait for all parallel branches to complete:
+Waits for all parallel branches to complete:
 ```yaml
 join_node:
   type: "join"
@@ -261,7 +261,7 @@ join_node:
 ```
 
 ### Branch Node
-Route execution based on conditions:
+Routes execution based on a condition:
 ```yaml
 branch_node:
   type: "branch"
@@ -269,7 +269,7 @@ branch_node:
   condition: "state_variable"
   branches:
     "value1": "path1"
-    "value2": "path2"
+    "value2": "path2" 
   default: "default_path"
 ```
 
@@ -281,12 +281,12 @@ Create agents with clear and focused responsibilities:
 agents:
   - id: "data_analyst"
     system_prompt: "You analyze data and provide insights."
-  - id: "report_writer"
+  - id: "report_writer" 
     system_prompt: "You write professional reports."
 ```
 
 ### 2. State Management
-Use meaningful variable names and proper scoping:
+Use meaningful variable names and appropriate scoping:
 ```yaml
 state:
   variables:
@@ -297,7 +297,7 @@ state:
 ```
 
 ### 3. Error Handling
-Always provide a default path for branch nodes:
+Always provide a default path in branch nodes:
 ```yaml
 decision_node:
   type: "branch"
@@ -315,19 +315,19 @@ decision_node:
 ## Common Patterns
 
 ### Master-Worker Pattern
-One coordinating agent manages multiple worker agents:
+A single coordinating agent manages multiple worker agents:
 ```yaml
 agents:
   - id: "master"
     system_prompt: "You coordinate and delegate tasks to experts."
-  - id: "worker_1"
+  - id: "worker_1" 
     system_prompt: "You handle specific task type A."
   - id: "worker_2"
     system_prompt: "You handle specific task type B."
 ```
 
 ### Pipeline Pattern
-Sequential processing through specialist agents:
+Sequential processing through specialized agents:
 ```yaml
 nodes:
   extract:
@@ -335,7 +335,7 @@ nodes:
     agent: "extractor"
     next: "transform"
   transform:
-    type: "agent_task"
+    type: "agent_task" 
     agent: "transformer"
     next: "load"
   load:
@@ -345,7 +345,7 @@ nodes:
 ```
 
 ### Consensus Pattern
-Multiple agents provide input for decision-making:
+Multiple agents provide input for a decision:
 ```yaml
 nodes:
   parallel_analysis:
@@ -356,7 +356,7 @@ nodes:
     type: "agent_task"
     agent: "decision_maker"
     input:
-      template: "Make a decision based on the following: {{expert_1_result}}, {{expert_2_result}}, {{expert_3_result}}"
+      template: "Make a decision based on: {{expert_1_result}}, {{expert_2_result}}, {{expert_3_result}}"
     next: "end"
 ```
 
@@ -364,26 +364,26 @@ nodes:
 
 ### Common Issues
 
-1. **Parallel branches not completing**: Verify that all parallel branches have proper `next` settings pointing to a join node.
+1.  **Parallel branches not completing**: Ensure all parallel branches have correct `next` settings pointing to a join node.
 
-2. **State variables not updating**: Check that `output.to_state` is correctly set in agent tasks.
+2.  **State variables not updating**: Verify that `output.to_state` is correctly configured in agent tasks.
 
-3. **Branch conditions not working**: Ensure the condition variable exists in the state and holds the expected value.
+3.  **Branch conditions not working**: Check that the condition variable exists in the state and has the expected value.
 
-4. **Performance issues**: Limit parallel branches and optimize agent prompts for faster responses.
+4.  **Performance issues**: Limit parallel branches and optimize agent prompts for faster responses.
 
 ### Debugging Tips
 
-1. Monitor execution with a workflow state listener:
+1.  Use a workflow state listener to monitor execution:
 ```javascript
 workflow.addStateListener((state) => {
   console.log("Current state:", state);
 });
 ```
 
-2. Add logging to agent prompts for debugging:
+2.  Add logging to agent prompts for debugging:
 ```yaml
-system_prompt: "You are an expert. Always start your response with [agent_name] for debugging purposes."
+system_prompt: "You are an expert. Always start your response with [AGENT_NAME] for debugging."
 ```
 
-3. Test individual agents before integrating them into the workflow.
+3.  Test individual agents before integrating them into a workflow.

@@ -29,6 +29,9 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Advanced',
       items: [
+        'multi-agent-workflows',
+        'custom-nodes',
+        'tools',
         'mcp',
         'documentation',
       ],
@@ -39,6 +42,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'examples/1',
         'examples/3',
+        'examples/multi-agent-business',
       ],
     },
   ],

@@ -2,7 +2,7 @@
 
 ## MCP Integration
 
-MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `SowonFlow` package provides smooth MCP server integration for extending agent capabilities.
+MCP (Model Context Protocol) integration allows agents to access external systems and services through a standardized protocol. The `sowonflow` package provides smooth MCP server integration for extending agent capabilities.
 
 ### What is MCP?
 
@@ -10,7 +10,7 @@ MCP (Model Context Protocol) is a standardized way for AI agents to interact wit
 
 ### Basic MCP Configuration
 
-#### Adding MCP Server
+#### Adding an MCP Server
 
 Configure an MCP server in your workflow definition:
 
@@ -26,8 +26,8 @@ agents:
       type: "agent"
       model: "google/gemini-2.5-flash"
       system_prompt: |
-        You are a Gmail assistant that can search and manage emails.
-        Use MCP tools (with "mcp__" prefix) to access Gmail features.
+        You are a Gmail assistant that can search for and manage emails.
+        Use MCP tools (prefixed with "mcp__") to access Gmail functionality.
       mcp: ["gmail"]  # Reference MCP server by name
 
 nodes:
@@ -40,7 +40,7 @@ nodes:
     type: "end"
 ```
 
-#### Configuring MCP Server
+#### Configuring an MCP Server
 
 Specify MCP server configuration when creating your workflow:
 
@@ -65,7 +65,7 @@ const workflow = new Workflow({
 
 #### Gmail MCP Server
 
-Access Gmail features for email management:
+Access Gmail functionality for email management:
 
 ```yaml
 agents:
@@ -117,7 +117,7 @@ agents:
         - List directory contents
         - Search for files
 
-        Use MCP tools with "mcp__fs__" prefix for file operations.
+        Use MCP tools prefixed with "mcp__fs__" for file operations.
       mcp: ["filesystem"]
 ```
 
@@ -166,7 +166,7 @@ agents:
         - Handle work-related and personal emails separately
         - Ignore promotional/spam emails
         - Search full content for important emails
-        - Provide structured summaries with key information
+        - Provide structured summaries of key information
 
         Available tools:
         - mcp__gmail__search_emails: Search using Gmail syntax
@@ -263,7 +263,7 @@ system_prompt: |
   ✓ Collect multiple email IDs
   ✓ Retrieve content with single tool call when possible
 
-  Avoid:
+  To avoid:
   ✗ Multiple individual searches
   ✗ Opening emails one by one
   ✗ Duplicate API calls
@@ -306,10 +306,10 @@ agents:
       system_prompt: |
         You are a comprehensive digital assistant with access to:
         - Gmail (email management)
-        - Calendar (schedule management)
+        - Calendar (scheduling)
         - File system (document access)
 
-        Use appropriate MCP tools based on user requests.
+        Use the appropriate MCP tools based on user requests.
       mcp: ["gmail", "calendar", "files"]
 ```
 
@@ -327,9 +327,9 @@ system_prompt: |
 
   Example:
   When Gmail search fails:
-  1. Verify search syntax is correct
+  1. Verify the search syntax is correct
   2. Try simplified search criteria
-  3. Inform user of limitations
+  3. Inform the user of limitations
 ```
 
 #### Performance Optimization
@@ -376,7 +376,7 @@ describe('MCP Integration Tests', () => {
       }
     });
 
-    const result = await workflow.ask("Check my recent emails");
+    const result = await workflow.ask("Please check my recent emails");
     expect(result.content).toBeDefined();
   });
 });

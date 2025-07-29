@@ -2,15 +2,15 @@
 
 ## What is a Supervisor?
 
-A supervisor is a specialized agent that coordinates and manages multiple agents to handle complex tasks. It analyzes user requests, selects appropriate agents, and generates dynamic workflows to solve multifaceted problems.
+A supervisor is a specialized agent that coordinates and manages multiple agents to handle complex tasks. It analyzes user requests, selects appropriate agents, and creates dynamic workflows to solve multifaceted problems.
 
 ### Key Roles
 
-* **Analyze and manage** complex requests into manageable tasks
-* **Select appropriate agents** for assignment from the management team
-* **Generate dynamic workflows** based on request types
-* **Coordinate execution** among multiple specialized agents
-* **Consolidate results** from various agents to provide a consistent response
+* **Analyze** and manage complex requests into manageable tasks
+* **Select** appropriate agents for assignment from the management team
+* **Create** dynamic workflows based on request types
+* **Coordinate** execution among multiple specialized agents
+* **Consolidate** results from various agents to provide consistent responses
 
 ---
 
@@ -57,7 +57,7 @@ agents:
       supervisor_mode: "branch"  # Choose from sequential, parallel, branch, auto
       system_prompt: |
         You are a supervisor managing specialized consultants.
-        Generate appropriate workflows based on requests according to supervisor_mode.
+        Create appropriate workflows based on requests according to supervisor_mode.
       agents: ["legal_expert", "tech_expert", "business_analyst"]
 
   # Managed agents
@@ -85,7 +85,7 @@ agents:
 
 ---
 
-## Detailed Specifications of supervisor_mode
+## Detailed Specifications for supervisor_mode
 
 In the supervisor type, you can explicitly specify the workflow execution pattern. You can choose one of the following four patterns using the `supervisor_mode` attribute:
 
@@ -125,7 +125,7 @@ version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
   name: "Multi-expert Analysis"
-  description: "Supervisor coordinates expert analysis"
+  description: "Supervisor coordinating expert analysis"
 
 agents:
   - id: "supervisor"
@@ -154,7 +154,7 @@ agents:
       model: "anthropic/claude-sonnet-4"
       system_prompt: |
         You are a technical expert. Focus on the following:
-        - Feasibility of implementation
+        - Feasibility
         - Technical architecture
         - Performance considerations
 
@@ -180,17 +180,17 @@ nodes:
 
 ## Built-in Supervisor Tools
 
-The supervisor can automatically access specialized tools. The behavior of the tools also changes depending on the `supervisor_mode`.
+The supervisor can automatically access specialized tools. The behavior of these tools also changes depending on the `supervisor_mode`.
 
-* **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes the user request to select the appropriate workflow pattern.
+* **workflow_template_selector**: When `supervisor_mode` is auto, it analyzes user requests to select appropriate workflow patterns.
   - Determine which pattern (sequential, parallel, branch) is needed
   - Select agents that need to participate
   - Provide reasoning for the decision
 
-* **dynamic_workflow_executor**: Dynamically generates and executes workflows based on `supervisor_mode`.
+* **dynamic_workflow_executor**: Dynamically creates and executes workflows based on `supervisor_mode`.
   - Configure workflows based on the selected pattern (sequential, parallel, branch, auto)
   - Coordinate agent execution
-  - Process data flow between agents
+  - Handle data flow between agents
   - Consolidate final results
 
 ## System Prompt Best Practices
@@ -222,14 +222,14 @@ Representative use cases for each `supervisor_mode` are as follows:
 
 #### Product Development Analysis
 ```
-User: "Please evaluate the feasibility of launching a new AI-based feature"
+User: "Evaluate the feasibility of launching a new AI-based feature"
 Supervisor: supervisor_mode: parallel → Legal (compliance), Technical (implementation), Business (market) analysis simultaneously
 ```
 
 #### Contract Review Process
 ```
 User: "Please review this partnership contract"
-Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) sequential analysis
+Supervisor: supervisor_mode: sequential → Legal (terms) → Business (strategic impact) → Technical (integration) analysis in sequence
 ```
 
 #### Strategic Decision Making
@@ -261,7 +261,7 @@ agents:
       model: "google/gemini-2.5-pro"
       supervisor_mode: "parallel"
       system_prompt: |
-        You are a test supervisor. Generate workflows based on supervisor_mode.
+        You are a test supervisor. Create workflows based on supervisor_mode.
       agents: ["expert_a", "expert_b"]
 
   - id: "expert_a"

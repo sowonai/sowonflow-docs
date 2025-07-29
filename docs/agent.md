@@ -37,7 +37,7 @@ agents:
       type: "agent"
       model: "openai/gpt-4.1"
       system_prompt: |
-        You are a mathematics expert.
+        You are a math expert.
         Use the calculator tool to calculate numbers.
       tools: ["calculator"]
 ```
@@ -123,7 +123,7 @@ agents:
         - Potential issues or concerns
         - Actionable recommendations
         Always structure your response clearly with headers and bullet points
-        to make it easy to read.
+        for easy reading.
 
 nodes:
   start:
@@ -199,10 +199,10 @@ agents:
 
 #### System Prompt Guidelines
 
-1. **Be specific**: Clearly define the agent's role and expertise
-2. **Set expectations**: Explain how the agent should respond
-3. **Include context**: Provide relevant background information
-4. **Format guidelines**: Specify output format preferences
+1. **Write Specifically**: Clearly define the agent's role and expertise
+2. **Set Expectations**: Explain how the agent should respond
+3. **Include Context**: Provide relevant background information
+4. **Format Instructions**: Specify output format preferences
 
 #### Example: Well-Structured System Prompt
 
@@ -210,7 +210,7 @@ agents:
 system_prompt: |
   You are a customer service agent for a SaaS company.
 
-  Areas of expertise:
+  Areas of Expertise:
   - Product features and limitations
   - Billing and subscription management
   - Basic technical troubleshooting
@@ -219,10 +219,10 @@ system_prompt: |
   Guidelines:
   - Always respond helpfully, professionally, and empathetically
   - Provide step-by-step instructions when needed
-  - Escalate appropriately when unable to resolve an issue
-  - Ask clear questions to better understand the issue
+  - Escalate appropriately when unable to resolve issues
+  - Ask clear questions to better understand issues
 
-  Response format:
+  Response Format:
   - Use clear and concise language
   - Structure responses with headers and bullet points
   - Include relevant links or references when helpful
@@ -230,10 +230,10 @@ system_prompt: |
 
 #### Performance Tips
 
-1. **Choose the right model**: Use simpler models for basic tasks
-2. **Optimize prompts**: Keep system prompts focused and clear
-3. **Limit tools**: Only include tools the agent actually needs
-4. **Set timeouts**: Configure appropriate response timeouts
+1. **Choose Appropriate Models**: Use simpler models for basic tasks
+2. **Optimize Prompts**: Keep system prompts focused and clear
+3. **Limit Tools**: Only include tools the agent actually needs
+4. **Set Timeouts**: Configure appropriate response timeouts
 
 #### Common Patterns
 

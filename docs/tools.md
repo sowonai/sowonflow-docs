@@ -2,12 +2,12 @@
 
 ## Overview
 
-In SowonFlow, Tools are a core feature that extends the capabilities of agents, allowing them to interact with external systems. Agents can perform tasks such as retrieving data, calling APIs, and processing files through tools.
+In SowonFlow, Tools are a core feature that extends an agent's capabilities, allowing it to interact with external systems. Through tools, agents can perform tasks such as retrieving data, calling APIs, and processing files.
 
 ## Understanding the Tool System
 
 ### What are Tools?
-A tool is a function that an agent can call, characterized by the following:
+A tool is a function that an agent can call, characterized by:
 
 - **Structured Input**: Parameters defined with a clear schema
 - **Asynchronous Execution**: Asynchronous support for external API calls or file processing
@@ -22,11 +22,11 @@ A tool is a function that an agent can call, characterized by the following:
 ### Differences from MCP
 
 MCP (Model Context Protocol) tools are implemented as separate servers, allowing for reuse across multiple projects and are suitable for complex external system integrations. For more details, refer to the [MCP Guide](./mcp.md).
-First lesson!
+Second lesson!
 
 ## Basic Tool Implementation
 
-### How to Use DynamicStructuredTool
+### Using DynamicStructuredTool
 
 ```javascript
 import { DynamicStructuredTool } from '@langchain/core/tools';
@@ -82,7 +82,7 @@ const workflow = new Workflow({
 });
 ```
 
-## Real-world Example: Business System Tools
+## Real-world Examples: Business System Tools
 
 ### Calendar Management Tool
 
@@ -96,7 +96,7 @@ const calendarTool = new DynamicStructuredTool({
   }),
   func: async ({ date, query }) => {
     try {
-      // Integrate with Google Calendar API or internal calendar system
+      // Integrate with Google Calendar API or internal scheduling system
       if (date === 'today') {
         const today = new Date().toISOString().split('T')[0];
         const events = await calendarAPI.getEvents(today);
@@ -126,7 +126,7 @@ const hrTool = new DynamicStructuredTool({
   name: "search_hr_policies",
   description: "Searches HR policies and regulations.",
   schema: z.object({
-    topic: z.string().describe("Search topic (e.g., travel expenses, vacation, benefits)"),
+    topic: z.string().describe("Search topic (e.g., travel expenses, leave, welfare)"),
     department: z.string().optional().describe("Department name (optional)")
   }),
   func: async ({ topic, department }) => {
@@ -192,7 +192,7 @@ const fileProcessorTool = new DynamicStructuredTool({
 });
 ```
 
-## Tool Design Best Practices
+## Best Practices for Tool Design
 
 ### 1. Clear Schema Definition
 
@@ -242,7 +242,7 @@ func: async (params) => {
 ### 3. Appropriate Response Format
 
 ```javascript
-// When JSON response is required
+// If JSON response is needed
 func: async (params) => {
   const result = await processData(params);
   return JSON.stringify({
@@ -252,7 +252,7 @@ func: async (params) => {
   });
 }
 
-// When text response is appropriate
+// If text response is appropriate
 func: async (params) => {
   const count = await database.count(params.query);
   return `Search results: Found ${count} items.`;
@@ -277,7 +277,7 @@ const dataProcessingTool = new DynamicStructuredTool({
     // Step 1: Data collection
     const rawData = await dataCollector.fetch(data_source);
     
-    // Step 2: Data cleaning
+    // Step 2: Data cleansing
     const cleanData = await dataProcessor.clean(rawData);
     
     // Step 3: Perform analysis
@@ -345,7 +345,7 @@ agents:
     inline:
       type: "agent"
       model: "openai/gpt-4.1-mini"
-      system_prompt: "You are a coordinator who analyzes tasks and assigns them to appropriate experts."
+      system_prompt: "You are a coordinator who analyzes tasks and assigns them to the appropriate expert."
       
   - id: "data_specialist"
     inline:
@@ -430,7 +430,7 @@ nodes:
 
 2. **Performance Issues**
    - Long execution times: Consider caching and batch processing
-   - Memory usage: Handle large data streams
+   - Memory usage: Process large data streams
 
 3. **Error Handling**
    - Return clear error messages that the agent can understand
@@ -502,4 +502,4 @@ func: async ({ user_id, action }) => {
 }
 ```
 
-Tools are one of SowonFlow's powerful features, and when properly designed and implemented, they can significantly enhance an agent's capabilities. Follow the guidelines above to develop secure and efficient tools.
+Tools are one of SowonFlow's powerful features, and when designed and implemented appropriately, they can significantly enhance an agent's capabilities. Follow the guidelines above to develop safe and efficient tools.

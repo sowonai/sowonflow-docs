@@ -1,20 +1,20 @@
-# Custom Nodes Guide
+# Custom Node Guide
 
 ## Overview
 
-Custom nodes in SowonFlow are a powerful feature that allows you to directly implement complex business logic that is difficult to achieve with agents or built-in node types. Through custom nodes, developers can insert special processing logic into workflows and extend workflows with complete control.
+SowonFlow's custom nodes are a powerful feature that allows you to directly implement complex business logic that is difficult to achieve with agents or built-in node types. Through custom nodes, developers can insert special processing logic into workflows and extend workflows with complete control.
 
 ## Understanding Custom Nodes
 
-### What are Custom Nodes?
-Custom nodes are nodes implemented with user-defined handler functions:
+### What is a Custom Node?
+A custom node is a node implemented with a user-defined handler function:
 
 - **Complete Control**: Full read/write access to workflow state
 - **Asynchronous Support**: External API calls, file processing, complex calculations, etc.
-- **Flexible I/O**: Message, state variables, custom data processing
-- **Parallel Processing Compatibility**: Fully integrated with `parallel` and `join` nodes
+- **Flexible I/O**: Message, state variable, custom data processing
+- **Parallel Processing Compatibility**: Fully compatible with `parallel` and `join` nodes
 
-### Custom Nodes vs. Agents vs. Tools
+### Custom Node vs. Agent vs. Tool
 
 | Category | Custom Node | Agent | Tool |
 |---|---|---|---|
@@ -58,7 +58,7 @@ const workflow = new Workflow({
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "커스텀 노드 예제" # Custom Node Example
+  name: "Custom Node Example"
 
 nodes:
   start:
@@ -70,7 +70,7 @@ nodes:
     type: "end"
 ```
 
-## Real Example: Parallel Custom Nodes
+## Real-world Example: Parallel Custom Nodes
 
 ### Workflow Utilizing Parallel Processing
 
@@ -78,7 +78,7 @@ nodes:
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "병렬 커스텀 워크플로우" # Parallel Custom Workflow
+  name: "Parallel Custom Workflow"
 
 state:
   variables:
@@ -162,7 +162,7 @@ const workflow = new Workflow({
       const userId = state.variables.userId;
       const isValid = userId && userId.length > 0;
       
-      // Store results in state
+      // Save results to state
       if (!state.variables.results) {
         state.variables.results = {};
       }
@@ -174,13 +174,13 @@ const workflow = new Workflow({
       console.log('Input data validation completed');
       
       return { 
-        messages: [new SystemMessage(`Validation Result: ${isValid ? 'Success' : 'Failure'}`)] 
+        messages: [new SystemMessage(`Validation result: ${isValid ? 'Success' : 'Failure'}`)] 
       };
     },
 
     // Fetch user information (parallel execution 2)
     fetchUserInfo: async (state: WorkflowState) => {
-      console.log('Fetching user information started');
+      console.log('User information lookup started');
       await delay(2000); // Simulate API call
       
       const userId = state.variables.userId;
@@ -188,16 +188,16 @@ const workflow = new Workflow({
       // Simulate external API call
       const userInfo = await mockUserAPI.getUserInfo(userId);
       
-      // Store results
+      // Save results
       if (!state.variables.results) {
         state.variables.results = {};
       }
       state.variables.results.userInfo = userInfo;
       
-      console.log('User information fetch completed');
+      console.log('User information lookup completed');
       
       return { 
-        messages: [new SystemMessage(`User Info: ${userInfo.name}`)] 
+        messages: [new SystemMessage(`User info: ${userInfo.name}`)] 
       };
     },
 
@@ -211,7 +211,7 @@ const workflow = new Workflow({
       // Permission check logic
       const permissions = await mockPermissionAPI.checkPermissions(userId);
       
-      // Store results
+      // Save results
       if (!state.variables.results) {
         state.variables.results = {};
       }
@@ -230,7 +230,7 @@ const workflow = new Workflow({
       
       const results = state.variables.results;
       
-      // Integrate results of all parallel tasks
+      // Integrate all parallel task results
       const summary = {
         validation: results.validation,
         user: results.userInfo,
@@ -274,7 +274,7 @@ const extractUserIdFromInput = (input: string): string => {
 };
 ```
 
-## Advanced Patterns: Nested Parallel Processing
+## Advanced Pattern: Nested Parallel Processing
 
 ### Complex Workflow Structure
 
@@ -282,7 +282,7 @@ const extractUserIdFromInput = (input: string): string => {
 version: "agentflow/v1"
 kind: "WorkflowSpec"
 metadata:
-  name: "중첩 병렬 커스텀 워크플로우" # Nested Parallel Custom Workflow
+  name: "Nested Parallel Custom Workflow"
 
 state:
   variables:
@@ -368,7 +368,7 @@ nodes:
 ```typescript
 // Good example: Safe state update
 const safeHandler = async (state: WorkflowState) => {
-  // Check for existence of state variables
+  // Check if state variables exist
   if (!state.variables) {
     state.variables = {};
   }
@@ -476,7 +476,7 @@ const cachedHandler = async (state: WorkflowState) => {
   // Fetch new data
   const userInfo = await userService.getInfo(state.variables.userId);
   
-  // Store in cache (5 minute TTL)
+  // Save to cache (5 min TTL)
   cache.set(cacheKey, userInfo);
   setTimeout(() => cache.delete(cacheKey), 5 * 60 * 1000);
   
@@ -595,7 +595,7 @@ const debugHandler = async (state: WorkflowState) => {
   
   console.log('=== Custom Node Execution Started ===');
   console.log('Current State:', JSON.stringify(state.variables, null, 2));
-  console.log('Message Count:', state.messages?.length || 0);
+  console.log('Number of Messages:', state.messages?.length || 0);
   
   try {
     // Execute business logic
@@ -666,12 +666,12 @@ const workflow = new Workflow({
 ### 1. Memory Management
 - Be mindful of memory usage when processing large datasets
 - Consider stream processing or batch processing
-- Remove unnecessary data from state
+- Remove unnecessary data from the state
 
 ### 2. Considerations for Parallel Processing
 - Concurrency issues when accessing shared resources
 - Prevent race conditions when updating state variables
-- Consider rate limiting when making external API calls
+- Consider rate limiting when calling external APIs
 
 ### 3. Error Recovery
 - Implement recovery strategies for partial failures
